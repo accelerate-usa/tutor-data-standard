@@ -29,7 +29,7 @@ K-12 students in public schools across the United States are not receiving the f
 
 ## Process
 
-<img src="./img/DATAS Process.png" alt="DATAS Process" title="hi" />
+<img src="./img/datas_process.png" alt="DATAS Process" title="How data moves through k12 education systems." />
 
 
 
