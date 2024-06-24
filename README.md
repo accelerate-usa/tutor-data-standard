@@ -144,7 +144,7 @@ This is where we will write how we add things once this thing becomes contentiou
             <th colspan="7" align="middle" valign="middle">Provider Support</th>
         </tr>
         <tr>
-            <td align="middle" valign="middle"><img src="img/littera.png" width="180"/></td>
+            <td align="middle" valign="middle"><img src="img/Littera.png" width="180"/></td>
         </tr>
         <tr></tr> <!-- empty line to avoid table zebra striping -->
         <tr>
