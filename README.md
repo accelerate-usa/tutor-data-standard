@@ -4,7 +4,7 @@
 ![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
 ![Version](https://img.shields.io/badge/version-0.0.1-orange.svg)
 
-Welcome to DATAS, or "Data Alignment Tutoring Standards"! This coalition of the willing creates, advocates for, and implements an open standard for tutoring data protocols in k12 settings. We work with districts, states, providers, platforms, and philanthropies.
+Welcome to DATAS, or "Data Alignment and Tutoring Assessment Standards"! This coalition of the willing creates, advocates for, and implements an open standard for tutoring data protocols in k12 settings. We work with districts, states, providers, platforms, and philanthropies.
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ Welcome to DATAS, or "Data Alignment Tutoring Standards"! This coalition of the 
 K-12 students in public schools across the United States are not receiving the full benefits of high-dosage tutoring programs due to the lack of standardized tracking and reporting metrics, making it difficult for districts, states, and researchers to measure program effectiveness. Despite over 1.4 billion dollars of ESSER funding being spent on high-dosage tutoring, there is insufficient data to evaluate success or identify areas for improvement. If this problem continues, the potential educational benefits of high-dosage tutoring will not be fully realized, potentially resulting in continued learning loss and widening achievement gaps. Therefore, we need to develop and implement standardized tracking and reporting metrics to evaluate the effectiveness of these programs. To test our hypothesis, we will collaborate with educational researchers, providers, districts, and philanthropies to create adaptable frameworks for tracking and reporting the outcomes of high-dosage tutoring.
 
 ## Goals
-1. **Identify impactful metrics:** Determine metrics that are proven indicators of tutoring success and are regularly measured across providers. These metrics are discussed in [the dictionary](./dictionaries/mvp.json).
+1. **Identify impactful metrics:** Determine metrics that are proven indicators of tutoring success and are regularly measured across providers. These metrics are defined in [the dictionaries](./dictionaries/).
 2. **Standardize communication:** Define a standard way for providers to communicate these metrics, including required vs. optional data points, structure, accepted values, and clear definitions of metric terminology. These metrics are discussed in [an undetermined location]().
 3. **Provide Templates:** Provide highly adaptable frameworks and templates for every aspect of beginning, operating, and assessing tutoring within a district. This includes a template DSA, MOU, IRB Application, and more---all files found in [documentation](./documentation).
 4. **Define Best practices:** Identify best practices around data aggregation and obfuscation.
@@ -30,8 +30,6 @@ K-12 students in public schools across the United States are not receiving the f
 ## Process
 
 <img src="./img/datas_process.png" alt="DATAS Process" title="How data moves through k12 education systems." />
-
-
 
 ## Resources
 - **Accelerate:** [Accelerate State Field Guide](https://accelerate.us/state-field-guide/)
@@ -147,13 +145,6 @@ This is where we will write how we add things once this thing becomes contentiou
             <td align="middle" valign="middle"><img src="img/Littera.png" width="180"/></td>
         </tr>
         <tr></tr> <!-- empty line to avoid table zebra striping -->
-        <tr>
-            <th colspan="7" align="middle" valign="middle">Philanthropic Support</th>
-        </tr>
-        <tr>
-            <td align="middle" valign="middle"><img src="img/accelerate.png" width="100"/></td>
-            <td align="middle" valign="middle"><img src="img/overdeck.png" width="100"/></td>
-        </tr>
     </tbody>
 </table>
 

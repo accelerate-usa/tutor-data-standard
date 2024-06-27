@@ -1,0 +1,27 @@
+{
+    "session_details": {
+      "scheduled_start_date_start_time": "timestamp",
+      "scheduled_duration": "integer",
+      "session_status": "text",
+      "session_delivery_type": "text",
+      "associated_tutoring_organization": "UUID",
+      "associated_tutoring_program": "UUID",
+      "actual_session_start_time": "timestamp",
+      "actual_session_end_time": "timestamp",
+      "associated_subjects": "text (array)"
+    },
+    "tutor_enrollment_details": {
+      "associated_tutors": "UUID (array)",
+      "present_tutors_joined_session_at": "timestamp (array)",
+      "present_tutors_left_session_at": "timestamp (array)"
+    },
+    "student_enrollment_details": {
+      "enrolled_students": "UUID (array)",
+      "associated_tutors_associated_tutoring_organizations": "text (array)",
+      "enrolled_students_associated_schools": "text (array)",
+      "enrolled_students_associated_grade_levels": "text (array)",
+      "present_students_joined_session_at": "timestamp (array)",
+      "present_students_left_session_at": "timestamp (array)"
+    }
+  }
+  
