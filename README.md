@@ -9,17 +9,33 @@ Welcome to DATAS, or "Data Alignment and Tutoring Assessment Standards"! This co
 ## Table of Contents
 
 1. [Introduction](#DATAS)
-2. [Problem Statement](#problem-statement)
-3. [Goals](#goals)
-4. [Process](#process)
-5. [Resources](#resources)
-6. [Contributions](#contributions)
-7. [Governance](#governance)
-8. [Steering Committee](#steering-committee)
-9. [Supported by](#supported-by)
+1. [Problem Statement](#problem-statement)
+1. [Mission](#Mission)
+1. [Audience](#Audience)
+1. [Goals](#goals)
+1. [Process](#process)
+1. [Resources](#resources)
+1. [Contributions](#contributions)
+1. [Governance](#governance)
+1. [Steering Committee](#steering-committee)
+1. [Supported by](#supported-by)
 
 ## Problem Statement
 K-12 students in public schools across the United States are not receiving the full benefits of high-dosage tutoring programs due to the lack of standardized tracking and reporting metrics, making it difficult for districts, states, and researchers to measure program effectiveness. Despite over 1.4 billion dollars of ESSER funding being spent on high-dosage tutoring, there is insufficient data to evaluate success or identify areas for improvement. If this problem continues, the potential educational benefits of high-dosage tutoring will not be fully realized, potentially resulting in continued learning loss and widening achievement gaps. Therefore, we need to develop and implement standardized tracking and reporting metrics to evaluate the effectiveness of these programs. To test our hypothesis, we will collaborate with educational researchers, providers, districts, and philanthropies to create adaptable frameworks for tracking and reporting the outcomes of high-dosage tutoring.
+
+## Mission
+Provide an easily adaptable, universally adoptable framework for collecting and sharing tutoring implementation data.
+
+## Audiences
+
+### District- and state-level education agencies
+This standard provides district- and state-level education agencies with a list of variables that provide insight into the tutoring work happening in their agency. 
+
+### Tutoring providers and platforms
+This standard contains exact definitions of each variable required. Additionally, it provides an ![example dataset]() and a ![tool]() for checking compliance with the data standard.
+
+### Third-party evaluators, researchers
+This standard provides variables requisite for rigorous insight into tutoring---be that for academic or accountability purposes. It also provides a ![template IRB application]() as well as ![example IRB applications]() that have been approved.
 
 ## Goals
 1. **Identify impactful metrics:** Determine metrics that are proven indicators of tutoring success and are regularly measured across providers. These metrics are defined in [the dictionaries](./dictionaries/).
