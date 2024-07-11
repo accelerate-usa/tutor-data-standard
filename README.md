@@ -64,6 +64,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Governance
 This is where we will write how we add things once this thing becomes contentious enough that we need a process.
 
+### Proposed: Steering committee + working groups
+
+The steering committee has at least one member from each major group: provider/platform, SEA/LEA, researcher/philanthropy. Then, there are working groups that work broadly to accomplish the goals laid out by the steering committee. This needs to be a light lift, so as much as possible should be wrapped up into regularly scheduled programming through grant activities.
+
+SEA/LEA WG already meets weekly through Harvard SDP
+
+Provider/platform WG can meet through Accelerate's *Community of Practice*
+
+researcher/philanthropy WG can meet through Accelerates *Research Learning Community* (just announced today)
+
 ## Steering Committee
 
 <table id="steeringcommittee">
