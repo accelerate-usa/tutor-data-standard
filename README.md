@@ -4,7 +4,7 @@
 ![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
 ![Version](https://img.shields.io/badge/version-0.0.1-orange.svg)
 
-Welcome to DATAS, or "Data Alignment and Tutoring Assessment Standards"! This coalition of the willing creates, advocates for, and implements an open standard for tutoring data protocols in k12 settings. We work with districts, states, providers, platforms, and philanthropies.
+Welcome to DATAS, or "Data Alignment and Tutoring Assessment Standards"! This coalition of the willing creates, advocates for, and implements an open standard for tutoring data protocols in k12 settings. We work with districts, states, providers, platforms, and philanthropies to set the standard for data interoperability.
 
 ## Table of Contents
 
@@ -21,7 +21,7 @@ Welcome to DATAS, or "Data Alignment and Tutoring Assessment Standards"! This co
 1. [Supported by](#supported-by)
 
 ## Problem Statement
-K-12 students in public schools across the United States are not receiving the full benefits of high-dosage tutoring programs due to the lack of standardized tracking and reporting metrics, making it difficult for districts, states, and researchers to measure program effectiveness. Despite over 1.4 billion dollars of ESSER funding being spent on high-dosage tutoring, there is insufficient data to evaluate success or identify areas for improvement. If this problem continues, the potential educational benefits of high-dosage tutoring will not be fully realized, potentially resulting in continued learning loss and widening achievement gaps. Therefore, we need to develop and implement standardized tracking and reporting metrics to evaluate the effectiveness of these programs. To test our hypothesis, we will collaborate with educational researchers, providers, districts, and philanthropies to create adaptable frameworks for tracking and reporting the outcomes of high-dosage tutoring.
+K-12 students in public schools across the United States are not receiving the full benefits of high-dosage tutoring programs due to the lack of standardized tracking and reporting metrics, making it difficult for districts, states, providers, and researchers to measure program effectiveness. Despite over 1.4 billion dollars of ESSER funding being spent on high-dosage tutoring, there is insufficient data to evaluate success or identify areas for improvement. If this problem continues, the potential educational benefits of high-dosage tutoring will not be fully realized, potentially resulting in continued learning loss and widening achievement gaps. Therefore, we need to develop and implement standardized tracking and reporting metrics to evaluate the effectiveness of these programs. To test our hypothesis, we will collaborate with educational researchers, providers, districts, and philanthropies to create adaptable frameworks for tracking and reporting the outcomes of high-dosage tutoring.
 
 ## Mission
 Provide an easily adaptable, universally adoptable framework for collecting and sharing tutoring implementation data.
