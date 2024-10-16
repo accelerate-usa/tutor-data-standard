@@ -14,12 +14,10 @@ Feel free to read more about us below, or jump straight to the [quick start](#qu
 ## Table of Contents
 
 1. [Mission Statement](#mission-statement)
-1. [Audience](#Audience)
-1. [Resources](#resources)
-1. [Contributions](#contributions)
 1. [Governance](#governance)
 1. [Steering Committee](#steering-committee)
 1. [Quick Start](#quick-start)
+1. [Contributions](#contributions)
 
 ## Mission Statement
 Students in public school systems across the United States deserve the full benefits of high-dosage tutoring programs. Despite over 1.4 billion dollars of ESSER funding being spent on high-dosage tutoring, there is insufficient data to evaluate success or identify areas for improvement. If this problem continues, the potential educational benefits of high-dosage tutoring will not be fully realized, potentially resulting in continued learning loss and widening achievement gaps. 
@@ -27,29 +25,6 @@ Students in public school systems across the United States deserve the full bene
 We have the power to unlock the potential of these programs by standardizing how we measure success. 
 
 To test our hypothesis, we will collaborate with educational researchers, providers, school districts, and philanthropies to create policy-ready frameworks for tracking and reporting the implementation and outcomes of high-dosage tutoring in a uniform way. Imagine a future where every dollar invested in tutoring translates into tangible gains for our students.
-
-## Audiences
-
-### District- and state-level education agencies
-This standard provides district- and state-level education agencies with a list of variables that provide insight into the tutoring work happening in their agency. 
-
-### Tutoring providers and platforms
-This standard contains exact definitions of each variable required. Additionally, it provides an ![example dataset]() and a ![tool]() for checking compliance with the data standard.
-
-### Third-party evaluators, researchers
-This standard provides variables requisite for rigorous insight into tutoring---be that for academic or accountability purposes. It also provides a ![template IRB application]() as well as ![example IRB applications]() that have been approved.
-
-## Resources
-- **Accelerate:** [Accelerate State Field Guide](https://accelerate.us/state-field-guide/)
-- **National Student Support Accelerator (NSSA):** [NSSA Data Collection Tools](https://docs.google.com/spreadsheets/d/1eBZ9rmfAJ_3e46NWLmPUvNxmhFiMc3pS/edit?usp=sharing&ouid=104829921588646286630&rtpof=true&sd=true)
-- **Chicago Ed Labs:** [Chicago Ed Labs Document](https://docs.google.com/document/d/1ji_fwvKKon_abuD3s5Yp-KAJk0d8cU64/edit)
-
----
-
-## Contributions
-We welcome contributions! Feel free to open issues or submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -151,6 +126,15 @@ The working groups are open enrollment meetings that work broadly to accomplish 
 </table>
 <!-- generate from steering_committee.py -->
 
+---
+
 ## Quick Start
+
+---
+
+## Contributions
+We welcome contributions! Feel free to open issues or submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 <!-- 29df1c1e-8fcc-4b30-88df-2365d9d8e9c8 -->
