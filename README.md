@@ -4,27 +4,29 @@
 ![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
 ![Version](https://img.shields.io/badge/version-0.0.1-orange.svg)
 
-Welcome to DATAS, or "Data Alignment and Tutoring Assessment Standards"! This coalition of the willing creates, advocates for, and implements an open standard for tutoring data protocols in k12 settings. We work with districts, states, providers, platforms, and philanthropies to set the standard for data interoperability.
+Welcome to the Data Alignment and Tutoring Assessment Standards (DATAS)! Here's what we do:
+1. We define the technical standard for tutoring data interoperability between schools, districts, providers, and platforms.
+1. We provide an easily adaptable, universally adoptable framework for collecting and sharing tutoring implementation data.
+1. We create tools that build leverage the data standard in practical ways (dashboards, analyses, model regulations, template DSAs).
+
+Feel free to read more about us below, or jump straight to the [quick start](#quick-start)!
 
 ## Table of Contents
 
-1. [Introduction](#DATAS)
-1. [Problem Statement](#problem-statement)
-1. [Mission](#Mission)
+1. [Mission Statement](#mission-statement)
 1. [Audience](#Audience)
-1. [Goals](#goals)
-1. [Process](#process)
 1. [Resources](#resources)
 1. [Contributions](#contributions)
 1. [Governance](#governance)
 1. [Steering Committee](#steering-committee)
-1. [Supported by](#supported-by)
+1. [Quick Start](#quick-start)
 
-## Problem Statement
-K-12 students in public schools across the United States are not receiving the full benefits of high-dosage tutoring programs due to the lack of standardized tracking and reporting metrics, making it difficult for districts, states, providers, and researchers to measure program effectiveness. Despite over 1.4 billion dollars of ESSER funding being spent on high-dosage tutoring, there is insufficient data to evaluate success or identify areas for improvement. If this problem continues, the potential educational benefits of high-dosage tutoring will not be fully realized, potentially resulting in continued learning loss and widening achievement gaps. Therefore, we need to develop and implement standardized tracking and reporting metrics to evaluate the effectiveness of these programs. To test our hypothesis, we will collaborate with educational researchers, providers, districts, and philanthropies to create adaptable frameworks for tracking and reporting the outcomes of high-dosage tutoring.
+## Mission Statement
+Students in public school systems across the United States deserve the full benefits of high-dosage tutoring programs. Despite over 1.4 billion dollars of ESSER funding being spent on high-dosage tutoring, there is insufficient data to evaluate success or identify areas for improvement. If this problem continues, the potential educational benefits of high-dosage tutoring will not be fully realized, potentially resulting in continued learning loss and widening achievement gaps. 
 
-## Mission
-Provide an easily adaptable, universally adoptable framework for collecting and sharing tutoring implementation data.
+We have the power to unlock the potential of these programs by standardizing how we measure success. 
+
+To test our hypothesis, we will collaborate with educational researchers, providers, school districts, and philanthropies to create policy-ready frameworks for tracking and reporting the implementation and outcomes of high-dosage tutoring in a uniform way. Imagine a future where every dollar invested in tutoring translates into tangible gains for our students.
 
 ## Audiences
 
@@ -36,16 +38,6 @@ This standard contains exact definitions of each variable required. Additionally
 
 ### Third-party evaluators, researchers
 This standard provides variables requisite for rigorous insight into tutoring---be that for academic or accountability purposes. It also provides a ![template IRB application]() as well as ![example IRB applications]() that have been approved.
-
-## Goals
-1. **Identify impactful metrics:** Determine metrics that are proven indicators of tutoring success and are regularly measured across providers. These metrics are defined in [the dictionaries](./dictionaries/).
-2. **Standardize communication:** Define a standard way for providers to communicate these metrics, including required vs. optional data points, structure, accepted values, and clear definitions of metric terminology. These metrics are discussed in [an undetermined location]().
-3. **Provide Templates:** Provide highly adaptable frameworks and templates for every aspect of beginning, operating, and assessing tutoring within a district. This includes a template DSA, MOU, IRB Application, and more---all files found in [documentation](./documentation).
-4. **Define Best practices:** Identify best practices around data aggregation and obfuscation.
-
-## Process
-
-<img src="./img/datas_process.png" alt="DATAS Process" title="How data moves through k12 education systems." />
 
 ## Resources
 - **Accelerate:** [Accelerate State Field Guide](https://accelerate.us/state-field-guide/)
@@ -62,118 +54,103 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 ## Governance
-This is where we will write how we add things once this thing becomes contentious enough that we need a process.
 
-### Proposed: Steering committee + working groups
+### Steering committee
 
-The steering committee has at least one member from each major group: provider/platform, SEA/LEA, researcher/philanthropy. Then, there are working groups that work broadly to accomplish the goals laid out by the steering committee. This needs to be a light lift, so as much as possible should be wrapped up into regularly scheduled programming through grant activities.
+The steering commitee is an invitation-only group that meets monthly to direct DATAS. The steering committee has at least one member from each major constituency: provider/platform, SEA/LEA, researcher/philanthropy. Any contributor with an accepted pull request will be invited to the steering committee.
 
-SEA/LEA WG already meets weekly through Harvard SDP
+### Working Groups
 
-Provider/platform WG can meet through Accelerate's *Community of Practice*
-
-researcher/philanthropy WG can meet through Accelerates *Research Learning Community* (just announced today)
+The working groups are open enrollment meetings that work broadly to accomplish the goals laid out by the steering committee. There are three working groups:
+1. Technical: make the data standard *work*
+1. Go-to-market: foments conditions for success after alpha testing concludes
+1. Alpha testing: tests the data standard in a real environment
 
 ## Steering Committee
-
-<table id="steeringcommittee">
+<!-- generate from steering_committee.py -->
+<table>
+    <thead>
+        <tr>
+            <th>Steering Committee Members</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
     <tbody>
         <tr>
-            <th colspan="3" align="middle" valign="middle">Steering Committee Members</th>
-        </tr>
-        <tr>
-            <td align="middle" valign="middle">
-                <img src="img/jgodfrey.jpg" width="100"/>
-                <br/>
-                <b>Jason Godfrey</b>
-                <br/>
-                <i>Accelerate</i>
+            <td align="center">
+                <img src="img/brittatremblay.jpg" alt="Britta Tremblay" width="100"/><br>
+                <strong>Britta Tremblay</strong><br>
+                VP of Product<br>
+                <span><em>Littera</em></span>
             </td>
-            <td align="middle" valign="middle">
-                <img src="img/member2.jpg" width="100"/>
-                <br/>
-                <b>Amy Counts</b>
-                <br/>
-                <i>AR DoE</i>
+            <td align="center">
+                <img src="img/jenniferbronson.jpg" alt="Jennifer Bronson" width="100"/><br>
+                <strong>Jennifer Bronson</strong><br>
+                Managing Director of Programs<br>
+                <span><em>Accelerate</em></span>
             </td>
-            <td align="middle" valign="middle">
-                <img src="img/member3.jpg" width="100"/>
-                <br/>
-                <b>Nicole Carmichael</b>
-                <br/>
-                <i>DE DoE</i>
+            <td align="center">
+                <img src="img/jasongodfrey.jpg" alt="Jason Godfrey" width="100"/><br>
+                <strong>Jason Godfrey</strong><br>
+                Director of Data Science<br>
+                <span><em>Accelerate</em></span>
             </td>
         </tr>
-        <tr></tr> <!-- empty line to avoid table zebra striping -->
         <tr>
-            <td align="middle" valign="middle">
-                <img src="img/member4.jpg" width="100"/>
-                <br/>
-                <b>Spencer Ellis</b>
-                <br/>
-                <i>CO DoE</i>
+            <td align="center">
+                <img src="img/dr.brentraby.jpg" alt="Dr. Brent Raby" width="100"/><br>
+                <strong>Dr. Brent Raby</strong><br>
+                Associate Superintendent<br>
+                <span><em>West Aurora SD 129</em></span>
             </td>
-            <td align="middle" valign="middle">
-                <img src="img/member5.jpg" width="100"/>
-                <br/>
-                <b>Sherine Tambyraja</b>
-                <br/>
-                <i>OH DoE</i>
+            <td align="center">
+                <img src="img/johnfailla.jpg" alt="John Failla" width="100"/><br>
+                <strong>John Failla</strong><br>
+                CEO & Founder<br>
+                <span><em>Pearl</em></span>
             </td>
-            <td align="middle" valign="middle">
-                <img src="img/member6.jpg" width="100"/>
-                <br/>
-                <b>Britta Tremblay</b>
-                <br/>
-                <i>Littera</i>
+            <td align="center">
+                <img src="img/justinserrano.jpg" alt="Justin Serrano" width="100"/><br>
+                <strong>Justin Serrano</strong><br>
+                CEO<br>
+                <span><em>Littera</em></span>
             </td>
         </tr>
-        <tr></tr> <!-- empty line to avoid table zebra striping -->
         <tr>
-            <td align="middle" valign="middle">
-                <img src="img/member7.jpg" width="100"/>
-                <br/>
-                <b>Zhanying Zong</b>
-                <br/>
-                <i>LA DoE</i>
+            <td align="center">
+                <img src="img/natecasey.jpg" alt="Nate Casey" width="100"/><br>
+                <strong>Nate Casey</strong><br>
+                Chief Strategy Officer<br>
+                <span><em>Pearl</em></span>
             </td>
-            <td align="middle" valign="middle">
-                <img src="img/member8.jpg" width="100"/>
-                <br/>
-                <b>Jake Ramsey</b>
-                <br/>
-                <i>Littera</i>
+            <td align="center">
+                <img src="img/nicolecarmichael.jpg" alt="Nicole Carmichael" width="100"/><br>
+                <strong>Nicole Carmichael</strong><br>
+                Integrated Data System Manager<br>
+                <span><em>Delaware DoE</em></span>
             </td>
+            <td align="center">
+                <img src="img/spencerellis.jpg" alt="Spencer Ellis" width="100"/><br>
+                <strong>Spencer Ellis</strong><br>
+                Grant Program Manager<br>
+                <span><em>CO DoE</em></span>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <img src="img/zhanyingzong.jpg" alt="Zhanying Zong" width="100"/><br>
+                <strong>Zhanying Zong</strong><br>
+                Director, Assessment & Accountability<br>
+                <span><em>LA DoE</em></span>
+            </td>
+            <td></td>
+            <td></td>
         </tr>
     </tbody>
 </table>
+<!-- generate from steering_committee.py -->
 
-
-## Supported by
-
-<table id="verticalalign">
-    <tbody>
-        <tr>
-            <th colspan="7" align="middle" valign="middle">District/State Support</th>
-        </tr>
-        <tr>
-            <td align="middle" valign="middle"><img src="img/ardoe.png" width="100"/></td>
-            <td align="middle" valign="middle"><img src="img/cdoe.png" width="100"/></td>
-            <td align="middle" valign="middle"><img src="img/ddoe.png" width="100"/></td>
-            <td align="middle" valign="middle"><img src="img/ladoe.png" width="100"/></td>
-            <td align="middle" valign="middle"><img src="img/odoew.png" width="100"/></td>
-        </tr>
-        <tr></tr> <!-- empty line to avoid table zebra striping -->
-        <tr>
-            <th colspan="7" align="middle" valign="middle">Provider Support</th>
-        </tr>
-        <tr>
-            <td align="middle" valign="middle"><img src="img/Littera.png" width="180"/></td>
-        </tr>
-        <tr></tr> <!-- empty line to avoid table zebra striping -->
-    </tbody>
-</table>
-
-
+## Quick Start
 
 <!-- 29df1c1e-8fcc-4b30-88df-2365d9d8e9c8 -->
