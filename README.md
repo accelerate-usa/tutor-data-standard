@@ -7,7 +7,7 @@
 Welcome to the Data Alignment and Tutoring Assessment Standards (DATAS)! Here's what we do:
 1. We define the technical standard for tutoring data interoperability between schools, districts, providers, and platforms.
 1. We provide an easily adaptable, universally adoptable framework for collecting and sharing tutoring implementation data.
-1. We create tools that build leverage the data standard in practical ways (dashboards, analyses, model regulations, template DSAs).
+1. We create tools that  leverage the data standard in practical ways (dashboards, analyses, model regulations, template DSAs).
 
 Feel free to read more about us below, or jump straight to the [quick start](#quick-start)!
 
@@ -36,7 +36,7 @@ The steering commitee is an invitation-only group that meets monthly to direct D
 
 ### Working Groups
 
-The working groups are open enrollment meetings that work broadly to accomplish the goals laid out by the steering committee. There are three working groups:
+The working groups are open enrollment meetings that work broadly to accomplish the goals laid out by the steering committee. The number of groups and their goals will shift over time. Currently, there are three working groups:
 1. Technical: make the data standard *work*
 1. Go-to-market: foments conditions for success after alpha testing concludes
 1. Alpha testing: tests the data standard in a real environment
