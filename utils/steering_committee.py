@@ -1,3 +1,4 @@
+#%%
 import gspread
 import pandas as pd
 
@@ -58,3 +59,4 @@ def generate_html_table(df):
 
 html_table = generate_html_table(ordered_members)
 print(html_table)
+# %%

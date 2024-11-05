@@ -41,6 +41,7 @@ The working groups are open enrollment meetings that work broadly to accomplish 
 1. Go-to-market: foments conditions for success after alpha testing concludes
 1. Alpha testing: tests the data standard in a real environment
 
+---
 ## Steering Committee
 <!-- generate from steering_committee.py -->
 <table>
@@ -56,75 +57,88 @@ The working groups are open enrollment meetings that work broadly to accomplish 
             <td align="center">
                 <img src="img/brittatremblay.jpg" alt="Britta Tremblay" width="100"/><br>
                 <strong>Britta Tremblay</strong><br>
-                VP of Product<br>
-                <span><em>Littera</em></span>
+                <em>VP of Product</em><br>
+                <span>Littera</span>
             </td>
             <td align="center">
                 <img src="img/jenniferbronson.jpg" alt="Jennifer Bronson" width="100"/><br>
                 <strong>Jennifer Bronson</strong><br>
-                Managing Director of Programs<br>
-                <span><em>Accelerate</em></span>
+                <em>Managing Director of Programs</em><br>
+                <span>Accelerate</span>
             </td>
             <td align="center">
                 <img src="img/jasongodfrey.jpg" alt="Jason Godfrey" width="100"/><br>
                 <strong>Jason Godfrey</strong><br>
-                Director of Data Science<br>
-                <span><em>Accelerate</em></span>
+                <em>Director of Data Science</em><br>
+                <span>Accelerate</span>
             </td>
         </tr>
         <tr>
             <td align="center">
                 <img src="img/dr.brentraby.jpg" alt="Dr. Brent Raby" width="100"/><br>
                 <strong>Dr. Brent Raby</strong><br>
-                Associate Superintendent<br>
-                <span><em>West Aurora SD 129</em></span>
+                <em>Associate Superintendent</em><br>
+                <span>West Aurora SD 129</span>
+            </td>
+            <td align="center">
+                <img src="img/fatemehmomeni.jpg" alt="Fatemeh Momeni" width="100"/><br>
+                <strong>Fatemeh Momeni</strong><br>
+                <em>Research Director</em><br>
+                <span>University of Chicago Education Lab</span>
             </td>
             <td align="center">
                 <img src="img/johnfailla.jpg" alt="John Failla" width="100"/><br>
                 <strong>John Failla</strong><br>
-                CEO & Founder<br>
-                <span><em>Pearl</em></span>
-            </td>
-            <td align="center">
-                <img src="img/justinserrano.jpg" alt="Justin Serrano" width="100"/><br>
-                <strong>Justin Serrano</strong><br>
-                CEO<br>
-                <span><em>Littera</em></span>
+                <em>CEO & Founder</em><br>
+                <span>Pearl</span>
             </td>
         </tr>
         <tr>
             <td align="center">
+                <img src="img/justinserrano.jpg" alt="Justin Serrano" width="100"/><br>
+                <strong>Justin Serrano</strong><br>
+                <em>CEO</em><br>
+                <span>Littera</span>
+            </td>
+            <td align="center">
                 <img src="img/natecasey.jpg" alt="Nate Casey" width="100"/><br>
                 <strong>Nate Casey</strong><br>
-                Chief Strategy Officer<br>
-                <span><em>Pearl</em></span>
+                <em>Chief Strategy Officer</em><br>
+                <span>Pearl</span>
             </td>
             <td align="center">
                 <img src="img/nicolecarmichael.jpg" alt="Nicole Carmichael" width="100"/><br>
                 <strong>Nicole Carmichael</strong><br>
-                Integrated Data System Manager<br>
-                <span><em>Delaware DoE</em></span>
-            </td>
-            <td align="center">
-                <img src="img/spencerellis.jpg" alt="Spencer Ellis" width="100"/><br>
-                <strong>Spencer Ellis</strong><br>
-                Grant Program Manager<br>
-                <span><em>CO DoE</em></span>
+                <em>Integrated Data System Manager</em><br>
+                <span>Delaware DoE</span>
             </td>
         </tr>
         <tr>
             <td align="center">
+                <img src="img/shaniyoung.jpg" alt="Shani Young" width="100"/><br>
+                <strong>Shani Young</strong><br>
+                <em>Director of Learning</em><br>
+                <span>North Carolina Education Corps</span>
+            </td>
+            <td align="center">
+                <img src="img/spencerellis.jpg" alt="Spencer Ellis" width="100"/><br>
+                <strong>Spencer Ellis</strong><br>
+                <em>Grant Program Manager</em><br>
+                <span>CO DoE</span>
+            </td>
+            <td align="center">
                 <img src="img/zhanyingzong.jpg" alt="Zhanying Zong" width="100"/><br>
                 <strong>Zhanying Zong</strong><br>
-                Director, Assessment & Accountability<br>
-                <span><em>LA DoE</em></span>
+                <em>Director, Assessment & Accountability</em><br>
+                <span>LA DoE</span>
             </td>
-            <td></td>
-            <td></td>
         </tr>
     </tbody>
 </table>
 <!-- generate from steering_committee.py -->
+
+---
+## Documentation
 
 ---
 
