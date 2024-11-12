@@ -2,235 +2,600 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Tutoring Data Validator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Include Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
+        /* Reset CSS */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body Styling */
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #f4f4f9;
-            color: #333;
-        }
-        .container {
-            text-align: center;
-            background: #fff;
+            align-items: flex-start;
             padding: 2em;
+            min-height: 100vh;
+        }
+
+        /* Container Styling */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-        h1 {
+
+        /* Header Styling */
+        header {
+            background-color: #4a90e2;
+            padding: 1.5em;
+            text-align: center;
+            color: #fff;
+        }
+
+        header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            background-color: #f8f8f8;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 1em;
+            cursor: pointer;
+            font-weight: 500;
+            color: #555;
+            border-bottom: 2px solid transparent;
+            transition: background-color 0.3s;
+        }
+
+        .tab:hover {
+            background-color: #e0e0e0;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid #4a90e2;
+            color: #4a90e2;
+        }
+
+        /* Content Areas */
+        .tab-content {
+            display: none;
+            padding: 2em;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* File Input Styling */
+        .file-upload {
+            border: 2px dashed #ccc;
+            border-radius: 6px;
+            padding: 2em;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
             margin-bottom: 1em;
-            font-weight: 600;
         }
-        input[type="file"] {
-            margin-bottom: 1em;
+
+        .file-upload.dragover {
+            border-color: #4a90e2;
         }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload p {
+            margin-top: 1em;
+            color: #888;
+        }
+
+        /* Buttons */
         button {
-            background: #007bff;
+            background-color: #4a90e2;
             color: #fff;
             border: none;
             padding: 0.75em 1.5em;
             border-radius: 4px;
             cursor: pointer;
             font-size: 1em;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            margin-top: 1em;
         }
+
         button:hover {
-            background: #0056b3;
+            background-color: #357abd;
         }
-        pre {
-            text-align: left;
-            background: #f4f4f9;
-            padding: 1em;
-            border-radius: 4px;
-            margin-top: 1em;
-            overflow-x: auto;
-        }
-        .note {
-            margin-top: 1em;
-            font-size: 0.9em;
-            color: #666;
-        }
-        #progress {
+
+        /* Progress Bar */
+        .progress {
             width: 100%;
-            background-color: #ddd;
+            background-color: #e0e0e0;
             border-radius: 5px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 1em 0;
             height: 20px;
+            position: relative;
         }
-        #progress-bar {
+
+        .progress-bar {
             height: 100%;
             width: 0;
-            background-color: #007bff;
+            background-color: #4a90e2;
             transition: width 0.3s;
+            position: relative;
         }
-        .example {
-            margin-top: 2em;
+
+        .progress-bar span {
+            position: absolute;
+            right: 10px;
+            color: #fff;
+            font-size: 0.9em;
         }
-        .example table {
+
+        /* Output Styling */
+        .output {
+            background-color: #f9f9f9;
+            padding: 1em;
+            border-radius: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1em;
+        }
+
+        .output h2 {
+            margin-bottom: 0.5em;
+        }
+
+        .output ul {
+            list-style: disc;
+            padding-left: 1.5em;
+        }
+
+        /* Success and Error Messages */
+        .success {
+            color: #2e7d32;
+        }
+
+        .error {
+            color: #c62828;
+        }
+
+        /* Modal Dialogs */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-collapse: collapse;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
-        .example th, .example td {
-            padding: 0.5em;
-            border: 1px solid #ccc;
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1em;
+        }
+
+        .modal-content button {
+            margin-top: 1em;
+        }
+
+        /* Accessibility Focus Styles */
+        .tab:focus,
+        button:focus {
+            outline: 2px solid #4a90e2;
+            outline-offset: 2px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .tab {
+                font-size: 0.9em;
+                padding: 0.75em;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
+    <!-- Include XLSX library for processing Excel files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
+
     <div class="container">
-        <h1>Student Tutoring Data Validator</h1>
-        <input type="file" id="fileInput" accept=".csv, .xlsx, .json">
-        <button id="validateButton" onclick="validateFile()">Validate</button>
-        <div id="progress">
-            <div id="progress-bar"></div>
+        <header>
+            <h1><i class="fas fa-file-alt"></i> Student Tutoring Data Validator</h1>
+        </header>
+        <div class="tabs">
+            <div class="tab active" tabindex="0" onclick="showTab('school')">School Data</div>
+            <div class="tab" tabindex="0" onclick="showTab('provider')">Provider Data</div>
         </div>
-        <pre id="output"></pre>
-        <div class="note">
-            Note: This tool runs entirely locally. Your data never leaves your machine.
-        </div>
-        <div class="example">
-            <h2>Example Data</h2>
-            <div style="overflow-x:auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>student id</th>
-                            <th>dosage %</th>
-                            <th>pre-test</th>
-                            <th>post-test</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>123456</td>
-                            <td>0.85</td>
-                            <td>78</td>
-                            <td>88</td>
-                        </tr>
-                        <tr>
-                            <td>234567</td>
-                            <td>0.92</td>
-                            <td>65</td>
-                            <td>72</td>
-                        </tr>
-                        <tr>
-                            <td>345678</td>
-                            <td>0.75</td>
-                            <td>80</td>
-                            <td>85</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div id="school" class="tab-content active">
+            <h2>Validate School Data</h2>
+            <div class="file-upload" id="fileUploadSchool" onclick="document.getElementById('fileInputSchool').click();" ondragover="handleDragOver(event, 'School');" ondragleave="handleDragLeave(event, 'School');" ondrop="handleFileDrop(event, 'School');">
+                <input type="file" id="fileInputSchool" accept=".csv, .xlsx, .json" onchange="handleFileSelect(event, 'School');">
+                <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                <p>Click or drag and drop a file here to upload</p>
             </div>
+            <button onclick="validateFile('school')">Validate</button>
+            <div class="progress" id="progressSchool">
+                <div class="progress-bar" id="progress-barSchool"><span id="progressTextSchool"></span></div>
+            </div>
+            <div class="output" id="outputSchool"></div>
+        </div>
+        <div id="provider" class="tab-content">
+            <h2>Validate Provider Data</h2>
+            <div class="file-upload" id="fileUploadProvider" onclick="document.getElementById('fileInputProvider').click();" ondragover="handleDragOver(event, 'Provider');" ondragleave="handleDragLeave(event, 'Provider');" ondrop="handleFileDrop(event, 'Provider');">
+                <input type="file" id="fileInputProvider" accept=".csv, .xlsx, .json" onchange="handleFileSelect(event, 'Provider');">
+                <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                <p>Click or drag and drop a file here to upload</p>
+            </div>
+            <button onclick="validateFile('provider')">Validate</button>
+            <div class="progress" id="progressProvider">
+                <div class="progress-bar" id="progress-barProvider"><span id="progressTextProvider"></span></div>
+            </div>
+            <div class="output" id="outputProvider"></div>
+        </div>
+        <div class="note">
+            <p><i class="fas fa-info-circle"></i> Note: This tool runs entirely locally in your browser. Your data never leaves your machine.</p>
+        </div>
+    </div>
+
+    <!-- Modal for Error Messages -->
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modalContent">
+            <h2 id="modalTitle"></h2>
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()">Close</button>
         </div>
     </div>
 
     <script>
-        function updateProgressBar(percent) {
-            document.getElementById('progress-bar').style.width = percent + '%';
+        // Variables to store selected files
+        let selectedFileSchool = null;
+        let selectedFileProvider = null;
+
+        // Function to switch tabs
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(function(content) {
+                content.classList.remove('active');
+            });
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add('active');
+            // Add active class to the selected tab
+            event.target.classList.add('active');
         }
 
-        function validateFile() {
-            const fileInput = document.getElementById('fileInput');
+        // Handle file selection
+        function handleFileSelect(event, type) {
+            const fileInput = event.target;
             const file = fileInput.files[0];
-            if (!file) {
-                alert("Please select a file first");
+            if (type === 'School') {
+                selectedFileSchool = file;
+            } else {
+                selectedFileProvider = file;
+            }
+            // Update UI
+            const fileUpload = document.getElementById('fileUpload' + type);
+            fileUpload.querySelector('p').textContent = 'File selected: ' + file.name;
+        }
+
+        // Handle drag over
+        function handleDragOver(event, type) {
+            event.preventDefault();
+            const fileUpload = document.getElementById('fileUpload' + type);
+            fileUpload.classList.add('dragover');
+        }
+
+        // Handle drag leave
+        function handleDragLeave(event, type) {
+            event.preventDefault();
+            const fileUpload = document.getElementById('fileUpload' + type);
+            fileUpload.classList.remove('dragover');
+        }
+
+        // Handle file drop
+        function handleFileDrop(event, type) {
+            event.preventDefault();
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                if (type === 'School') {
+                    selectedFileSchool = files[0];
+                    document.getElementById('fileInputSchool').files = files;
+                } else {
+                    selectedFileProvider = files[0];
+                    document.getElementById('fileInputProvider').files = files;
+                }
+                // Update UI
+                const fileUpload = document.getElementById('fileUpload' + type);
+                fileUpload.querySelector('p').textContent = 'File selected: ' + files[0].name;
+                fileUpload.classList.remove('dragover');
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar(percent, type) {
+            const progressBar = document.getElementById('progress-bar' + type);
+            const progressText = document.getElementById('progressText' + type);
+            progressBar.style.width = percent + '%';
+            progressText.textContent = percent + '%';
+        }
+
+        // Show modal dialog
+        function showModal(title, message) {
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modal.classList.add('active');
+        }
+
+        // Close modal dialog
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+        }
+
+        // Validate file
+        function validateFile(type) {
+            const selectedFile = type === 'school' ? selectedFileSchool : selectedFileProvider;
+            const resultDiv = document.getElementById('output' + (type === 'school' ? 'School' : 'Provider'));
+            resultDiv.innerHTML = ''; // Clear previous output
+
+            if (!selectedFile) {
+                showModal('No File Selected', 'Please select a file to validate.');
                 return;
             }
+
+            const fileType = selectedFile.name.split('.').pop().toLowerCase();
 
             const reader = new FileReader();
             reader.onprogress = function(e) {
                 if (e.lengthComputable) {
                     const percentLoaded = Math.round((e.loaded / e.total) * 100);
-                    updateProgressBar(percentLoaded);
+                    updateProgressBar(percentLoaded, type === 'school' ? 'School' : 'Provider');
                 }
             };
             reader.onload = function(e) {
                 const data = e.target.result;
-                const fileType = file.name.split('.').pop();
                 if (fileType === 'csv') {
-                    processCSV(data);
+                    processCSV(data, type);
                 } else if (fileType === 'xlsx') {
-                    processXLSX(data);
+                    processXLSX(data, type);
                 } else if (fileType === 'json') {
-                    processJSON(data);
+                    processJSON(data, type);
                 } else {
-                    alert("Unsupported file type");
+                    showModal('Unsupported File Type', 'Please upload a CSV, XLSX, or JSON file.');
                 }
             };
             reader.onloadend = function() {
-                updateProgressBar(100);
+                updateProgressBar(100, type === 'school' ? 'School' : 'Provider');
             };
 
-            if (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
-                reader.readAsArrayBuffer(file);
+            if (fileType === "xlsx") {
+                reader.readAsArrayBuffer(selectedFile);
             } else {
-                reader.readAsText(file);
+                reader.readAsText(selectedFile);
             }
         }
 
-        function processCSV(data) {
+        function processCSV(data, type) {
             const rows = data.split('\n').map(row => row.split(',').map(cell => cell.trim()));
-            validateData(rows);
+            validateData(rows, type);
         }
 
-        function processXLSX(data) {
+        function processXLSX(data, type) {
             const workbook = XLSX.read(data, { type: 'array' });
             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
             const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 }).map(row => row.map(cell => (typeof cell === 'string') ? cell.trim() : cell));
-            validateData(rows);
+            validateData(rows, type);
         }
 
-        function processJSON(data) {
+        function processJSON(data, type) {
             const jsonData = JSON.parse(data);
-            const rows = jsonData.map(Object.values);
-            validateData(rows);
+            const headers = Object.keys(jsonData[0]);
+            const rows = [headers].concat(jsonData.map(obj => headers.map(header => obj[header])));
+            validateData(rows, type);
         }
 
-        function validateData(rows) {
-            const resultDiv = document.getElementById('output');
+        function validateData(rows, type) {
+            const resultDiv = document.getElementById('output' + (type === 'school' ? 'School' : 'Provider'));
             let errors = [];
 
-            // Validate headers
-            const headers = rows[0].map(header => header.toLowerCase());
-            const expectedHeaders = ["student-id", "dosage", "pre-test", "post-test"];
-            if (JSON.stringify(headers) !== JSON.stringify(expectedHeaders)) {
-                resultDiv.innerHTML = `<h2>Invalid Headers</h2><p>Expected headers: ${expectedHeaders.join(", ")}</p>`;
+            if (rows.length <= 1) {
+                resultDiv.innerHTML = '<p class="error">The file appears to be empty or only contains headers.</p>';
                 return;
             }
 
-            rows.slice(1).forEach((row, index) => {
-                const [studentId, dosage, preTest, postTest] = row;
-                const studentIdInt = parseInt(studentId, 10);
-                const dosageFloat = parseFloat(dosage);
-                const preTestInt = parseInt(preTest, 10);
-                const postTestInt = parseInt(postTest, 10);
+            if (type === 'school') {
+                // Expected headers for school data
+                const expectedHeaders = [
+                    "student_ID", "DISTRICTID", "DISTRICTNAME", "SCHOOLID", "SCHOOLNAME", "GRADELVL", "GENDER",
+                    "ethnic", "ELL", "IEP", "FRLP", "GIFTED", "HOMELESS", "2-year ELA score", "PRIOR YEAR ELA SCORE",
+                    "CURRENT YEAR ELA SCORE", "MATH", "SCIENCE", "PRIOR YEAR PERFORMANCE LEVEL",
+                    "CURRENT YEAR PERFORMANCE LEVEL", "Tutor eligible", "economic disadvantage", "disability"
+                ];
 
-                if (!/^\d{6}$/.test(studentId)) {
-                    errors.push(`Row ${index + 2}: Invalid Student ID "${studentId}"`);
+                // Normalize headers from the file
+                const headers = rows[0].map(header => header.trim());
+                const headerSet = new Set(headers);
+
+                // Check for missing headers
+                const missingHeaders = expectedHeaders.filter(h => !headerSet.has(h));
+                if (missingHeaders.length > 0) {
+                    resultDiv.innerHTML = `<h2 class="error">Invalid Headers</h2><p>The following headers are missing or misspelled:</p><ul>` + missingHeaders.map(h => `<li>${h}</li>`).join('') + `</ul>`;
+                    return;
                 }
-                if (!(dosageFloat >= 0 && dosageFloat <= 1)) {
-                    errors.push(`Row ${index + 2}: Invalid Dosage % "${dosage}"`);
+
+                // Validate each row
+                rows.slice(1).forEach((row, index) => {
+                    const rowData = {};
+                    headers.forEach((header, idx) => {
+                        rowData[header] = row[idx];
+                    });
+
+                    // Validation rules for school data
+                    // student_ID should be a string of digits
+                    if (!/^\d+$/.test(rowData["student_ID"])) {
+                        errors.push(`Row ${index + 2}: Invalid student_ID "${rowData["student_ID"]}"`);
+                    }
+
+                    // DISTRICTID and SCHOOLID should be numbers
+                    ["DISTRICTID", "SCHOOLID"].forEach(field => {
+                        if (isNaN(rowData[field])) {
+                            errors.push(`Row ${index + 2}: Invalid ${field} "${rowData[field]}"`);
+                        }
+                    });
+
+                    // GRADELVL should be a number between 1 and 12
+                    const gradeLevel = parseInt(rowData["GRADELVL"], 10);
+                    if (isNaN(gradeLevel) || gradeLevel < 1 || gradeLevel > 12) {
+                        errors.push(`Row ${index + 2}: Invalid GRADELVL "${rowData["GRADELVL"]}"`);
+                    }
+
+                    // GENDER should be 'M' or 'F'
+                    if (!["M", "F"].includes(rowData["GENDER"])) {
+                        errors.push(`Row ${index + 2}: Invalid GENDER "${rowData["GENDER"]}"`);
+                    }
+
+                    // ELL, IEP, FRLP, GIFTED, HOMELESS, Tutor eligible, economic disadvantage, disability should be 'Yes' or 'No'
+                    ["ELL", "IEP", "FRLP", "GIFTED", "HOMELESS", "Tutor eligible", "economic disadvantage", "disability"].forEach(field => {
+                        if (!["Yes", "No"].includes(rowData[field])) {
+                            errors.push(`Row ${index + 2}: Invalid ${field} "${rowData[field]}"`);
+                        }
+                    });
+
+                    // Scores should be numbers between 0 and 100
+                    ["2-year ELA score", "PRIOR YEAR ELA SCORE", "CURRENT YEAR ELA SCORE", "MATH", "SCIENCE"].forEach(field => {
+                        const score = parseFloat(rowData[field]);
+                        if (isNaN(score) || score < 0 || score > 100) {
+                            errors.push(`Row ${index + 2}: Invalid ${field} "${rowData[field]}"`);
+                        }
+                    });
+
+                    // PRIOR YEAR PERFORMANCE LEVEL and CURRENT YEAR PERFORMANCE LEVEL should be one of predefined levels
+                    const performanceLevels = ["Below Basic", "Basic", "Proficient", "Advanced"];
+                    ["PRIOR YEAR PERFORMANCE LEVEL", "CURRENT YEAR PERFORMANCE LEVEL"].forEach(field => {
+                        if (!performanceLevels.includes(rowData[field])) {
+                            errors.push(`Row ${index + 2}: Invalid ${field} "${rowData[field]}"`);
+                        }
+                    });
+                });
+            } else if (type === 'provider') {
+                // Expected headers for provider data
+                const expectedHeaders = ["student_id", "session_topic", "session_date", "session_duration", "tutor_id"];
+
+                // Normalize headers from the file
+                const headers = rows[0].map(header => header.trim());
+                const headerSet = new Set(headers);
+
+                // Check for missing headers
+                const missingHeaders = expectedHeaders.filter(h => !headerSet.has(h));
+                if (missingHeaders.length > 0) {
+                    resultDiv.innerHTML = `<h2 class="error">Invalid Headers</h2><p>The following headers are missing or misspelled:</p><ul>` + missingHeaders.map(h => `<li>${h}</li>`).join('') + `</ul>`;
+                    return;
                 }
-                if (!(Number.isInteger(preTestInt) && preTestInt >= 0 && preTestInt <= 100)) {
-                    errors.push(`Row ${index + 2}: Invalid Pre-Test Score "${preTest}"`);
-                }
-                if (!(Number.isInteger(postTestInt) && postTestInt >= 0 && postTestInt <= 100)) {
-                    errors.push(`Row ${index + 2}: Invalid Post-Test Score "${postTest}"`);
-                }
-            });
+
+                // Validate each row
+                rows.slice(1).forEach((row, index) => {
+                    const rowData = {};
+                    headers.forEach((header, idx) => {
+                        rowData[header] = row[idx];
+                    });
+
+                    // Validation rules for provider data
+
+                    // student_id should be a string of digits
+                    if (!/^\d+$/.test(rowData["student_id"])) {
+                        errors.push(`Row ${index + 2}: Invalid student_id "${rowData["student_id"]}"`);
+                    }
+
+                    // session_topic should be 'math' or 'ela'
+                    if (!["math", "ela"].includes(rowData["session_topic"].toLowerCase())) {
+                        errors.push(`Row ${index + 2}: Invalid session_topic "${rowData["session_topic"]}"`);
+                    }
+
+                    // session_date should be in YYYY-MM-DD format
+                    if (!/^\d{4}-\d{2}-\d{2}$/.test(rowData["session_date"])) {
+                        errors.push(`Row ${index + 2}: Invalid session_date "${rowData["session_date"]}"`);
+                    } else {
+                        const dateParts = rowData["session_date"].split('-');
+                        const year = parseInt(dateParts[0], 10);
+                        const month = parseInt(dateParts[1], 10);
+                        const day = parseInt(dateParts[2], 10);
+                        const date = new Date(year, month - 1, day);
+                        if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+                            errors.push(`Row ${index + 2}: Invalid session_date "${rowData["session_date"]}"`);
+                        }
+                    }
+
+                    // session_duration should be a positive number (minutes)
+                    const duration = parseFloat(rowData["session_duration"]);
+                    if (isNaN(duration) || duration <= 0) {
+                        errors.push(`Row ${index + 2}: Invalid session_duration "${rowData["session_duration"]}"`);
+                    }
+
+                    // tutor_id should be a non-empty string
+                    if (typeof rowData["tutor_id"] !== 'string' || rowData["tutor_id"].trim() === '') {
+                        errors.push(`Row ${index + 2}: Invalid tutor_id "${rowData["tutor_id"]}"`);
+                    }
+                });
+            }
 
             if (errors.length > 0) {
-                resultDiv.innerHTML = '<h2>Errors Found:</h2><ul>' + errors.map(error => `<li>${error}</li>`).join('') + '</ul>';
+                resultDiv.innerHTML = '<h2 class="error">Errors Found:</h2><ul>' + errors.map(error => `<li>${error}</li>`).join('') + '</ul>';
             } else {
-                const base64String = "STR";
-                resultDiv.innerHTML = `<h2 class="success">Congratulations! Your data are valid. You may now display this image on your website: </h2><img src="${base64String}" alt="Success">`;
+                resultDiv.innerHTML = `<h2 class="success"><i class="fas fa-check-circle"></i> Congratulations! Your data are valid.</h2>`;
             }
         }
     </script>
