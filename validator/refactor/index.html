@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Tutoring Data Validator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Include Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Include XLSX library for processing Excel files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-alt"></i> Student Tutoring Data Validator</h1>
+        </header>
+        <div class="tabs">
+            <div class="tab active" tabindex="0" onclick="showTab('school')">School Data</div>
+            <div class="tab" tabindex="0" onclick="showTab('provider')">Provider Data</div>
+        </div>
+        <div id="school" class="tab-content active">
+            <h2>Validate School Data</h2>
+            <div class="file-upload" id="fileUploadSchool" onclick="document.getElementById('fileInputSchool').click();" ondragover="handleDragOver(event, 'School');" ondragleave="handleDragLeave(event, 'School');" ondrop="handleFileDrop(event, 'School');">
+                <input type="file" id="fileInputSchool" accept=".csv, .xlsx, .json" onchange="handleFileSelect(event, 'School');">
+                <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                <p>Click or drag and drop a file here to upload</p>
+            </div>
+            <button onclick="validateFile('school')">Validate</button>
+            <div class="progress" id="progressSchool">
+                <div class="progress-bar" id="progress-barSchool"><span id="progressTextSchool"></span></div>
+            </div>
+            <div class="output" id="outputSchool"></div>
+            <!-- Summary Output -->
+            <div class="summary" id="summarySchool"></div>
+        </div>
+        <div id="provider" class="tab-content">
+            <h2>Validate Provider Data</h2>
+            <div class="file-upload" id="fileUploadProvider" onclick="document.getElementById('fileInputProvider').click();" ondragover="handleDragOver(event, 'Provider');" ondragleave="handleDragLeave(event, 'Provider');" ondrop="handleFileDrop(event, 'Provider');">
+                <input type="file" id="fileInputProvider" accept=".csv, .xlsx, .json" onchange="handleFileSelect(event, 'Provider');">
+                <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                <p>Click or drag and drop a file here to upload</p>
+            </div>
+            <button onclick="validateFile('provider')">Validate</button>
+            <div class="progress" id="progressProvider">
+                <div class="progress-bar" id="progress-barProvider"><span id="progressTextProvider"></span></div>
+            </div>
+            <div class="output" id="outputProvider"></div>
+            <!-- Summary Output -->
+            <div class="summary" id="summaryProvider"></div>
+        </div>
+        <div class="note">
+            <p><i class="fas fa-info-circle"></i> Note: This tool runs entirely locally in your browser. Your data never leaves your machine.</p>
+        </div>
+    </div>
+
+    <!-- Modal for Error Messages -->
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modalContent">
+            <h2 id="modalTitle"></h2>
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Include external JavaScript files -->
+    <script src="main.js"></script>
+    <script src="tools.js"></script>
+    <script src="validators.js"></script>
+    <script src="fileHandlers.js"></script>
+    <script src="schoolValidator.js"></script>
+    <script src="providerValidator.js"></script>
+    <script src="summaryGenerator.js"></script>
+</body>
+</html>

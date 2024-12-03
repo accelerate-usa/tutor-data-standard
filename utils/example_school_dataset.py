@@ -54,7 +54,8 @@ def generate_csv(n, filename):
                     break
 
             # Generate district_id (7-digit integer as a string)
-            district_id = ''.join(random.choices(string.digits, k=7))
+            leaids = [ '0100001', '0200001', '0400001', '0500001', '0600001', '0800001', '0900001', '1000001', '1100001', '1200001',]
+            district_id = random.choice(leaids)
             district_name = random.choice(district_names)
 
             # Generate school_id (6-digit integer as a string)

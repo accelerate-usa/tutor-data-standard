@@ -144,6 +144,11 @@ The working groups are open enrollment meetings that work broadly to accomplish 
 
 ## Quick Start
 
+To make sure that your data are aligned with the open data standard is as easy as 1, 2, 3.
+1. Construct a .csv, .xlsx, or .json file that matches [this](https://drive.google.com/file/d/1caxLu4q-57VWNqNMSwyy9ApbG2ccn2GM/view?usp=drive_link) template.
+1. Validate that your data match the standard.
+1. Upload your output statistics here and be included on the [data standard interoperability map](https://jasongodfrey.info/datas-map.html)! (optional)
+
 ---
 
 ## Contributions
