@@ -1,0 +1,127 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Student Dataset Schema",
+    "type": "object",
+    "properties": {
+      "student_id": {
+        "type": "string",
+        "description": "A unique identifier for the student, stored as a string.",
+        "examples": ["1234567890"],
+        "pattern": "^[0-9]{10}$"
+      },
+      "district_id": {
+        "type": "string",
+        "description": "Federal LEAID.",
+        "examples": ["1234567"],
+        "pattern": "^[0-9]{7}$"
+      },
+      "district_name": {
+        "type": "string",
+        "description": "District name.",
+        "examples": ["Denver Public Schools"]
+      },
+      "school_id": {
+        "type": "string",
+        "description": "School ID.",
+        "examples": ["123456"],
+        "pattern": "^[0-9]{6}$"
+      },
+      "school_name": {
+        "type": "string",
+        "description": "School name.",
+        "examples": ["Denver High School"]
+      },
+      "current_grade_level": {
+        "type": "integer",
+        "description": "Grade level served.",
+        "examples": [8],
+        "minimum": -1,
+        "maximum": 12
+      },
+      "gender": {
+        "type": "boolean",
+        "description": "Student gender.",
+        "examples": [true]
+      },
+      "ethnicity": {
+        "type": "string",
+        "description": "Student ethnicity.",
+        "examples": ["Hispanic"],
+        "maxLength": 50
+      },
+      "ell": {
+        "type": "boolean",
+        "description": "English-language learner flag.",
+        "examples": [true]
+      },
+      "iep": {
+        "type": "boolean",
+        "description": "IEP flag.",
+        "examples": [false]
+      },
+      "gifted_flag": {
+        "type": "boolean",
+        "description": "Gifted flag.",
+        "examples": [true]
+      },
+      "homeless_flag": {
+        "type": "boolean",
+        "description": "Homeless flag.",
+        "examples": [true]
+      },
+      "disability": {
+        "type": "boolean",
+        "description": "Disability flag.",
+        "examples": [true]
+      },
+      "economic_disadvantage": {
+        "type": "boolean",
+        "description": "Economic disadvantage flag.",
+        "examples": [true]
+      },
+      "ela_state_score_two_years_ago": {
+        "type": "integer",
+        "description": "ELA score from 2 years ago.",
+        "examples": [750]
+      },
+      "ela_state_score_one_year_ago": {
+        "type": "integer",
+        "description": "ELA score from last year.",
+        "examples": [750]
+      },
+      "ela_state_score_current_year": {
+        "type": "integer",
+        "description": "ELA score from current year.",
+        "examples": [750]
+      },
+      "math_state_score_two_years_ago": {
+        "type": "integer",
+        "description": "Math score from 2 years ago.",
+        "examples": [750]
+      },
+      "math_state_score_one_year_ago": {
+        "type": "integer",
+        "description": "Math score from last year.",
+        "examples": [750]
+      },
+      "math_state_score_current_year": {
+        "type": "integer",
+        "description": "Math score from current year.",
+        "examples": [750]
+      },
+      "performance_level_prior_year": {
+        "type": "string",
+        "description": "Prior year performance level (e.g., basic, advanced).",
+        "examples": ["advanced"],
+        "enum": ["basic", "proficient", "advanced", "below basic", "developing", "emerging"]
+      },
+      "performance_level_current_year": {
+        "type": "string",
+        "description": "Current year performance level (e.g., basic, advanced).",
+        "examples": ["basic"],
+        "enum": ["basic", "proficient", "advanced", "below basic", "developing", "emerging"]
+      }
+    },
+    "required": ["student_id", "district_id", "current_grade_level", "ela_state_score_current_year", "math_state_score_current_year"]
+  }
+  
