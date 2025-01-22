@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CSV Merge</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+</head>
+<body>
+  <h1>Merge CSV Files on "student_id"</h1>
+  
+  <input type="file" id="providerFile" accept=".csv" />
+  <label for="providerFile">Upload Provider Data</label><br><br>
+
+  <input type="file" id="schoolFile" accept=".csv" />
+  <label for="schoolFile">Upload School Data</label><br><br>
+
+  <button onclick="parseAndMerge()">Merge</button>
+  <button id="downloadButton" style="display:none;" onclick="downloadCSV()">Download Merged CSV</button>
+  
+  <pre id="output"></pre>
+
+  <script>
+    let mergedCSV = '';
+
+    function parseAndMerge() {
+      const providerFile = document.getElementById('providerFile').files[0];
+      const schoolFile = document.getElementById('schoolFile').files[0];
+
+      if (!providerFile || !schoolFile) {
+        document.getElementById('output').textContent = "Please select both CSV files.";
+        return;
+      }
+
+      // Parse provider CSV
+      Papa.parse(providerFile, {
+        header: true,
+        complete: function(providerResults) {
+          // Parse school CSV
+          Papa.parse(schoolFile, {
+            header: true,
+            complete: function(schoolResults) {
+              const providers = providerResults.data;
+              const schools = schoolResults.data;
+
+              // Build a lookup for school rows by student_id
+              const schoolLookup = {};
+              schools.forEach(row => {
+                schoolLookup[row.student_id] = row;
+              });
+
+              // Left join on student_id
+              const merged = providers.map(providerRow => {
+                const match = schoolLookup[providerRow.student_id] || {};
+                return {...providerRow, ...match};
+              });
+
+              // Convert merged array to CSV
+              const fields = Object.keys(merged[0] || {});
+              mergedCSV = Papa.unparse({ data: merged, fields: fields });
+
+              document.getElementById('output').textContent = mergedCSV;
+
+              // Enable download button
+              document.getElementById('downloadButton').style.display = 'inline-block';
+            }
+          });
+        }
+      });
+    }
+
+    function downloadCSV() {
+      const blob = new Blob([mergedCSV], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'merged_data.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>

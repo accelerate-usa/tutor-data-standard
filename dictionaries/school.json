@@ -109,17 +109,23 @@
         "description": "Math score from current year.",
         "examples": [750]
       },
+      "performance_level_two_years_ago": {
+        "type": "string",
+        "description": "Prior year performance level (e.g., basic, advanced).",
+        "examples": ["advanced"],
+        "enum": ["basic", "proficient", "advanced"]
+      },
       "performance_level_prior_year": {
         "type": "string",
         "description": "Prior year performance level (e.g., basic, advanced).",
         "examples": ["advanced"],
-        "enum": ["basic", "proficient", "advanced", "below basic", "developing", "emerging"]
+        "enum": ["basic", "proficient", "advanced"]
       },
       "performance_level_current_year": {
         "type": "string",
         "description": "Current year performance level (e.g., basic, advanced).",
         "examples": ["basic"],
-        "enum": ["basic", "proficient", "advanced", "below basic", "developing", "emerging"]
+        "enum": ["basic", "proficient", "advanced"]
       }
     },
     "required": ["student_id", "district_id", "current_grade_level", "ela_state_score_current_year", "math_state_score_current_year"]

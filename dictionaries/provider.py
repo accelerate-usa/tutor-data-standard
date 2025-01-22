@@ -1,93 +1,55 @@
+#%%
 import pandas as pd
-from pydantic import BaseModel, Field, ValidationError
-from pydantic.types import conint, conlist, constr
-from typing import List, Optional
-from datetime import datetime
+import random
+from faker import Faker
+from datetime import datetime, timedelta
+import numpy as np
 
-# Define the schema
-class SessionDetails(BaseModel):
-    scheduled_start_date: constr(regex=r'^\d{4}-\d{2}-\d{2}$')
-    scheduled_start_time: constr(regex=r'^\d{2}:\d{2}$')
-    scheduled_duration: conint(ge=0)
-    session_status: constr(regex=r'^(scheduled|completed|canceled)$')
-    session_delivery_type: constr(regex=r'^(in-person|online)$')
-    tutoring_organization_id: constr(regex=r'^[a-f0-9-]{36}$')
-    tutoring_program_id: constr(regex=r'^[a-f0-9-]{36}$')
-    actual_session_start_time: Optional[datetime]
-    actual_session_end_time: Optional[datetime]
-    associated_subjects: List[str]
-    session_id: constr(regex=r'^[a-f0-9-]{36}$')
-    progress_monitor_score: conint(ge=0, le=100)
+fake = Faker()
 
-class TutorEnrollmentDetails(BaseModel):
-    tutor_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
-    present_tutors_joined_session_at: List[Optional[datetime]]
-    present_tutors_left_session_at: List[Optional[datetime]]
-    session_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
+def random_school_datetime():
+    start_date = datetime(2024, 9, 1)
+    end_date = datetime(2025, 6, 30)
+    random_date = fake.date_between_dates(date_start=start_date, date_end=end_date)
 
-class StudentEnrollmentDetails(BaseModel):
-    student_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
-    student_school_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
-    student_grade_level: List[str]
-    present_students_joined_session_at: List[Optional[datetime]]
-    present_students_left_session_at: List[Optional[datetime]]
-    session_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
+    start_time = timedelta(hours=8)
+    end_time = timedelta(hours=15)
+    random_time = start_time + timedelta(seconds=random.randint(0, int((end_time - start_time).total_seconds())))
 
-class AttendanceTracking(BaseModel):
-    tutor_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
-    student_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
-    attendance_status: List[constr(regex=r'^(present|absent|late)$')]
-    session_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
+    return datetime.combine(random_date, datetime.min.time()) + random_time
 
-class EngagementMetrics(BaseModel):
-    student_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
-    participation_level: conlist(conint(ge=1, le=5), min_items=1)
-    activities_completed: conlist(conint(ge=0), min_items=1)
-    session_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
+def generate_tutoring_sessions(student_ids, num_sessions_range=(0, 100)):
+    sessions = []
+    tutors = [fake.random_number(digits=5, fix_len=True) for _ in range(50)]  # n unique tutors
+    
+    for student_id in student_ids:
+        session_topic = random.choice(["math", "ela"])
 
-class Feedback(BaseModel):
-    tutor_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
-    student_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
-    feedback_comments: List[str]
-    session_id: conlist(constr(regex=r'^[a-f0-9-]{36}$'), min_items=1)
+        num_sessions = random.randint(*num_sessions_range)
 
-# Example data
-data = {
-    "session_details": {
-        "scheduled_start_date": "2023-07-11",
-        "scheduled_start_time": "15:00",
-        "scheduled_duration": 60,
-        "session_status": "scheduled",
-        "session_delivery_type": "online",
-        "tutoring_organization_id": "123e4567-e89b-12d3-a456-426614174000",
-        "tutoring_program_id": "123e4567-e89b-12d3-a456-426614174000",
-        "actual_session_start_time": None,
-        "actual_session_end_time": None,
-        "associated_subjects": ["Math", "Science"],
-        "session_id": "123e4567-e89b-12d3-a456-426614174000",
-        "progress_monitor_score": 85
-    },
-    # Add the rest of the data for tutor_enrollment_details, student_enrollment_details, etc.
-}
+        for _ in range(num_sessions):
+            session_date = random_school_datetime()
+            session_duration = random.choice([30, 45, 60, 90])
+            session_ratio = random.choice(["1:1", "1:2", "1:3", "1:4", "1:5"])
+            tutor_id = random.choice(tutors)
 
-# Validate the example data
-try:
-    session_details = SessionDetails(**data["session_details"])
-    # Validate other sections similarly
-    print("Data is valid")
-except ValidationError as e:
-    print("Data validation error:", e.json())
+            sessions.append({
+                "student_id": student_id,
+                "session_topic": session_topic,
+                "session_date": session_date.strftime("%Y-%m-%d"),
+                "session_duration": session_duration,
+                "session_ratio": session_ratio,
+                "tutor_id": str(tutor_id)
+            })
 
-# Function to validate a DataFrame
-def validate_dataframe(df, schema_model):
-    for index, row in df.iterrows():
-        try:
-            schema_model(**row.to_dict())
-        except ValidationError as e:
-            print(f"Row {index} validation error:", e.json())
+    return pd.DataFrame(sessions)
 
-# Example DataFrame
-df = pd.DataFrame([data["session_details"]])  # Add more rows as needed
+student_dataset = pd.read_csv("fake_student_dataset.csv")
+student_ids = student_dataset["student_id"].tolist()
 
-# Validate the DataFrame
-validate_dataframe(df, SessionDetails)
+tutoring_dataset = generate_tutoring_sessions(student_ids)
+
+tutoring_dataset.to_csv("fake_tutoring_dataset.csv", index=False)
+
+print("Fake tutoring dataset generated and saved to 'fake_tutoring_dataset.csv'")
+# %%

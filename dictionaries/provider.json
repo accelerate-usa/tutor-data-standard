@@ -1,76 +1,44 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tutoring Dataset Schema",
   "type": "object",
   "properties": {
-    "session_details": {
-      "type": "object",
-      "properties": {
-        "scheduled_start_date": {"type": "string", "format": "date"},
-        "scheduled_start_time": {"type": "string", "pattern": "^[0-9]{2}:[0-9]{2}$"},
-        "scheduled_duration": {"type": "integer", "minimum": 0},
-        "session_status": {"type": "string", "enum": ["scheduled", "completed", "canceled"]},
-        "session_delivery_type": {"type": "string", "enum": ["in-person", "online", "hybrid"]},
-        "tutoring_organization_id": {"type": "string", "pattern": "^[a-f0-9-]{36}$"},
-        "tutoring_program_id": {"type": "string", "pattern": "^[a-f0-9-]{36}$"},
-        "actual_session_start_time": {"type": ["string", "null"], "format": "date-time"},
-        "actual_session_end_time": {"type": ["string", "null"], "format": "date-time"},
-        "associated_subjects": {"type": "array", "items": {"type": "string"}},
-        "session_id": {"type": "string", "pattern": "^[a-f0-9-]{36}$"},
-        "progress_monitor_score": {"type": "integer", "minimum": 0, "maximum": 100}
-      },
-      "required": ["scheduled_start_date", "scheduled_start_time", "scheduled_duration", "session_status", "session_delivery_type", "tutoring_organization_id", "tutoring_program_id", "session_id", "progress_monitor_score"]
+    "student_id": {
+      "type": ["string"],
+      "description": "Unique identifier for each student",
+      "examples": ["12345", "67890"],
+      "pattern": "^(\d+)$"
     },
-    "tutor_enrollment_details": {
-      "type": "object",
-      "properties": {
-        "tutor_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}},
-        "present_tutors_joined_session_at": {"type": "array", "items": {"type": "string", "format": "date-time"}},
-        "present_tutors_left_session_at": {"type": "array", "items": {"type": "string", "format": "date-time"}},
-        "session_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}}
-      },
-      "required": ["tutor_id", "present_tutors_joined_session_at", "present_tutors_left_session_at", "session_id"]
+    "session_topic": {
+      "type": "string",
+      "description": "Subject of the tutoring session",
+      "examples": ["math", "ela"],
+      "enum": ["math", "ela"]
     },
-    "student_enrollment_details": {
-      "type": "object",
-      "properties": {
-        "student_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}},
-        "student_school_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}},
-        "student_grade_level": {"type": "array", "items": {"type": "string"}},
-        "present_students_joined_session_at": {"type": "array", "items": {"type": "string", "format": "date-time"}},
-        "present_students_left_session_at": {"type": "array", "items": {"type": "string", "format": "date-time"}},
-        "session_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}}
-      },
-      "required": ["student_id", "student_school_id", "student_grade_level", "present_students_joined_session_at", "present_students_left_session_at", "session_id"]
+    "session_date": {
+      "type": "string",
+      "description": "Date of the session (YYYY-MM-DD)",
+      "examples": ["2024-06-15"],
+      "format": "date"
     },
-    "attendance_tracking": {
-      "type": "object",
-      "properties": {
-        "tutor_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}},
-        "student_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}},
-        "attendance_status": {"type": "array", "items": {"type": "string", "enum": ["present", "absent", "late"]}},
-        "session_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}}
-      },
-      "required": ["tutor_id", "student_id", "attendance_status", "session_id"]
+    "session_duration": {
+      "type": "integer",
+      "description": "Duration of the session in minutes",
+      "examples": [45, 60],
+      "minimum": 1
     },
-    "engagement_metrics": {
-      "type": "object",
-      "properties": {
-        "student_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}},
-        "participation_level": {"type": "array", "items": {"type": "integer", "minimum": 1, "maximum": 5}},
-        "activities_completed": {"type": "array", "items": {"type": "integer", "minimum": 0}},
-        "session_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}}
-      },
-      "required": ["student_id", "participation_level", "activities_completed", "session_id"]
+    "session_ratio": {
+      "type": ["string"],
+      "description": "Student-to-tutor ratio",
+      "examples": ["1:1"],
+      "pattern": "^\d+:\d+$",
     },
-    "feedback": {
-      "type": "object",
-      "properties": {
-        "tutor_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}},
-        "student_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}},
-        "feedback_comments": {"type": "array", "items": {"type": "string"}},
-        "session_id": {"type": "array", "items": {"type": "string", "pattern": "^[a-f0-9-]{36}$"}}
-      },
-      "required": ["tutor_id", "student_id", "feedback_comments", "session_id"]
+    "tutor_id": {
+      "type": ["string"],
+      "description": "Unique identifier for each tutor",
+      "examples": ["54321", "98765"],
+      "pattern": "^(\d+)$"
     }
-  }
+  },
+  "required": ["student_id", "session_topic", "session_date", "session_duration", "tutor_id"]
 }
