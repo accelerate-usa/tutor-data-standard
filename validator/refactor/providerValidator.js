@@ -75,7 +75,6 @@ function validateProviderData(rows) {
         resultDiv.innerHTML = '<h2 class="error">Errors Found:</h2><ul>' + errors.map(error => `<li>${error}</li>`).join('') + '</ul>';
     } else {
         resultDiv.innerHTML = `<h2 class="success"><i class="fas fa-check-circle"></i> Congratulations! Your data are valid.</h2>`;
-        // If needed, call a function to handle valid data
-        generateSummary(rows, headers, 'school');
+        generateSummary(rows, headers, 'provider');
     }
 }

@@ -273,8 +273,6 @@ function validateSchoolData(rows) {
                 Feel free to redact any information you don't want to share.
             </div>`;
 
-        // Either define generateSummary(...) or remove the call if you don't need it.
-        // This is a minimal placeholder to avoid runtime errors:
         if (typeof generateSummary === 'function') {
             generateSummary(rows, headers, 'school');
         }
