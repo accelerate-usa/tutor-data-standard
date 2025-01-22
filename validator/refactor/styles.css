@@ -7,15 +7,26 @@
 
 /* Body Styling */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    font-family: 'Poppins', sans-serif;
+    background-color: #E0E2E7;
+    color: #0F1D2F;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 2em;
     min-height: 100vh;
 }
+
+/* Styling for the logo*/
+.lower-right-image {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    width: 10vw;
+    height: auto;
+    z-index: 10;
+}
+
 
 /* Container Styling */
 .container {
@@ -29,7 +40,7 @@ body {
 
 /* Header Styling */
 header {
-    background-color: #4a90e2;
+    background-color: #10A59C;
     padding: 1.5em;
     text-align: center;
     color: #fff;
@@ -62,8 +73,8 @@ header h1 {
 }
 
 .tab.active {
-    border-bottom: 2px solid #4a90e2;
-    color: #4a90e2;
+    border-bottom: 2px solid #10A59C;
+    color: #10A59C;
 }
 
 /* Content Areas */
@@ -88,7 +99,7 @@ header h1 {
 }
 
 .file-upload.dragover {
-    border-color: #4a90e2;
+    border-color: #10A59C;
 }
 
 .file-upload input[type="file"] {
@@ -102,7 +113,7 @@ header h1 {
 
 /* Buttons */
 button {
-    background-color: #4a90e2;
+    background-color: #10A59C;
     color: #fff;
     border: none;
     padding: 0.75em 1.5em;
@@ -132,7 +143,7 @@ button:hover {
 .progress-bar {
     height: 100%;
     width: 0;
-    background-color: #4a90e2;
+    background-color: #10A59C;
     transition: width 0.3s;
     position: relative;
 }
@@ -229,7 +240,7 @@ button:hover {
 /* Accessibility Focus Styles */
 .tab:focus,
 button:focus {
-    outline: 2px solid #4a90e2;
+    outline: 2px solid #10A59C;
     outline-offset: 2px;
 }
 

@@ -74,7 +74,19 @@ function validateProviderData(rows) {
     if (errors.length > 0) {
         resultDiv.innerHTML = '<h2 class="error">Errors Found:</h2><ul>' + errors.map(error => `<li>${error}</li>`).join('') + '</ul>';
     } else {
-        resultDiv.innerHTML = `<h2 class="success"><i class="fas fa-check-circle"></i> Congratulations! Your data are valid.</h2>`;
+        resultDiv.innerHTML = `
+            <h2 class="success">
+                <i class="fas fa-check-circle"></i> Congratulations! Your data are valid.
+            </h2>
+            <div class="note">
+                If you'd like to join the list of agencies dedicated to data quality, 
+                please upload the output below to this website:
+                <a href="https://accelerate.us/datas" target="_blank">
+                    https://accelerate.us/datas
+                </a>. 
+                Rename the file to your agency name. 
+                Feel free to redact any information you don't want to share.
+            </div>`;
         generateSummary(rows, headers, 'provider');
     }
 }

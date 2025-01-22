@@ -1,14 +1,3 @@
-// 1. Make sure your CSV parsing actually produces an array of arrays ("rows"), 
-//    with row[0] as the headers and row[1..n] as the data rows.
-//
-// 2. Verify the CSV indeed has more than one row (headers + at least 1 data row).
-//
-// 3. Correct the spelling mismatch for "economic_disadvantage" in the validations.
-//
-// 4. Provide or remove the generateSummary function so the code doesn't fail silently.
-// 
-// 5. Check for any console errors in case something else is breaking the flow.
-
 function validateSchoolData(rows) {
     const resultDiv = document.getElementById('outputSchool');
     let errors = [];
@@ -18,7 +7,6 @@ function validateSchoolData(rows) {
         return;
     }
 
-    // Expected headers for school data
     const expectedHeaders = [
         "student_id",
         "district_id",
@@ -41,7 +29,7 @@ function validateSchoolData(rows) {
         "performance_level_prior_year",
         "performance_level_current_year",
         "disability",
-        "economic_disadvantage"  // Make sure it matches exactly in the validations below.
+        "economic_disadvantage"
     ];
 
     // Normalize headers from the file
@@ -266,8 +254,8 @@ function validateSchoolData(rows) {
             <div class="note">
                 If you'd like to join the list of agencies dedicated to data quality, 
                 please upload the output below to this website:
-                <a href="https://accelerate.us/placeholder" target="_blank">
-                    https://accelerate.us/placeholder
+                <a href="https://accelerate.us/datas" target="_blank">
+                    https://accelerate.us/datas
                 </a>. 
                 Rename the file to your agency name. 
                 Feel free to redact any information you don't want to share.
