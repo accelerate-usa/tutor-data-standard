@@ -29,7 +29,7 @@ def generate_fake_dataset(num_rows):
 
     # Generate unique district details
     district_ids = [fake.unique.random_number(digits=7, fix_len=True) for _ in range(num_districts)]
-    district_names = [fake.company() + " School District" for _ in range(num_districts)]
+    district_names = [fake.company().replace(",", "") + " School District" for _ in range(num_districts)]
 
     # Generate unique school details, associating each school with a district
     school_details = []
@@ -37,7 +37,7 @@ def generate_fake_dataset(num_rows):
         district_index = random.randint(0, num_districts - 1)
         school_details.append({
             "school_id": fake.unique.random_number(digits=6, fix_len=True),
-            "school_name": fake.company() + " High School",
+            "school_name": fake.company().replace(",", "") + " High School",
             "district_id": district_ids[district_index],
             "district_name": district_names[district_index]
         })

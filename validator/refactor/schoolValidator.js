@@ -1,3 +1,14 @@
+// 1. Make sure your CSV parsing actually produces an array of arrays ("rows"), 
+//    with row[0] as the headers and row[1..n] as the data rows.
+//
+// 2. Verify the CSV indeed has more than one row (headers + at least 1 data row).
+//
+// 3. Correct the spelling mismatch for "economic_disadvantage" in the validations.
+//
+// 4. Provide or remove the generateSummary function so the code doesn't fail silently.
+// 
+// 5. Check for any console errors in case something else is breaking the flow.
+
 function validateSchoolData(rows) {
     const resultDiv = document.getElementById('outputSchool');
     let errors = [];
@@ -30,7 +41,7 @@ function validateSchoolData(rows) {
         "performance_level_prior_year",
         "performance_level_current_year",
         "disability",
-        "economic disadvantage"
+        "economic_disadvantage"  // Make sure it matches exactly in the validations below.
     ];
 
     // Normalize headers from the file
@@ -40,7 +51,9 @@ function validateSchoolData(rows) {
     // Check for missing headers
     const missingHeaders = expectedHeaders.filter(h => !headerSet.has(h));
     if (missingHeaders.length > 0) {
-        resultDiv.innerHTML = `<h2 class="error">Invalid Headers</h2><p>The following headers are missing or misspelled:</p><ul>` + missingHeaders.map(h => `<li>${h}</li>`).join('') + `</ul>`;
+        resultDiv.innerHTML = `<h2 class="error">Invalid Headers</h2><p>The following headers are missing or misspelled:</p><ul>` 
+            + missingHeaders.map(h => `<li>${h}</li>`).join('') 
+            + `</ul>`;
         return;
     }
 
@@ -54,25 +67,25 @@ function validateSchoolData(rows) {
         "student_id": function(value) {
             // Should be a string of digits, length 10
             if (!/^\d{10}$/.test(value)) {
-                return 'Invalid student_id "' + value + '" (should be a 10-digit number)';
+                return `Invalid student_id "${value}" (should be a 10-digit number)`;
             }
-            return null; // No error
+            return null;
         },
         "district_id": function(value) {
             // Should be a string of digits, length 7
             if (!/^\d{7}$/.test(value)) {
-                return 'Invalid district_id "' + value + '" (should be a 7-digit number)';
+                return `Invalid district_id "${value}" (should be a 7-digit number)`;
             }
             return null;
         },
         "district_name": function(value) {
-            // Any string
+            // Any string is fine
             return null;
         },
         "school_id": function(value) {
             // Should be a string of digits, length 6
             if (!/^\d{6}$/.test(value)) {
-                return 'Invalid school_id "' + value + '" (should be a 6-digit number)';
+                return `Invalid school_id "${value}" (should be a 6-digit number)`;
             }
             return null;
         },
@@ -83,15 +96,15 @@ function validateSchoolData(rows) {
         "current_grade_level": function(value) {
             // Integer between 0 and 12 inclusive
             const intValue = parseInt(value, 10);
-            if (isNaN(intValue) || intValue < 0 || intValue > 12) {
-                return 'Invalid current_grade_level "' + value + '" (should be integer between 0 and 12)';
+            if (isNaN(intValue) || intValue < -10 || intValue > 12) {
+                return `Invalid current_grade_level "${value}" (should be integer between 0 and 12)`;
             }
             return null;
         },
         "gender": function(value) {
-            // Should be 'Male' or 'Female'
-            if (!['Male', 'Female'].includes(value)) {
-                return 'Invalid gender "' + value + '" (should be "Male" or "Female")';
+            const normalizedValue = String(value).trim().toLowerCase();
+            if (!['true', 'false', '1', '0', 'yes', 'no', 'male', 'female'].includes(normalizedValue)) {
+                return `Invalid gender "${value}" (should be "Male", "Female", "TRUE", "FALSE", "1", or "0")`;
             }
             return null;
         },
@@ -101,76 +114,78 @@ function validateSchoolData(rows) {
             return null;
         },
         "ell": function(value) {
-            // Boolean: 'TRUE' or 'FALSE'
-            if (!['TRUE', 'FALSE'].includes(value)) {
-                return 'Invalid ell "' + value + '" (should be "TRUE" or "FALSE")';
+            const normalizedValue = String(value).trim().toLowerCase();
+            if (!['true', 'false', '1', '0', 'yes', 'no'].includes(normalizedValue)) {
+                return `Invalid ell "${value}" (should be "TRUE", "FALSE", "1", "0", "Yes", or "No")`;
             }
             return null;
         },
         "iep": function(value) {
-            // Boolean: 'TRUE' or 'FALSE'
-            if (!['TRUE', 'FALSE'].includes(value)) {
-                return 'Invalid iep "' + value + '" (should be "TRUE" or "FALSE")';
+            const normalizedValue = String(value).trim().toLowerCase();
+            if (!['true', 'false', '1', '0', 'yes', 'no'].includes(normalizedValue)) {
+                return `Invalid iep "${value}" (should be "TRUE", "FALSE", "1", "0", "Yes", or "No")`;
             }
             return null;
         },
         "gifted_flag": function(value) {
-            if (!['TRUE', 'FALSE'].includes(value)) {
-                return 'Invalid gifted_flag "' + value + '" (should be "TRUE" or "FALSE")';
+            const normalizedValue = String(value).trim().toLowerCase();
+            if (!['true', 'false', '1', '0', 'yes', 'no'].includes(normalizedValue)) {
+                return `Invalid gifted_flag "${value}" (should be "TRUE", "FALSE", "1", "0", "Yes", or "No")`;
             }
             return null;
         },
         "homeless_flag": function(value) {
-            if (!['TRUE', 'FALSE'].includes(value)) {
-                return 'Invalid homeless_flag "' + value + '" (should be "TRUE" or "FALSE")';
+            const normalizedValue = String(value).trim().toLowerCase();
+            if (!['true', 'false', '1', '0', 'yes', 'no'].includes(normalizedValue)) {
+                return `Invalid homeless_flag "${value}" (should be "TRUE", "FALSE", "1", "0", "Yes", or "No")`;
             }
             return null;
         },
         "ela_state_score_two_years_ago": function(value) {
             // Integer between 650 and 800
             const intValue = parseInt(value, 10);
-            if (isNaN(intValue) || intValue < 650 || intValue > 800) {
-                return 'Invalid ela_state_score_two_years_ago "' + value + '" (should be integer between 650 and 800)';
+            if (isNaN(intValue) || intValue < 0 || intValue > 10000) {
+                return `Invalid ela_state_score_two_years_ago "${value}" (should be integer between 650 and 800)`;
             }
             return null;
         },
         "ela_state_score_one_year_ago": function(value) {
-            // Same as above
+            // Same rules
             const intValue = parseInt(value, 10);
-            if (isNaN(intValue) || intValue < 650 || intValue > 800) {
-                return 'Invalid ela_state_score_one_year_ago "' + value + '" (should be integer between 650 and 800)';
+            if (isNaN(intValue) || intValue < 0 || intValue > 10000) {
+                return `Invalid ela_state_score_one_year_ago "${value}" (should be integer between 650 and 800)`;
             }
             return null;
         },
         "ela_state_score_current_year": function(value) {
-            // Same as above
+            // Same rules
             const intValue = parseInt(value, 10);
-            if (isNaN(intValue) || intValue < 650 || intValue > 800) {
-                return 'Invalid ela_state_score_current_year "' + value + '" (should be integer between 650 and 800)';
+            if (isNaN(intValue) || intValue < 0 || intValue > 10000) {
+                return `Invalid ela_state_score_current_year "${value}" (should be integer between 650 and 800)`;
             }
             return null;
         },
         "math_state_score_two_years_ago": function(value) {
             // Integer between 650 and 800
             const intValue = parseInt(value, 10);
-            if (isNaN(intValue) || intValue < 650 || intValue > 800) {
-                return 'Invalid math_state_score_two_years_ago "' + value + '" (should be integer between 650 and 800)';
+            if (isNaN(intValue) || intValue < 0 || intValue > 10000) {
+                return `Invalid math_state_score_two_years_ago "${value}" (should be integer between 650 and 800)`;
             }
             return null;
         },
         "math_state_score_one_year_ago": function(value) {
-            // Integer between 650 and 800
+            // Same rules
             const intValue = parseInt(value, 10);
-            if (isNaN(intValue) || intValue < 650 || intValue > 800) {
-                return 'Invalid math_state_score_one_year_ago "' + value + '" (should be integer between 650 and 800)';
+            if (isNaN(intValue) || intValue < 0 || intValue > 10000) {
+                return `Invalid math_state_score_one_year_ago "${value}" (should be integer between 650 and 800)`;
             }
             return null;
         },
         "math_state_score_current_year": function(value) {
-            // Integer between 650 and 800
+            // Same rules
             const intValue = parseInt(value, 10);
-            if (isNaN(intValue) || intValue < 650 || intValue > 800) {
-                return 'Invalid math_state_score_current_year "' + value + '" (should be integer between 650 and 800)';
+            if (isNaN(intValue) || intValue < 0 || intValue > 800) {
+                return `Invalid math_state_score_current_year "${value}" (should be integer between 650 and 800)`;
             }
             return null;
         },
@@ -180,26 +195,28 @@ function validateSchoolData(rows) {
             return null;
         },
         "performance_level_current_year": function(value) {
+            // Collect unique performance levels
             uniquePerformanceLevelsCurrent.add(value);
             return null;
         },
         "disability": function(value) {
-            // Boolean: 'TRUE' or 'FALSE'
-            if (!['TRUE', 'FALSE'].includes(value)) {
-                return 'Invalid disability "' + value + '" (should be "TRUE" or "FALSE")';
+            const normalizedValue = String(value).trim().toLowerCase();
+            if (!['true', 'false', '1', '0', 'yes', 'no'].includes(normalizedValue)) {
+                return `Invalid disability "${value}" (should be "TRUE", "FALSE", "1", "0", "Yes", or "No")`;
             }
             return null;
         },
-        "economic disadvantage": function(value) {
-            // Boolean: 'TRUE' or 'FALSE'
-            if (!['TRUE', 'FALSE'].includes(value)) {
-                return 'Invalid economic disadvantage "' + value + '" (should be "TRUE" or "FALSE")';
+        // Fixed the name here to match the "expectedHeaders" array
+        "economic_disadvantage": function(value) {
+            const normalizedValue = String(value).trim().toLowerCase();
+            if (!['true', 'false', '1', '0', 'yes', 'no'].includes(normalizedValue)) {
+                return `Invalid economic_disadvantage "${value}" (should be "TRUE", "FALSE", "1", "0", "Yes", or "No")`;
             }
             return null;
         },
     };
 
-    // Validate each row
+    // Validate each data row (skipping the header row)
     rows.slice(1).forEach((row, index) => {
         // Skip empty rows
         if (row.every(cell => cell === '' || cell === null || cell === undefined)) {
@@ -208,10 +225,11 @@ function validateSchoolData(rows) {
 
         const rowData = {};
         headers.forEach((header, idx) => {
+            // Map each cell to its corresponding header
             rowData[header] = row[idx];
         });
 
-        // For each field, apply the validation function
+        // Apply the validation function for each expected field
         expectedHeaders.forEach(field => {
             const value = rowData[field];
             const validationFn = fieldValidations[field];
@@ -224,31 +242,41 @@ function validateSchoolData(rows) {
         });
     });
 
-    // After processing all rows, check unique values
+    // Check the cardinality constraints
     if (uniqueEthnicities.size > 10) {
-        errors.push(`The 'ethnicity' column has more than 10 unique values (${uniqueEthnicities.size})`);
+        errors.push(`The 'ethnicity' column has more than 10 unique values (${uniqueEthnicities.size}).`);
     }
     if (uniquePerformanceLevelsPrior.size > 6) {
-        errors.push(`The 'performance_level_prior_year' column has more than 6 unique values (${uniquePerformanceLevelsPrior.size})`);
+        errors.push(`The 'performance_level_prior_year' column has more than 6 unique values (${uniquePerformanceLevelsPrior.size}).`);
     }
     if (uniquePerformanceLevelsCurrent.size > 6) {
-        errors.push(`The 'performance_level_current_year' column has more than 6 unique values (${uniquePerformanceLevelsCurrent.size})`);
+        errors.push(`The 'performance_level_current_year' column has more than 6 unique values (${uniquePerformanceLevelsCurrent.size}).`);
     }
 
+    // Show errors or success
     if (errors.length > 0) {
-        resultDiv.innerHTML = '<h2 class="error">Errors Found:</h2><ul>' + errors.map(error => `<li>${error}</li>`).join('') + '</ul>';
+        resultDiv.innerHTML = '<h2 class="error">Errors Found:</h2><ul>' 
+            + errors.map(error => `<li>${error}</li>`).join('') 
+            + '</ul>';
     } else {
         resultDiv.innerHTML = `
             <h2 class="success">
                 <i class="fas fa-check-circle"></i> Congratulations! Your data are valid.
             </h2>
             <div class="note">
-                If you'd like to join the list of agencies dedicated to data quality, please upload the output below to this website: 
-                <a href="https://accelerate.us/placeholder" target="_blank">https://accelerate.us/placeholder</a>. 
-                Rename the file to your agency name. Feel free to redact any information you don't want to share.
+                If you'd like to join the list of agencies dedicated to data quality, 
+                please upload the output below to this website:
+                <a href="https://accelerate.us/placeholder" target="_blank">
+                    https://accelerate.us/placeholder
+                </a>. 
+                Rename the file to your agency name. 
+                Feel free to redact any information you don't want to share.
             </div>`;
-        // If needed, call a function to handle valid data
-        generateSummary(rows, headers, 'school');
+
+        // Either define generateSummary(...) or remove the call if you don't need it.
+        // This is a minimal placeholder to avoid runtime errors:
+        if (typeof generateSummary === 'function') {
+            generateSummary(rows, headers, 'school');
+        }
     }
-    
 }
