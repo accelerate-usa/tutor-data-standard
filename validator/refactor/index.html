@@ -25,6 +25,13 @@
         </div>
         <div id="school" class="tab-content active">
             <h2>Validate School Data</h2>
+            <p>
+                This tool will check your data's conformity to the <a href="https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770" target="_blank">data dictionary</a>. Correctly formatted data can 
+                be plugged directly into the toolkit to start gaining insight.
+            </p>
+            <p>
+                <i>Note: This tool runs entirely locally in your browser. Your data never leaves your machine.</i>
+            </p>     
             <div class="file-upload" id="fileUploadSchool" onclick="document.getElementById('fileInputSchool').click();" ondragover="handleDragOver(event, 'School');" ondragleave="handleDragLeave(event, 'School');" ondrop="handleFileDrop(event, 'School');">
                 <input type="file" id="fileInputSchool" accept=".csv, .xlsx, .json" onchange="handleFileSelect(event, 'School');">
                 <i class="fas fa-cloud-upload-alt fa-3x"></i>
@@ -40,6 +47,13 @@
         </div>
         <div id="provider" class="tab-content">
             <h2>Validate Provider Data</h2>
+            <p>
+                This tool will check your data's conformity to the <a href="https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=1133342997#gid=1133342997" target="_blank">data dictionary </a>. Correctly formatted data can 
+                be plugged directly into the toolkit to start gaining insight.
+            </p>
+            <p>
+                <i>Note: This tool runs entirely locally in your browser. Your data never leaves your machine.</i>
+            </p>    
             <div class="file-upload" id="fileUploadProvider" onclick="document.getElementById('fileInputProvider').click();" ondragover="handleDragOver(event, 'Provider');" ondragleave="handleDragLeave(event, 'Provider');" ondrop="handleFileDrop(event, 'Provider');">
                 <input type="file" id="fileInputProvider" accept=".csv, .xlsx, .json" onchange="handleFileSelect(event, 'Provider');">
                 <i class="fas fa-cloud-upload-alt fa-3x"></i>
@@ -54,7 +68,7 @@
             <div class="summary" id="summaryProvider"></div>
         </div>
         <div class="note">
-            <p><i class="fas fa-info-circle"></i> Note: This tool runs entirely locally in your browser. Your data never leaves your machine.</p>
+            <!-- <p><i class="fas fa-info-circle"></i> Note: This tool runs entirely locally in your browser. Your data never leaves your machine.</p> -->
         </div>
     </div>
 

@@ -87,6 +87,24 @@ header h1 {
     display: block;
 }
 
+.tab-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1em;
+    color: #2c3e50;
+}
+
+.tab-content p {
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #555;
+    /* margin-bottom: 1em; */
+}
+
+.tab-content p i {
+    font-size: 0.9rem;
+    color: #888;
+}
+
 /* File Input Styling */
 .file-upload {
     border: 2px dashed #ccc;
@@ -126,7 +144,7 @@ button {
 }
 
 button:hover {
-    background-color: #357abd;
+    background-color: #304A6F;
 }
 
 /* Progress Bar */
@@ -257,5 +275,29 @@ button:focus {
 
     button {
         width: 100%;
+    }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add responsive adjustments */
+@media (max-width: 768px) {
+    .tab-content {
+        padding: 1.5em;
+        max-width: 90%;
+    }
+
+    .tab-content h2 {
+        font-size: 1.5rem;
     }
 }

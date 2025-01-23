@@ -49,7 +49,7 @@ student_ids = student_dataset["student_id"].tolist()
 
 tutoring_dataset = generate_tutoring_sessions(student_ids)
 
-tutoring_dataset.to_csv("fake_tutoring_dataset.csv", index=False)
+tutoring_dataset.to_csv("fake_provider_dataset.csv", index=False)
 
-print("Fake tutoring dataset generated and saved to 'fake_tutoring_dataset.csv'")
+print("Fake provider dataset generated and saved to 'fake_provider_dataset.csv'")
 # %%
