@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-st.set_page_config(page_title="Tutoring Hours and Cost Analysis", layout="wide")
+st.set_page_config(page_title="DATAS Analysis Toolkit", layout="wide")
 
 # Title
-st.title("📊 Tutoring Hours and Cost Analysis")
+st.title("📊 DATAS Analysis Toolkit")
 
 # Tabs
 tab1, tab2, tab3 = st.tabs(["Step 1: Upload Data", "Step 2: Analysis Settings", "Step 3: Charts & Results"])
@@ -50,7 +50,7 @@ with tab2:
         full_dosage_threshold = st.number_input(
             "Full dosage threshold (hours)",
             min_value=0.0,
-            value=st.session_state.get("full_dosage_threshold", 40.0),
+            value=st.session_state.get("full_dosage_threshold", 60.0),
             step=1.0
         )
         total_cost = st.number_input(
@@ -136,6 +136,19 @@ with tab3:
             )
             st.plotly_chart(fig, use_container_width=True)
 
+            # Calculate percentage of students receiving full dosage
+            full_dosage_students = tutoring_hours_per_student[tutoring_hours_per_student['dosage_category'] == "Full Dosage or Above"].shape[0]
+            total_students = tutoring_hours_per_student.shape[0]
+            if total_students > 0:
+                percentage_full_dosage = (full_dosage_students / total_students) * 100
+            else:
+                percentage_full_dosage = 0
+
+            # Display percentage
+            st.subheader("Dosage Insights")
+            st.write(f"**{percentage_full_dosage:.2f}% of students** are receiving the full dosage or above.")
+
+
             # Cost metrics
             st.subheader("Cost Analysis")
             col1, col2, col3 = st.columns(3)
@@ -204,4 +217,6 @@ with tab3:
         st.info("Please complete Steps 1 and 2 before viewing results.")
 
 st.write("---")
-st.caption("If you have trouble uploading, ensure data is formatted correctly at [validator](https://accelerate.us/datas-validator).")
+st.caption("Ensure your files are formatted correctly before uploading. You can validate your data at our [validator](https://accelerate.us/datas-validator).")
+st.caption("Once you refresh, all data are erased.")
+
