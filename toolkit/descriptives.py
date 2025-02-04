@@ -19,6 +19,8 @@ if "student_data" not in st.session_state:
 # ---- STEP 1: UPLOAD DATA ----
 with tab1:
     st.header("1. Upload Your Data")
+    st.write("Feel free to use our example [student](https://drive.google.com/file/d/1FjTLaWGRQd6zlgaXkqHkAU_Gj8kUzgGY/view) and [session](https://drive.google.com/file/d/1ivNs9gFkIIgiABUHEOvsm8mCmvg9nKJ3/view) datasets to explore the toolkit.")
+    st.write("To use your own data, upload your session and student below. Be sure that your data is formatted according to our [data dictionary](https://accelerate.us/datas-validator). Our [validator](https://accelerate.us/datas-validator) can help you troubleshoot your data formatting.") 
 
     uploaded_provider_file = st.file_uploader("Upload Tutoring Session Data (CSV)", type="csv", key="provider_uploader")
     uploaded_student_file = st.file_uploader("Upload Student Data (CSV)", type="csv", key="student_uploader")
@@ -73,6 +75,8 @@ with tab2:
 # ---- STEP 3: CHARTS & RESULTS ----
 with tab3:
     st.header("3. View Charts & Metrics")
+    st.write("---")
+    st.subheader("Dosage Insights")
     if st.session_state["provider_data"] is not None and st.session_state["student_data"] is not None:
         provider_df = st.session_state["provider_data"]
         student_df = st.session_state["student_data"]
@@ -145,12 +149,13 @@ with tab3:
                 percentage_full_dosage = 0
 
             # Display percentage
-            st.subheader("Dosage Insights")
             st.write(f"**{percentage_full_dosage:.2f}% of students** are receiving the full dosage or above.")
 
 
             # Cost metrics
+            st.write("---")
             st.subheader("Cost Analysis")
+
             col1, col2, col3 = st.columns(3)
 
             total_students = len(tutoring_hours_per_student)
@@ -211,6 +216,35 @@ with tab3:
                 )
             else:
                 st.warning("No raw points gained on average. Check your dataset.")
+            
+            #
+            st.write("---")
+            st.subheader("More in-depth tools below:")
+            buttons_html = """
+            <div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap;">
+                <a href="https://accelerate.us/cost-analysis-tool/" target="_blank">
+                    <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
+                                    border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
+                        Cost-Analysis Tool
+                    </button>
+                </a>
+                <a href="https://accelerate.us/state-field-guide/ target="_blank">
+                    <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
+                                    border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
+                        State Field Guide
+                    </button>
+                </a>
+                <a href="https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770" target="_blank">
+                    <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
+                                    border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
+                        Data Dictionary
+                    </button>
+                </a>
+            </div>
+            """
+
+            st.markdown(buttons_html, unsafe_allow_html=True)
+            #
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
     else:
@@ -218,5 +252,5 @@ with tab3:
 
 st.write("---")
 st.caption("Ensure your files are formatted correctly before uploading. You can validate your data at our [validator](https://accelerate.us/datas-validator).")
-st.caption("Once you refresh, all data are erased.")
+st.caption("Once you refresh, all data are erased. You may run this tool [locally](https://github.com/accelerate-usa/tutor-data-standard/tree/main/toolkit).")
 
