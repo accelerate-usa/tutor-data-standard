@@ -251,6 +251,6 @@ with tab3:
         st.info("Please complete Steps 1 and 2 before viewing results.")
 
 st.write("---")
-st.caption("Ensure your files are formatted correctly before uploading. You can validate your data at our [validator](https://accelerate.us/datas-validator).")
+st.caption("Ensure your files are formatted correctly before uploading. You can validate your data at our [validator](https://jasongodfrey.info/data_validator.html).")
 st.caption("Once you refresh, all data are erased. You may run this tool [locally](https://github.com/accelerate-usa/tutor-data-standard/tree/main/toolkit).")
 
