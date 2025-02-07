@@ -222,6 +222,12 @@ with tab3:
             st.subheader("More in-depth tools below:")
             buttons_html = """
             <div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap;">
+                <a href="https://studentsupportaccelerator.org/tutoring" target="_blank">
+                    <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
+                                    border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
+                        Toolkit for Tutoring Programs
+                    </button>
+                </a>
                 <a href="https://accelerate.us/cost-analysis-tool/" target="_blank">
                     <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
                                     border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
