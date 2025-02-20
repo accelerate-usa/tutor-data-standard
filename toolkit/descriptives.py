@@ -8,7 +8,7 @@ st.set_page_config(page_title="DATAS Analysis Toolkit", layout="wide")
 st.title("📊 DATAS Analysis Toolkit")
 
 # Tabs
-tab1, tab2, tab3 = st.tabs(["Step 1: Upload Data", "Step 2: Analysis Settings", "Step 3: Charts & Results"])
+tab1, tab2, tab3 = st.tabs(["Step 1: Upload Data", "Step 2: Program Characteristics", "Step 3: Charts & Results"])
 
 # Session state to hold data
 if "provider_data" not in st.session_state:
@@ -20,7 +20,7 @@ if "student_data" not in st.session_state:
 with tab1:
     st.header("1. Upload Your Data")
     st.write("Feel free to use our example [student](https://drive.google.com/file/d/1FjTLaWGRQd6zlgaXkqHkAU_Gj8kUzgGY/view) and [session](https://drive.google.com/file/d/1ivNs9gFkIIgiABUHEOvsm8mCmvg9nKJ3/view) datasets to explore the toolkit.")
-    st.write("To use your own data, upload your session and student below. Be sure that your data is formatted according to our [data dictionary](https://accelerate.us/datas-validator). Our [validator](https://accelerate.us/datas-validator) can help you troubleshoot your data formatting.") 
+    st.write("To use your own data, upload your session and student below. Be sure that your data is formatted according to our [data dictionary](https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770). Our [validator](https://jasongodfrey.info/data_validator.html) can help you troubleshoot your data formatting.") 
 
     uploaded_provider_file = st.file_uploader("Upload Tutoring Session Data (CSV)", type="csv", key="provider_uploader")
     uploaded_student_file = st.file_uploader("Upload Student Data (CSV)", type="csv", key="student_uploader")
@@ -141,7 +141,9 @@ with tab3:
             st.plotly_chart(fig, use_container_width=True)
 
             # Calculate percentage of students receiving full dosage
-            full_dosage_students = tutoring_hours_per_student[tutoring_hours_per_student['dosage_category'] == "Full Dosage or Above"].shape[0]
+            full_dosage_students = tutoring_hours_per_student[
+                tutoring_hours_per_student['dosage_category'] == "Full Dosage or Above"
+            ].shape[0]
             total_students = tutoring_hours_per_student.shape[0]
             if total_students > 0:
                 percentage_full_dosage = (full_dosage_students / total_students) * 100
@@ -151,20 +153,19 @@ with tab3:
             # Display percentage
             st.write(f"**{percentage_full_dosage:.2f}% of students** are receiving the full dosage or above.")
 
-
             # Cost metrics
             st.write("---")
             st.subheader("Cost Analysis")
 
             col1, col2, col3 = st.columns(3)
-
             total_students = len(tutoring_hours_per_student)
             if total_students > 0:
                 cost_per_student = total_cost / total_students
                 col1.metric(
                     label="Cost Per Student",
                     value=f"${cost_per_student:,.2f}",
-                    delta=f"Total Students: {total_students}"
+                    delta=f"Total Students: {total_students}",
+                    help="Cost Per Student: `Total Cost / Total Students`\n\nThis metric represents the average cost allocated for each student."
                 )
             else:
                 st.warning("No students found.")
@@ -178,45 +179,59 @@ with tab3:
                 (student_df['math_state_score_current_year'] - student_df['math_state_score_one_year_ago']) -
                 (student_df['math_state_score_one_year_ago'] - student_df['math_state_score_two_years_ago'])
             )
-
-            # Average value-added points across students
             average_ela_value_added = student_df['ela_value_added'].mean()
             average_math_value_added = student_df['math_value_added'].mean()
             average_total_value_added = (average_ela_value_added + average_math_value_added) / 2
 
-            # Raw point gains (total points gained from two years ago to current year)
+            # Raw point gains (from two years ago to current year)
             student_df['ela_raw_points_gained'] = student_df['ela_state_score_current_year'] - student_df['ela_state_score_two_years_ago']
             student_df['math_raw_points_gained'] = student_df['math_state_score_current_year'] - student_df['math_state_score_two_years_ago']
             average_ela_raw_gain = student_df['ela_raw_points_gained'].mean()
             average_math_raw_gain = student_df['math_raw_points_gained'].mean()
             average_total_raw_gain = (average_ela_raw_gain + average_math_raw_gain) / 2
 
-            # Calculate cost per point gained
+            # Value-Added Analysis Tooltip (always present)
+            value_added_help = (
+                "Value-Added Cost Per Point:\n\n"
+                "• $VA = (S_{current} - S_{1yr}) - (S_{1yr} - S_{2yr})$\n\n"
+                "• $\\text{Average VA} = \\frac{\\text{ELA VA} + \\text{Math VA}}{2}$\n\n"
+                "This metric shows the cost for each additional point of improvement beyond the typical yearly change."
+            )
+
+            if average_total_value_added < 1:
+                value_added_help += "\n\nNote: The average value-added is less than 1 point, indicating non-substantial improvement."
+
+            st.write("### 📈 Value-Added Analysis")
             if average_total_value_added >= 1:
                 value_added_cost_per_point = total_cost / average_total_value_added
-                st.write("### 📈 Value-Added Analysis")
                 st.metric(
                     label="Value-Added Cost Per Point",
                     value=f"${value_added_cost_per_point:.2f} per point",
                     delta=f"Avg. Value-Added: {average_total_value_added:.2f} points",
-                    help="Value-added measures the improvement in student performance, accounting for expected growth."
+                    help=value_added_help
                 )
             else:
-                st.write("### 📈 Value-Added Analysis")
-                st.warning(f"No value added on average. The average value-added is less than 1 point ({average_total_value_added:.2f}).")
+                st.metric(
+                    label="Value-Added Cost Per Point",
+                    value="N/A",
+                    delta=f"Avg. Value-Added: {average_total_value_added:.2f} points",
+                    help=value_added_help
+                )
 
-            # Raw cost per point
+            # Raw Cost Per Point, Per Student
             if average_total_raw_gain > 0:
-                raw_cost_per_point = (total_cost / average_total_raw_gain) / total_students
+                raw_cost_per_point = total_cost / (average_total_raw_gain * total_students)
                 st.metric(
                     label="Raw Cost Per Point, Per Student",
                     value=f"${raw_cost_per_point:.2f} per point, per student",
                     delta=f"Avg. Total Points Gained: {average_total_raw_gain:.2f} points",
-                    help="This is the cost per point gained, calculated without considering value-added metrics."
+                    help="Raw Cost Per Point, Per Student:\n\n"
+                        "• $\\text{Cost Per Point} = \\frac{\\text{Total Cost}}{\\text{Avg Total Raw Gain} × \\text{Total Students}}$\n\n"
+                        "This metric shows the average cost incurred for each point of raw score improvement per student."
                 )
             else:
                 st.warning("No raw points gained on average. Check your dataset.")
-            
+
             #
             st.write("---")
             st.subheader("More in-depth tools below:")
