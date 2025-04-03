@@ -251,8 +251,10 @@
             <h1><i class="fas fa-file-alt"></i> Student Tutoring Data Validator</h1>
         </header>
         <div class="tabs">
-            <div class="tab active" tabindex="0" onclick="showTab('school')">School Data</div>
-            <div class="tab" tabindex="0" onclick="showTab('provider')">Provider Data</div>
+            <!-- Student Data == School Data -->
+            <div class="tab active" tabindex="0" onclick="showTab('school')">Student Data</div>
+            <!-- Session Data == provider data -->       
+            <div class="tab" tabindex="0" onclick="showTab('provider')">Session Data</div>
         </div>
         <div id="school" class="tab-content active">
             <h2>Validate School Data</h2>
