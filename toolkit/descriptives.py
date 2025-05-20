@@ -1,53 +1,191 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import re
+from datetime import datetime
 
 st.set_page_config(page_title="DATAS Analysis Toolkit", layout="wide")
 
 # Title
 st.title("📊 DATAS Analysis Toolkit")
 
+# util functions
+def validate_data(df: pd.DataFrame, data_type: str):
+    errors = []
+
+    # 1. Empty or header-only file
+    if df.shape[0] <= 0:
+        errors.append("The file appears to be empty or only contains headers.")
+        return errors
+
+    # Normalize column names
+    headers = [c.strip() for c in df.columns]
+
+    if data_type == 'school':
+        expected = [
+            "student_id","district_id","district_name","school_id","school_name",
+            "current_grade_level","gender","ethnicity","ell","iep","gifted_flag",
+            "homeless_flag","ela_state_score_two_years_ago","ela_state_score_one_year_ago",
+            "ela_state_score_current_year","math_state_score_two_years_ago",
+            "math_state_score_one_year_ago","math_state_score_current_year",
+            "performance_level_prior_year","performance_level_current_year",
+            "disability","economic disadvantage"
+        ]
+        missing = [h for h in expected if h not in headers]
+        if missing:
+            errors.append("Invalid Headers – missing or misspelled:")
+            errors += [f"  • {h}" for h in missing]
+            return errors
+
+        unique_eth = set()
+        unique_pp = set()
+        unique_pc = set()
+
+        for i, row in df.iterrows():
+            vals = row.astype(str).str.strip().tolist()
+            if all(v == '' for v in vals):
+                continue
+
+            def chk(field, val):
+                if field == "student_id" and not re.fullmatch(r"\d{10}", val):
+                    return f'Row {i+2}: Invalid student_id "{val}" (should be 10 digits)'
+                if field == "district_id" and not re.fullmatch(r"\d{7}", val):
+                    return f'Row {i+2}: Invalid district_id "{val}" (7 digits)'
+                if field == "school_id" and not re.fullmatch(r"\d{6}", val):
+                    return f'Row {i+2}: Invalid school_id "{val}" (6 digits)'
+                if field == "current_grade_level":
+                    try:
+                        iv = int(val)
+                        if iv < -1 or iv > 12:
+                            return f'Row {i+2}: current_grade_level "{val}" must be -1–12'
+                    except:
+                        return f'Row {i+2}: current_grade_level "{val}" not an integer'
+                if field in ["ell", "iep", "gifted_flag", "homeless_flag", "disability", "economic disadvantage", "gender"]:
+                    bool_val = str(val).lower()
+                    if bool_val not in ("true", "false", "1", "0", "t", "f", "yes", "no", "y", "n", "TRUE", "FALSE", "YES", "NO", "T", "F", "male", "female"):
+                        return f'Row {i+2}: {field} "{val}" must be a boolean value (TRUE/FALSE, True/False, 1/0, etc.)'
+                if field in [
+                    "ela_state_score_two_years_ago","ela_state_score_one_year_ago",
+                    "ela_state_score_current_year","math_state_score_two_years_ago",
+                    "math_state_score_one_year_ago","math_state_score_current_year"
+                ]:
+                    try:
+                        iv = float(val)
+                    except:
+                        return f'Row {i+2}: {field} "{val}" must be a number'
+                if field == "ethnicity":
+                    unique_eth.add(val)
+                if field == "performance_level_prior_year":
+                    unique_pp.add(val)
+                if field == "performance_level_current_year":
+                    unique_pc.add(val)
+                return None
+
+            for col in expected:
+                err = chk(col, str(row[col]))
+                if err:
+                    errors.append(err)
+
+        if len(unique_eth) > 10:
+            errors.append(f"The 'ethnicity' column has >10 unique values ({len(unique_eth)})")
+        if len(unique_pp) > 6:
+            errors.append(f"'performance_level_prior_year' has >6 unique values ({len(unique_pp)})")
+        if len(unique_pc) > 6:
+            errors.append(f"'performance_level_current_year' has >6 unique values ({len(unique_pc)})")
+
+    elif data_type == 'session':
+        expected = ["student_id","session_topic","session_date","session_duration","tutor_id"]
+        missing = [h for h in expected if h not in headers]
+        if missing:
+            errors.append("Invalid Headers – missing or misspelled:")
+            errors += [f"  • {h}" for h in missing]
+            return errors
+
+        for i, row in df.iterrows():
+            vals = row.astype(str).str.strip().tolist()
+            if all(v == '' for v in vals):
+                continue
+
+            sid = str(row["student_id"])
+            if not re.fullmatch(r"\d+", sid):
+                errors.append(f'Row {i+2}: Invalid student_id "{sid}"')
+
+            topic = str(row["session_topic"]).lower()
+            if topic not in ("math","ela"):
+                errors.append(f'Row {i+2}: session_topic "{row["session_topic"]}" must be math or ela')
+
+            date = str(row["session_date"])
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+                errors.append(f'Row {i+2}: Invalid session_date "{date}"')
+            else:
+                try:
+                    y,m,d = map(int, date.split("-"))
+                    _ = datetime(y,m,d)
+                except:
+                    errors.append(f'Row {i+2}: session_date "{date}" is not a real date')
+
+            try:
+                dur = float(row["session_duration"])
+                if dur <= 0:
+                    errors.append(f'Row {i+2}: session_duration "{row["session_duration"]}" must be >0')
+            except:
+                errors.append(f'Row {i+2}: session_duration "{row["session_duration"]}" not a number')
+
+            tid = str(row["tutor_id"]).strip()
+            if not tid:
+                errors.append(f'Row {i+2}: tutor_id must be non-empty')
+
+    return errors
+
 # Tabs
-tab1, tab2, tab3 = st.tabs(["Step 1: Upload Data", "Step 2: Program Characteristics", "Step 3: Charts & Results"])
+tab1, tab2, tab3 = st.tabs(["Step 1: Validate Data", "Step 2: Program Characteristics", "Step 3: Charts & Results"])
 
 # Session state to hold data
-if "provider_data" not in st.session_state:
-    st.session_state["provider_data"] = None
+if "session_data" not in st.session_state:
+    st.session_state["session_data"] = None
 if "student_data" not in st.session_state:
     st.session_state["student_data"] = None
 
-# ---- STEP 1: UPLOAD DATA ----
+# ---- STEP 1: VALIDATE DATA ----
 with tab1:
-    st.header("1. Upload Your Data")
+    st.header("1. Validate Your Data")
     st.write("Feel free to use our example [student](https://drive.google.com/file/d/1FjTLaWGRQd6zlgaXkqHkAU_Gj8kUzgGY/view) and [session](https://drive.google.com/file/d/1ivNs9gFkIIgiABUHEOvsm8mCmvg9nKJ3/view) datasets to explore the toolkit.")
     st.write("To use your own data, upload your session and student below. Be sure that your data is formatted according to our [data dictionary](https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770). Our [validator](https://jasongodfrey.info/data_validator.html) can help you troubleshoot your data formatting.") 
 
-    uploaded_provider_file = st.file_uploader("Upload Tutoring Session Data (CSV)", type="csv", key="provider_uploader")
-    uploaded_student_file = st.file_uploader("Upload Student Data (CSV)", type="csv", key="student_uploader")
+    uploaded_session_file = st.file_uploader("Upload Tutoring Session Data (CSV)", type="csv", key="session_uploader")
+    uploaded_student_file  = st.file_uploader("Upload Student Data (CSV)",  type="csv", key="student_uploader")
 
-    if uploaded_provider_file and uploaded_student_file:
+    if uploaded_session_file and uploaded_student_file:
         try:
-            provider_df = pd.read_csv(uploaded_provider_file)
-            student_df = pd.read_csv(uploaded_student_file)
-            st.session_state["provider_data"] = provider_df
-            st.session_state["student_data"] = student_df
+            session_df = pd.read_csv(uploaded_session_file)
+            student_df  = pd.read_csv(uploaded_student_file)
 
-            st.success("Files uploaded successfully.")
-            with st.expander("Preview Data"):
-                st.write("### Provider Data Sample")
-                st.dataframe(provider_df.head())
-                st.write("### Student Data Sample")
-                st.dataframe(student_df.head())
+            prov_errs = validate_data(session_df, 'session')
+            stud_errs = validate_data(student_df,  'school')
+
+            if prov_errs or stud_errs:
+                st.error("Errors Found:")
+                for e in prov_errs + stud_errs:
+                    st.write(f"- {e}")
+            else:
+                st.success("🎉 Congratulations! Your data are valid.")
+                st.session_state["session_data"] = session_df
+                st.session_state["student_data"]  = student_df
+                with st.expander("Preview Data"):
+                    st.write("### session Data Sample")
+                    st.dataframe(session_df.head())
+                    st.write("### Student Data Sample")
+                    st.dataframe(student_df.head())
+
         except Exception as e:
             st.error(f"Error reading files: {e}")
-
     else:
         st.info("Please upload both CSV files to proceed.")
 
 # ---- STEP 2: ANALYSIS SETTINGS ----
 with tab2:
     st.header("2. Adjust Parameters")
-    if st.session_state["provider_data"] is not None and st.session_state["student_data"] is not None:
+    if st.session_state["session_data"] is not None and st.session_state["student_data"] is not None:
         # User inputs
         full_dosage_threshold = st.number_input(
             "Full dosage threshold (hours)",
@@ -77,19 +215,19 @@ with tab3:
     st.header("3. View Charts & Metrics")
     st.write("---")
     st.subheader("Dosage Insights")
-    if st.session_state["provider_data"] is not None and st.session_state["student_data"] is not None:
-        provider_df = st.session_state["provider_data"]
+    if st.session_state["session_data"] is not None and st.session_state["student_data"] is not None:
+        session_df = st.session_state["session_data"]
         student_df = st.session_state["student_data"]
 
         try:
             # Data prep
-            provider_df['student_id'] = provider_df['student_id'].astype(str)
-            student_df['student_id'] = student_df['student_id'].astype(str)
+            session_df['student_id'] = session_df['student_id'].astype(str).str.strip()
+            student_df['student_id'] = student_df['student_id'].astype(str).str.strip()
 
-            merged_provider_df = provider_df.merge(student_df, on="student_id", how="inner")
-            merged_provider_df['session_duration_hours'] = (merged_provider_df['session_duration'] / 60).round()
+            merged_session_df = session_df.merge(student_df, on="student_id", how="inner")
+            merged_session_df['session_duration_hours'] = (merged_session_df['session_duration'] / 60).round()
 
-            tutoring_hours_per_student = merged_provider_df.groupby("student_id")["session_duration_hours"].sum().reset_index()
+            tutoring_hours_per_student = merged_session_df.groupby("student_id")["session_duration_hours"].sum().reset_index()
             tutoring_hours_per_student['session_duration_hours'] = tutoring_hours_per_student['session_duration_hours'].round()
 
             # Retrieve threshold and total cost
@@ -274,4 +412,3 @@ with tab3:
 st.write("---")
 st.caption("Ensure your files are formatted correctly before uploading. You can validate your data at our [validator](https://jasongodfrey.info/data_validator.html).")
 st.caption("Once you refresh, all data are erased. You may run this tool [locally](https://github.com/accelerate-usa/tutor-data-standard/tree/main/toolkit).")
-

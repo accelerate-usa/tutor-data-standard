@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Tutoring Data Validator</title>
+    <title>Tutoring Data Validator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Include Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -257,7 +257,7 @@
             <div class="tab" tabindex="0" onclick="showTab('provider')">Session Data</div>
         </div>
         <div id="school" class="tab-content active">
-            <h2>Validate School Data</h2>
+            <h2>Validate Student Data</h2>
             <div class="file-upload" id="fileUploadSchool" onclick="document.getElementById('fileInputSchool').click();" ondragover="handleDragOver(event, 'School');" ondragleave="handleDragLeave(event, 'School');" ondrop="handleFileDrop(event, 'School');">
                 <input type="file" id="fileInputSchool" accept=".csv, .xlsx, .json" onchange="handleFileSelect(event, 'School');">
                 <i class="fas fa-cloud-upload-alt fa-3x"></i>
@@ -270,7 +270,7 @@
             <div class="output" id="outputSchool"></div>
         </div>
         <div id="provider" class="tab-content">
-            <h2>Validate Provider Data</h2>
+            <h2>Validate Session Data</h2>
             <div class="file-upload" id="fileUploadProvider" onclick="document.getElementById('fileInputProvider').click();" ondragover="handleDragOver(event, 'Provider');" ondragleave="handleDragLeave(event, 'Provider');" ondrop="handleFileDrop(event, 'Provider');">
                 <input type="file" id="fileInputProvider" accept=".csv, .xlsx, .json" onchange="handleFileSelect(event, 'Provider');">
                 <i class="fas fa-cloud-upload-alt fa-3x"></i>
