@@ -149,8 +149,9 @@ if "student_data" not in st.session_state:
 # ---- STEP 1: VALIDATE DATA ----
 with tab1:
     st.header("1. Validate Your Data")
-    st.write("Feel free to use our example [student](https://drive.google.com/file/d/1FjTLaWGRQd6zlgaXkqHkAU_Gj8kUzgGY/view) and [session](https://drive.google.com/file/d/1ivNs9gFkIIgiABUHEOvsm8mCmvg9nKJ3/view) datasets to explore the toolkit.")
-    st.write("To use your own data, upload your session and student below. Be sure that your data is formatted according to our [data dictionary](https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770). Our [validator](https://jasongodfrey.info/data_validator.html) can help you troubleshoot your data formatting.") 
+    st.write("This tool checks the format of your data against the [DATAS dictionary](https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770). Input your session and student data below, and it will return a list of errors or prompt you to proceed to Step 2.")
+    st.write("If you're just exploring the toolkit, feel free to use our example [session](https://drive.google.com/file/d/1ivNs9gFkIIgiABUHEOvsm8mCmvg9nKJ3/view) and [student](https://drive.google.com/file/d/1FjTLaWGRQd6zlgaXkqHkAU_Gj8kUzgGY/view) datasets.")
+    # st.write("To use your own data, upload your session and student below.")
 
     uploaded_session_file = st.file_uploader("Upload Tutoring Session Data (CSV)", type="csv", key="session_uploader")
     uploaded_student_file  = st.file_uploader("Upload Student Data (CSV)",  type="csv", key="student_uploader")
@@ -410,5 +411,4 @@ with tab3:
         st.info("Please complete Steps 1 and 2 before viewing results.")
 
 st.write("---")
-st.caption("Ensure your files are formatted correctly before uploading. You can validate your data at our [validator](https://jasongodfrey.info/data_validator.html).")
-st.caption("Once you refresh, all data are erased. You may run this tool [locally](https://github.com/accelerate-usa/tutor-data-standard/tree/main/toolkit).")
+st.caption("This tool requires no data upload. Please feel free to run this tool [locally](https://github.com/accelerate-usa/tutor-data-standard/tree/main/toolkit). If you use this tool as is, all data are erased upon refresh.")
