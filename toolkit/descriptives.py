@@ -29,7 +29,7 @@ def validate_data(df: pd.DataFrame, data_type: str):
             "ela_state_score_current_year","math_state_score_two_years_ago",
             "math_state_score_one_year_ago","math_state_score_current_year",
             "performance_level_prior_year","performance_level_current_year",
-            "disability","economic disadvantage"
+            "disability","economic_disadvantage"
         ]
         missing = [h for h in expected if h not in headers]
         if missing:
@@ -60,7 +60,7 @@ def validate_data(df: pd.DataFrame, data_type: str):
                             return f'Row {i+2}: current_grade_level "{val}" must be -1–12'
                     except:
                         return f'Row {i+2}: current_grade_level "{val}" not an integer'
-                if field in ["ell", "iep", "gifted_flag", "homeless_flag", "disability", "economic disadvantage", "gender"]:
+                if field in ["ell", "iep", "gifted_flag", "homeless_flag", "disability", "economic_disadvantage", "gender"]:
                     bool_val = str(val).lower()
                     if bool_val not in ("true", "false", "1", "0", "t", "f", "yes", "no", "y", "n", "TRUE", "FALSE", "YES", "NO", "T", "F", "male", "female"):
                         return f'Row {i+2}: {field} "{val}" must be a boolean value (TRUE/FALSE, True/False, 1/0, etc.)'
