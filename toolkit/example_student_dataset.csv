@@ -1,0 +1,1001 @@
+student_id,district_id,district_name,school_id,school_name,current_grade_level,gender,ethnicity,ell,iep,gifted_flag,homeless_flag,disability,economic_disadvantage,ela_state_score_two_years_ago,ela_state_score_one_year_ago,ela_state_score_current_year,math_state_score_two_years_ago,math_state_score_one_year_ago,math_state_score_current_year,performance_level_two_years_ago,performance_level_prior_year,performance_level_current_year
+3047429848,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,3,True,Other,True,True,True,True,True,True,729,746,767,677,686,697,proficient,proficient,advanced
+7141523668,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,True,Black,False,False,True,False,False,True,651,676,702,682,700,714,basic,proficient,proficient
+4365641163,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,True,Other,True,False,False,True,False,False,633,654,673,730,748,763,proficient,proficient,proficient
+2900531809,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,False,Native American,False,False,True,True,True,True,608,615,624,726,741,762,basic,proficient,proficient
+3717302614,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,6,True,Hispanic,True,False,False,True,False,False,628,631,634,712,728,741,basic,proficient,proficient
+3246484147,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,False,Black,True,True,True,False,True,False,726,738,753,730,739,746,advanced,advanced,advanced
+4572627216,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Other,True,True,True,True,True,True,666,681,696,673,681,687,basic,proficient,proficient
+9738797240,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,Native American,False,False,True,False,False,True,697,716,741,724,736,746,proficient,advanced,advanced
+3454762731,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,2,True,Pacific Islander,False,False,False,True,True,False,654,678,699,720,735,746,proficient,proficient,proficient
+5032982597,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,True,Black,True,False,False,False,False,True,660,671,680,714,737,753,proficient,proficient,proficient
+4251862795,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,10,True,Hispanic,False,True,False,True,False,True,614,627,640,685,696,705,basic,basic,basic
+6434465045,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,Other,True,False,True,False,False,False,743,752,759,687,711,731,proficient,advanced,advanced
+8074359315,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,4,False,Pacific Islander,False,True,False,False,True,True,719,735,752,673,680,687,proficient,proficient,proficient
+3876796239,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,True,Native American,False,False,True,True,False,False,648,662,674,699,703,707,basic,proficient,proficient
+4747993364,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,False,Black,True,True,False,True,True,False,670,693,718,712,717,724,proficient,proficient,proficient
+6702812241,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,False,Asian,False,True,False,True,False,True,609,624,637,734,746,763,basic,proficient,proficient
+1177438500,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,True,Asian,False,True,False,True,True,True,680,700,717,627,643,659,basic,basic,proficient
+8058085142,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Asian,False,True,True,True,True,False,642,656,668,722,744,770,proficient,proficient,proficient
+9800405529,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,True,Asian,False,False,False,False,True,True,640,657,677,728,733,738,proficient,proficient,proficient
+8568722635,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,True,Native American,False,True,True,True,False,False,651,676,696,710,722,735,proficient,proficient,proficient
+7083211499,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,Hispanic,False,False,False,True,True,False,649,662,675,689,702,715,basic,proficient,proficient
+1032912355,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,True,White,True,False,False,True,True,False,642,648,655,664,684,704,basic,basic,proficient
+7837758624,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,True,Pacific Islander,False,False,False,False,False,False,716,722,729,659,664,669,proficient,proficient,proficient
+5914161872,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,True,Black,False,True,False,False,True,False,663,665,668,688,699,707,proficient,proficient,proficient
+6297438170,4603381,Ware Ltd School District,205193,Chandler Inc High School,0,False,Hispanic,False,False,False,False,True,True,615,629,644,601,620,645,basic,basic,basic
+4416103276,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,False,White,False,False,True,True,False,True,685,695,706,665,681,703,proficient,proficient,proficient
+4405885325,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,True,Asian,True,False,True,False,False,False,636,656,680,669,676,684,basic,basic,proficient
+9989769159,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Native American,True,False,False,True,False,False,739,757,775,614,636,655,proficient,proficient,proficient
+5206489295,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,True,Hispanic,False,False,False,True,False,True,612,620,626,715,726,740,basic,basic,proficient
+4970661405,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Native American,False,False,False,False,False,True,702,718,732,670,696,720,proficient,proficient,advanced
+7426346831,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,False,Pacific Islander,True,False,True,True,False,True,617,638,659,723,735,750,basic,proficient,proficient
+3635554171,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,7,True,Hispanic,True,False,True,True,True,True,608,610,612,686,701,721,basic,basic,basic
+4629745264,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,True,Asian,True,True,True,False,True,True,659,677,696,654,672,690,basic,basic,proficient
+3328979477,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,True,Asian,True,True,True,False,True,True,712,731,747,614,618,621,basic,basic,proficient
+8113773795,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,-1,False,Native American,False,False,True,False,True,False,636,642,648,690,700,710,basic,basic,proficient
+1105967939,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,Hispanic,True,False,True,True,False,False,672,687,704,642,644,646,basic,basic,proficient
+5836521746,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,False,Native American,False,False,False,True,True,True,695,706,721,717,729,742,proficient,proficient,advanced
+6591162957,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Native American,False,False,True,True,True,True,716,734,756,609,623,636,basic,proficient,proficient
+6970246872,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,False,Native American,False,False,False,False,True,False,701,718,731,706,715,723,proficient,proficient,advanced
+3889854941,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,6,True,Other,False,True,False,False,True,False,744,760,778,678,692,709,proficient,advanced,advanced
+1870883799,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,False,Black,True,True,False,False,False,True,657,663,670,632,650,668,basic,basic,basic
+7283957671,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,False,Pacific Islander,False,False,False,True,False,False,690,701,716,690,710,726,proficient,proficient,proficient
+9121096466,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,True,Black,False,False,True,False,True,True,717,733,753,652,654,657,proficient,proficient,proficient
+7479311579,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,False,Native American,True,True,False,True,True,True,725,733,741,636,644,651,proficient,proficient,proficient
+9352150739,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,False,Hispanic,False,True,True,False,False,False,667,680,691,630,634,637,basic,basic,basic
+2644146957,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,False,Other,False,False,True,False,False,False,675,686,694,702,719,738,proficient,proficient,proficient
+9006329625,4603381,Ware Ltd School District,205193,Chandler Inc High School,1,False,Pacific Islander,True,True,False,False,True,False,728,742,752,618,632,646,basic,proficient,proficient
+8240239681,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,Hispanic,False,True,False,False,True,True,682,686,689,735,759,777,proficient,proficient,advanced
+4828311885,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,False,White,False,False,True,True,False,True,715,723,732,713,718,724,proficient,proficient,advanced
+3600666465,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,False,Pacific Islander,False,True,False,True,False,False,616,619,623,672,692,714,basic,basic,basic
+3073471239,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,False,Black,True,True,True,True,False,False,659,669,682,674,687,704,basic,proficient,proficient
+6188193415,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,True,Pacific Islander,True,True,True,False,False,False,731,749,768,745,757,773,advanced,advanced,advanced
+9884231495,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,True,White,False,False,True,False,True,True,655,661,666,636,651,670,basic,basic,basic
+9574471873,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,True,Black,False,True,False,False,False,True,708,716,722,680,685,689,proficient,proficient,proficient
+6442094556,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,False,Other,True,True,True,False,True,True,666,677,688,715,727,736,proficient,proficient,proficient
+1086228174,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Native American,True,False,True,False,True,False,615,640,661,643,649,656,basic,basic,basic
+1878060119,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,False,White,False,False,True,False,False,False,664,690,712,683,705,733,basic,proficient,proficient
+4009959537,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,Hispanic,True,False,True,True,False,True,638,664,683,618,639,663,basic,basic,basic
+2026054900,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,False,Asian,False,False,True,True,True,True,677,685,692,650,662,673,basic,basic,proficient
+3936829933,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,False,Other,False,True,False,False,True,False,653,675,692,674,691,707,basic,proficient,proficient
+1802434345,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,False,White,False,True,False,False,True,False,625,649,672,634,646,656,basic,basic,basic
+5605797524,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,True,Other,True,False,True,False,True,True,727,744,763,655,658,662,proficient,proficient,proficient
+3035982176,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,True,Native American,True,False,True,True,True,True,600,612,625,708,721,732,basic,basic,proficient
+9485201913,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,False,Asian,True,False,False,False,False,True,749,768,785,641,644,647,proficient,proficient,proficient
+5210887338,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Hispanic,False,True,True,True,False,True,698,726,751,674,681,688,proficient,proficient,proficient
+5707004012,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,True,Native American,False,True,True,True,False,True,612,636,654,623,644,669,basic,basic,basic
+9111548120,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,False,White,True,True,True,False,True,True,667,674,681,647,666,681,basic,basic,proficient
+8638946875,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,False,Asian,False,False,True,False,True,False,731,735,738,688,700,714,proficient,proficient,advanced
+3272083001,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,True,White,False,True,False,True,True,False,723,727,731,653,667,684,proficient,proficient,proficient
+4181052548,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,2,False,Asian,True,True,False,False,False,True,705,728,750,671,676,683,proficient,proficient,proficient
+5789107954,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,True,Hispanic,False,False,False,False,True,True,621,643,661,695,701,707,basic,basic,proficient
+4741614748,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,True,Hispanic,False,True,True,False,True,False,721,723,725,744,753,762,advanced,advanced,advanced
+9314529391,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,False,Other,True,True,False,False,True,False,683,700,721,683,702,724,proficient,proficient,proficient
+6402958290,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,White,False,False,True,False,True,True,630,639,648,682,704,726,basic,basic,proficient
+5366428245,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,Other,False,False,False,False,False,False,689,697,704,638,666,688,basic,proficient,proficient
+3707970784,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,White,True,True,True,False,False,True,731,745,757,722,728,733,advanced,advanced,advanced
+5482588340,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,White,True,False,True,False,False,False,717,723,730,668,680,690,proficient,proficient,proficient
+1539273869,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,True,Asian,True,False,False,False,True,False,641,659,676,708,719,729,basic,proficient,proficient
+3856046075,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,Black,False,False,False,False,False,False,609,622,638,712,734,762,basic,proficient,proficient
+3209844627,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,False,Hispanic,False,False,False,True,True,False,737,758,780,652,667,679,proficient,proficient,advanced
+7013033577,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,True,White,False,False,False,True,False,True,628,636,648,684,686,689,basic,basic,basic
+2368932038,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,True,Asian,True,False,True,True,True,False,720,747,775,745,761,774,advanced,advanced,advanced
+9710200468,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,White,False,True,False,False,False,True,670,686,703,648,672,690,basic,proficient,proficient
+1570535033,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,White,False,True,True,False,False,False,745,760,772,726,735,745,advanced,advanced,advanced
+9201201286,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Asian,True,False,False,False,False,False,735,751,769,621,640,661,proficient,proficient,proficient
+5238763685,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,Hispanic,True,True,True,True,False,False,644,672,700,692,699,707,basic,proficient,proficient
+5366475417,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,8,False,Native American,True,True,True,True,False,False,701,718,734,640,644,648,basic,proficient,proficient
+2550097378,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,False,Native American,True,True,True,True,True,False,744,755,770,681,688,695,proficient,proficient,advanced
+4657957284,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,White,True,False,True,False,True,True,739,746,754,602,618,635,basic,proficient,proficient
+2886183162,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,True,Hispanic,False,True,True,False,False,True,662,682,697,652,662,675,basic,basic,proficient
+9118612881,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,True,Native American,True,False,True,False,True,True,741,756,771,695,698,702,proficient,advanced,advanced
+3851926692,4603381,Ware Ltd School District,205193,Chandler Inc High School,2,False,Pacific Islander,True,True,False,False,False,False,661,672,683,621,640,659,basic,basic,basic
+4403381169,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,True,Hispanic,False,True,True,True,True,False,617,634,649,625,639,653,basic,basic,basic
+9318195540,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,True,White,True,False,False,False,False,True,686,693,700,669,678,689,proficient,proficient,proficient
+8577307869,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,True,Pacific Islander,False,True,True,True,False,True,678,699,720,704,720,735,proficient,proficient,advanced
+8516906921,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,Black,True,True,True,True,True,False,711,723,736,666,673,680,proficient,proficient,proficient
+7419672522,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,True,White,False,False,True,True,False,True,604,623,644,698,706,715,basic,basic,proficient
+8078103823,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,6,False,Asian,True,True,True,False,False,True,601,614,630,607,612,617,basic,basic,basic
+3710100272,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,True,Hispanic,True,False,True,True,False,False,605,615,628,685,713,740,basic,basic,proficient
+2893305202,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,True,Black,False,True,True,False,False,True,642,651,659,660,674,691,basic,basic,proficient
+2908870950,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,False,Asian,False,False,True,True,False,True,606,627,644,666,684,707,basic,basic,proficient
+4549911345,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,False,Asian,False,True,False,False,True,True,734,743,751,690,704,718,proficient,proficient,advanced
+9080210489,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,4,False,White,False,True,False,True,True,False,679,694,708,679,696,714,proficient,proficient,proficient
+6936955361,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,True,Hispanic,False,True,True,False,False,False,692,697,703,742,769,790,proficient,advanced,advanced
+7529283978,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,False,Hispanic,False,False,False,False,True,True,714,732,751,687,694,703,proficient,proficient,advanced
+5208213256,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,Asian,True,True,False,True,True,False,692,707,722,676,680,685,proficient,proficient,proficient
+2085061898,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,False,Black,False,True,False,True,False,False,664,686,710,746,768,786,proficient,advanced,advanced
+8863593936,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,False,Asian,True,True,False,False,True,False,643,657,668,669,682,696,basic,basic,proficient
+9699180742,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,Asian,False,False,False,False,True,False,708,719,731,729,736,744,proficient,advanced,advanced
+5583266685,4603381,Ware Ltd School District,205193,Chandler Inc High School,0,False,Pacific Islander,False,False,True,True,False,False,618,620,622,748,764,776,proficient,proficient,proficient
+1038776422,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,Black,True,True,False,True,False,False,695,709,727,721,723,725,proficient,proficient,advanced
+4011030733,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,Hispanic,False,True,True,False,False,False,666,678,694,701,714,732,proficient,proficient,proficient
+1791512786,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,True,Other,True,False,False,True,True,False,724,727,729,645,660,675,proficient,proficient,proficient
+4252831330,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,True,Hispanic,False,True,False,False,False,True,652,656,659,606,628,656,basic,basic,basic
+4386309883,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,True,White,False,False,True,True,True,True,648,668,681,686,702,718,basic,proficient,proficient
+5521197700,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Hispanic,False,True,False,True,True,False,617,621,624,686,691,696,basic,basic,basic
+3034775263,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,7,True,Other,False,True,True,True,True,False,691,713,732,709,726,741,proficient,proficient,advanced
+5334363243,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,True,White,False,False,False,False,True,False,673,687,703,661,683,706,basic,proficient,proficient
+9812322029,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,True,Hispanic,True,True,False,False,False,True,665,672,680,655,681,702,basic,proficient,proficient
+3123463001,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,True,Black,False,True,False,False,True,True,616,621,626,746,749,752,proficient,proficient,proficient
+5313056952,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,False,Pacific Islander,False,True,False,False,True,True,715,729,747,710,718,725,proficient,proficient,advanced
+5945814517,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,4,True,Hispanic,False,False,True,True,True,True,739,759,775,712,723,734,advanced,advanced,advanced
+2770312371,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,Asian,True,True,True,False,False,True,686,691,696,718,736,753,proficient,proficient,proficient
+9121718263,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,7,False,Asian,False,True,False,False,True,True,734,749,766,642,663,682,proficient,proficient,proficient
+1498041745,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,False,Native American,False,True,True,False,True,True,689,706,720,727,747,769,proficient,advanced,advanced
+5868344143,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,True,Other,True,False,True,True,True,True,635,639,642,699,718,732,basic,proficient,proficient
+9268608142,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,True,Black,False,True,False,False,True,False,648,657,664,606,619,630,basic,basic,basic
+5704666216,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,True,Asian,True,False,True,False,True,True,686,701,713,743,751,761,proficient,advanced,advanced
+7168782186,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,10,False,Asian,False,False,True,True,True,True,716,733,753,607,615,623,basic,basic,proficient
+3563935963,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,False,Native American,True,False,True,False,False,True,615,628,640,687,692,698,basic,basic,basic
+4451160696,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,Asian,True,True,False,True,False,False,630,640,647,701,718,736,basic,proficient,proficient
+4978808401,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,True,Pacific Islander,False,True,True,True,False,False,740,746,752,697,711,723,proficient,advanced,advanced
+7855899002,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,White,False,True,True,False,True,True,723,728,732,638,646,652,proficient,proficient,proficient
+8895665039,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,True,Hispanic,False,True,False,False,False,False,671,680,690,612,625,640,basic,basic,basic
+4572712658,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,False,Other,True,False,False,True,True,True,731,736,740,647,658,672,proficient,proficient,proficient
+5431232167,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,False,Native American,False,False,False,False,True,True,665,681,698,632,641,651,basic,basic,basic
+6255630034,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Black,True,False,False,True,True,True,686,699,710,638,643,649,basic,basic,proficient
+9331016320,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,False,Asian,True,True,True,False,True,False,691,697,704,723,744,770,proficient,proficient,advanced
+6938288789,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,True,Other,False,False,True,False,False,False,710,717,723,678,690,701,proficient,proficient,proficient
+1581483301,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,7,True,Black,False,False,True,True,False,True,672,698,719,663,669,676,basic,proficient,proficient
+7507034933,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,12,True,White,False,True,False,True,False,False,698,712,726,658,669,680,proficient,proficient,proficient
+3989001100,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,False,Pacific Islander,False,False,False,False,False,True,672,684,698,749,771,788,proficient,advanced,advanced
+9118750832,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,True,Asian,True,True,False,True,True,True,608,634,657,674,684,699,basic,basic,proficient
+6014271560,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,Native American,True,True,False,True,False,False,640,647,653,705,729,757,basic,proficient,proficient
+2177812089,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,3,False,Pacific Islander,True,False,False,False,True,True,692,700,709,672,698,719,proficient,proficient,proficient
+7232130762,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,False,Other,False,True,True,False,False,True,704,710,716,613,626,636,basic,basic,proficient
+3303706244,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Other,True,False,True,True,False,True,742,757,779,673,699,720,proficient,advanced,advanced
+1870076284,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,False,Other,True,True,True,True,True,True,685,690,696,700,715,727,proficient,proficient,proficient
+2093664248,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,6,False,Native American,False,True,False,True,False,False,728,737,745,709,716,724,proficient,advanced,advanced
+4371521710,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,False,Native American,False,True,True,True,True,False,685,711,737,704,719,731,proficient,proficient,advanced
+1376452242,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,Other,False,True,True,False,True,False,648,668,683,658,677,697,basic,basic,proficient
+6057196170,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,True,Other,False,True,False,False,False,True,665,682,696,618,633,646,basic,basic,basic
+2749246155,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,Asian,False,False,False,True,True,True,739,742,746,677,694,707,proficient,proficient,advanced
+2889630018,4603381,Ware Ltd School District,205193,Chandler Inc High School,0,False,Pacific Islander,False,True,True,False,True,False,688,712,738,747,751,755,proficient,advanced,advanced
+3852340197,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,True,Pacific Islander,False,True,True,False,False,False,611,617,624,635,640,645,basic,basic,basic
+4552339528,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,False,Black,False,False,False,False,True,False,648,666,684,618,622,626,basic,basic,basic
+6722200257,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,White,True,False,True,False,False,True,736,740,743,616,625,636,proficient,proficient,proficient
+9653415067,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,False,Other,True,False,True,False,True,False,661,672,681,606,613,620,basic,basic,basic
+1197691607,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,True,White,False,True,False,True,False,False,708,720,734,621,628,639,basic,basic,proficient
+7701770930,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,10,False,White,False,True,False,False,False,True,624,644,663,637,664,691,basic,basic,proficient
+4750627053,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,4,True,White,False,False,False,True,True,True,657,665,671,632,654,677,basic,basic,basic
+7274618647,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,True,Black,False,False,True,False,False,True,651,669,683,645,663,681,basic,basic,proficient
+9387338739,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,False,White,True,False,False,True,True,False,737,748,762,700,709,718,proficient,advanced,advanced
+8349705727,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,False,Asian,True,False,True,False,False,True,722,734,749,645,656,670,proficient,proficient,proficient
+6540819152,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,False,Asian,False,False,False,False,True,False,662,671,677,643,652,661,basic,basic,basic
+2310852211,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,True,Other,False,False,False,True,True,False,666,671,676,703,708,714,proficient,proficient,proficient
+9056499340,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,False,Black,False,False,True,True,False,False,639,654,667,737,741,745,proficient,proficient,proficient
+9340560426,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,Other,False,True,True,False,False,True,746,748,750,605,608,611,proficient,proficient,proficient
+7989815007,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,False,Black,True,False,True,True,False,False,711,715,719,721,736,749,proficient,advanced,advanced
+3564571250,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,True,White,False,True,False,True,False,True,750,763,778,674,685,696,proficient,proficient,advanced
+6896830706,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,False,Asian,True,True,True,False,False,True,640,658,678,660,665,669,basic,basic,basic
+5532130578,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,8,True,Other,True,False,False,True,True,False,634,643,655,651,654,657,basic,basic,basic
+4055433263,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,True,Hispanic,False,False,False,False,False,True,604,624,644,719,722,725,basic,basic,proficient
+1398350572,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,True,Hispanic,True,False,False,False,False,True,746,758,769,654,665,676,proficient,proficient,proficient
+5907914575,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,True,Native American,False,False,False,True,True,True,665,669,675,750,754,758,proficient,proficient,proficient
+2149988839,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,Black,True,False,True,False,True,False,700,712,723,743,747,752,proficient,advanced,advanced
+7963412768,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,True,Asian,False,True,True,False,False,False,675,684,693,697,707,715,proficient,proficient,proficient
+9946112385,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,Pacific Islander,True,True,True,True,False,True,720,728,736,619,629,638,basic,proficient,proficient
+9920741626,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,False,Other,True,True,True,True,True,True,707,722,739,698,704,710,proficient,proficient,proficient
+9038498152,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,True,Pacific Islander,False,True,True,False,False,False,671,690,705,647,653,658,basic,basic,proficient
+2493934117,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Native American,True,False,True,True,False,False,733,747,761,677,683,690,proficient,proficient,advanced
+6039326705,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,False,Asian,True,False,True,True,True,False,688,708,726,747,757,765,proficient,advanced,advanced
+8562549112,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,White,False,False,True,True,True,False,687,695,700,635,647,661,basic,basic,proficient
+8514463524,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,False,Asian,True,True,False,False,False,True,676,685,694,618,629,638,basic,basic,basic
+6771534423,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,Black,False,True,True,True,True,True,648,671,695,619,626,634,basic,basic,basic
+8706116079,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,False,Black,True,False,True,True,True,False,675,696,714,614,625,636,basic,basic,proficient
+5407769185,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,Native American,True,False,True,False,True,False,616,638,659,631,633,636,basic,basic,basic
+9990493064,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,True,Other,False,True,True,False,True,True,643,667,690,663,672,682,basic,basic,proficient
+4984043070,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,False,Other,False,True,False,True,True,True,633,652,669,715,722,730,basic,proficient,proficient
+6302906461,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,Pacific Islander,False,True,True,True,False,False,646,659,676,639,645,651,basic,basic,basic
+8308100531,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Black,False,True,True,True,False,False,628,634,639,686,692,697,basic,basic,basic
+6698330980,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,False,Native American,True,False,True,False,False,True,633,637,641,725,751,771,proficient,proficient,proficient
+1696035469,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,True,Asian,True,False,True,True,False,True,727,743,761,622,638,659,basic,proficient,proficient
+3056264726,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,False,Asian,True,False,True,True,True,False,739,751,763,604,630,650,basic,proficient,proficient
+8151066652,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,True,White,True,True,False,True,False,False,601,610,619,617,624,633,basic,basic,basic
+7537247803,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,True,Hispanic,True,False,True,True,True,True,629,639,649,719,730,739,basic,proficient,proficient
+2230710396,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,True,White,True,False,True,True,False,False,716,720,725,672,689,707,proficient,proficient,proficient
+8601238884,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,True,Native American,False,True,True,True,False,False,737,750,763,600,613,630,basic,proficient,proficient
+9078419448,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,False,Black,False,False,True,True,True,True,699,718,732,725,728,732,proficient,proficient,advanced
+8010034668,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,6,False,Other,False,True,True,True,True,False,614,640,664,713,735,756,basic,proficient,proficient
+5667164734,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,False,Black,True,True,False,True,False,True,643,661,686,704,707,709,basic,proficient,proficient
+2122992556,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,False,Native American,True,True,True,False,False,True,708,716,725,678,701,726,proficient,proficient,advanced
+4392855686,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,White,False,False,True,False,True,True,646,652,657,607,630,653,basic,basic,basic
+2090758198,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,False,White,False,False,True,False,True,True,748,769,783,659,672,684,proficient,proficient,advanced
+6042912503,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,True,Hispanic,False,True,False,True,True,False,605,612,619,651,665,675,basic,basic,basic
+1029764368,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,True,Native American,True,False,False,False,True,False,630,639,647,606,611,616,basic,basic,basic
+7838760001,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,White,False,False,True,True,True,False,722,740,762,691,704,722,proficient,proficient,advanced
+5576782538,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,False,Black,True,False,True,False,True,True,715,730,745,738,754,769,advanced,advanced,advanced
+2248956021,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Native American,True,True,True,True,False,True,724,740,752,676,695,716,proficient,proficient,advanced
+5155104143,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,True,Pacific Islander,False,False,False,True,True,True,606,616,624,750,755,759,proficient,proficient,proficient
+9983502031,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,Other,True,False,False,False,False,False,671,676,681,609,618,627,basic,basic,basic
+2149394192,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,False,Pacific Islander,True,True,False,False,False,True,631,634,638,673,685,699,basic,basic,basic
+5594991810,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,True,White,True,True,True,True,False,True,750,758,764,622,626,630,proficient,proficient,proficient
+5776828402,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,10,False,Other,False,True,True,True,True,True,722,739,760,711,714,717,proficient,advanced,advanced
+9394369776,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,True,Asian,False,True,True,False,False,True,733,742,754,701,720,739,proficient,advanced,advanced
+9775372005,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Other,True,True,True,False,True,True,676,695,714,656,675,690,basic,proficient,proficient
+2973104705,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,False,Asian,True,False,False,True,False,True,674,686,698,750,765,778,proficient,advanced,advanced
+2902024518,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,4,False,Pacific Islander,False,True,True,True,False,True,733,748,764,629,637,646,proficient,proficient,proficient
+4705133472,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Native American,True,False,True,False,False,False,748,751,755,669,671,673,proficient,proficient,proficient
+4679454120,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,True,Asian,True,True,False,True,False,False,634,644,654,666,681,703,basic,basic,proficient
+9610490076,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,5,True,Other,False,False,True,True,True,True,605,632,652,745,767,787,proficient,proficient,proficient
+4641161571,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,False,Pacific Islander,True,False,True,False,True,False,693,711,734,684,709,731,proficient,proficient,advanced
+5766565472,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,False,Asian,False,False,True,True,True,True,719,725,731,643,645,647,proficient,proficient,proficient
+4118524912,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,False,Pacific Islander,True,False,True,False,True,True,659,670,680,724,732,742,proficient,proficient,proficient
+3536009725,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,False,Asian,True,True,False,True,True,True,665,687,709,676,698,723,basic,proficient,proficient
+2930627546,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,False,Native American,True,False,True,False,True,True,748,764,779,713,728,743,advanced,advanced,advanced
+1888971909,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,White,False,True,False,True,True,False,704,729,747,643,645,648,basic,proficient,proficient
+8600224326,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,True,Hispanic,False,False,False,False,False,False,691,699,705,678,686,693,proficient,proficient,proficient
+9450249662,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,False,Pacific Islander,False,True,True,True,True,True,728,745,762,676,694,716,proficient,proficient,advanced
+8108340946,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,-1,False,Pacific Islander,True,True,False,False,True,True,720,741,762,621,624,627,basic,proficient,proficient
+7203044101,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,False,Native American,True,True,True,True,False,False,714,723,731,731,743,755,proficient,advanced,advanced
+8682070110,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,True,Asian,True,True,True,False,True,True,698,712,729,636,650,670,basic,proficient,proficient
+2042640182,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,Asian,False,True,True,False,True,False,690,701,716,677,679,681,proficient,proficient,proficient
+5583000970,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,True,Black,True,True,False,True,False,True,642,669,697,609,626,642,basic,basic,basic
+2494212892,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Pacific Islander,False,True,True,False,True,False,628,633,639,721,732,745,basic,proficient,proficient
+1395947961,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,True,Asian,False,True,True,True,True,False,688,707,725,674,697,719,proficient,proficient,proficient
+2807170715,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,True,Asian,True,False,False,True,False,True,715,737,753,600,613,628,basic,proficient,proficient
+5065919866,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,True,Hispanic,True,True,True,True,False,False,731,741,750,742,746,750,advanced,advanced,advanced
+5939023158,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,True,Pacific Islander,True,True,False,False,True,True,636,655,673,699,725,749,basic,proficient,proficient
+1084169763,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,False,Hispanic,False,False,True,True,True,True,740,757,773,728,742,761,advanced,advanced,advanced
+4836173605,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,True,Pacific Islander,True,False,True,False,True,True,660,666,672,739,746,752,proficient,proficient,proficient
+7710805952,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,Hispanic,False,False,False,True,True,False,653,660,665,641,657,674,basic,basic,basic
+2588362069,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,True,Black,True,True,False,True,True,False,695,698,701,702,708,714,proficient,proficient,proficient
+9737027853,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Pacific Islander,False,True,True,True,False,False,748,757,764,649,653,657,proficient,proficient,proficient
+6984134722,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Pacific Islander,False,False,True,True,True,False,648,660,669,731,750,768,proficient,proficient,proficient
+9306438213,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,False,Asian,True,False,True,False,False,False,641,652,662,690,705,723,basic,proficient,proficient
+7314127059,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,2,False,Black,True,False,False,False,True,False,625,630,634,719,738,757,basic,proficient,proficient
+7667726436,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,False,Other,False,False,False,False,False,False,608,619,627,682,691,700,basic,basic,basic
+8355182465,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Hispanic,False,False,True,False,True,True,737,741,744,701,707,714,proficient,proficient,advanced
+3201096830,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,False,Other,False,False,True,True,False,True,698,711,725,706,729,750,proficient,proficient,advanced
+9582589116,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,False,Pacific Islander,True,True,False,False,True,True,735,753,768,729,751,770,advanced,advanced,advanced
+8440580212,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,Other,False,True,False,True,False,False,707,719,730,606,629,649,basic,basic,proficient
+4447591097,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,True,White,False,True,True,False,False,False,616,637,659,605,633,659,basic,basic,basic
+3165701612,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,False,Other,True,False,True,False,True,False,605,616,628,634,652,673,basic,basic,basic
+7090953994,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,False,Pacific Islander,True,True,False,False,False,True,663,678,691,616,644,669,basic,basic,proficient
+5971837280,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,True,Hispanic,True,True,False,True,True,False,646,651,655,714,736,761,proficient,proficient,proficient
+7384050208,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,True,Asian,False,True,True,False,True,False,608,631,654,639,655,671,basic,basic,basic
+2533446276,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,True,Native American,True,True,True,True,False,True,686,691,698,679,692,704,proficient,proficient,proficient
+3739891795,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,False,Native American,True,True,False,True,True,True,612,637,658,733,736,738,basic,proficient,proficient
+4445373197,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,Asian,True,False,False,False,True,True,629,646,669,638,642,645,basic,basic,basic
+8860788295,4603381,Ware Ltd School District,205193,Chandler Inc High School,2,False,Pacific Islander,True,True,False,False,True,False,695,700,707,723,742,762,proficient,proficient,advanced
+3171520625,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,True,White,True,False,True,False,True,True,662,684,704,617,624,631,basic,basic,basic
+2668799250,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,True,Other,True,True,False,True,True,False,682,684,687,600,614,630,basic,basic,basic
+8210308395,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,True,Hispanic,False,True,False,False,False,False,669,677,684,684,694,705,proficient,proficient,proficient
+7444904222,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,True,Asian,True,False,False,False,True,False,638,656,680,702,705,708,basic,proficient,proficient
+8804006986,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Pacific Islander,False,True,True,False,False,True,676,696,717,646,671,696,basic,proficient,proficient
+6457985092,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,False,Pacific Islander,True,False,True,True,True,False,648,658,671,698,702,707,basic,proficient,proficient
+1080103376,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,True,Black,True,False,True,False,True,True,667,683,699,674,680,685,basic,proficient,proficient
+9942138888,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,True,Asian,True,False,False,True,False,True,746,752,757,741,758,773,advanced,advanced,advanced
+6610538584,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,True,Hispanic,True,False,False,True,True,True,740,753,766,607,627,649,basic,proficient,proficient
+8319443844,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,True,Asian,False,True,False,True,False,False,681,696,711,695,718,744,proficient,proficient,advanced
+8854152293,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,True,White,True,False,False,True,True,False,716,738,760,663,683,704,proficient,proficient,advanced
+7857767646,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,False,Hispanic,False,False,True,False,False,True,606,608,610,628,645,661,basic,basic,basic
+8324470577,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,White,False,True,True,True,True,True,723,735,748,618,641,662,basic,proficient,proficient
+2829715289,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,White,True,True,True,True,True,True,728,751,774,654,665,677,proficient,proficient,advanced
+3950262877,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,True,Other,False,True,False,True,False,False,609,628,650,683,690,698,basic,basic,basic
+1889794409,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Pacific Islander,False,True,True,True,False,True,677,690,703,688,707,732,proficient,proficient,proficient
+3985927993,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,True,Native American,False,False,True,True,False,False,713,731,751,603,625,642,basic,proficient,proficient
+4078413243,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,3,False,Black,True,False,False,False,False,False,620,628,635,733,759,786,proficient,proficient,proficient
+6942401027,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,White,False,False,False,True,True,False,640,652,663,641,651,662,basic,basic,basic
+6908743209,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,True,Hispanic,True,False,True,False,False,True,600,609,618,669,693,717,basic,basic,basic
+1636184230,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,Other,False,False,False,False,False,True,668,690,712,615,623,629,basic,basic,basic
+3090779122,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,False,Hispanic,False,False,True,True,False,False,662,679,697,723,726,729,proficient,proficient,proficient
+9020119502,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,True,Hispanic,True,False,False,True,False,True,746,755,764,714,727,741,advanced,advanced,advanced
+1111690288,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,False,White,True,True,False,True,False,False,726,747,769,612,617,622,basic,proficient,proficient
+7742063096,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Pacific Islander,False,True,True,False,False,False,613,627,646,682,699,716,basic,basic,proficient
+4423750532,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,False,Black,False,True,True,False,True,True,692,712,729,614,620,628,basic,basic,proficient
+6809195008,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,8,False,Native American,False,True,False,True,False,False,750,752,755,745,762,784,advanced,advanced,advanced
+9418179356,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,False,White,True,True,True,True,True,True,731,748,765,749,754,762,advanced,advanced,advanced
+1870624018,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,True,Native American,False,False,False,True,True,True,692,714,730,610,625,637,basic,basic,proficient
+8452986676,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,12,False,White,True,False,True,True,True,True,737,745,754,646,657,671,proficient,proficient,proficient
+4764680907,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,Native American,True,True,False,True,False,False,701,707,712,649,660,669,proficient,proficient,proficient
+7027574799,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,False,Hispanic,False,True,False,True,False,False,717,726,736,691,709,729,proficient,proficient,advanced
+3015337590,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,False,Native American,True,True,True,False,True,True,646,668,689,665,690,713,basic,proficient,proficient
+7573961634,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,True,Other,False,False,False,False,False,True,739,746,754,604,613,622,basic,proficient,proficient
+9672270635,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,False,Pacific Islander,False,True,False,False,True,False,678,705,732,625,629,633,basic,basic,proficient
+1346025048,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,False,Native American,False,True,True,True,True,True,739,754,768,654,658,663,proficient,proficient,proficient
+2527699426,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,Pacific Islander,True,True,False,False,False,True,615,625,635,666,685,710,basic,basic,basic
+2203895286,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Native American,False,True,False,False,True,True,713,720,727,684,695,708,proficient,proficient,proficient
+4990817545,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,-1,True,Pacific Islander,True,False,False,True,True,True,623,634,643,696,713,725,basic,basic,proficient
+7302298549,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,True,Hispanic,False,True,True,False,False,True,718,733,754,674,678,682,proficient,proficient,proficient
+4352818422,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,True,Pacific Islander,True,False,True,False,False,True,726,738,750,638,652,670,proficient,proficient,proficient
+1750764454,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,False,Hispanic,False,True,True,False,False,True,698,701,704,619,632,647,basic,basic,proficient
+4553149659,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,True,Pacific Islander,True,True,True,True,True,True,627,633,639,656,665,675,basic,basic,basic
+1141407405,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,True,Asian,False,True,False,False,True,False,720,723,727,670,678,688,proficient,proficient,proficient
+4985091135,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,True,Pacific Islander,True,True,True,True,False,False,712,720,728,622,633,643,basic,proficient,proficient
+4544291161,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Native American,False,True,False,True,False,True,642,662,679,715,737,761,proficient,proficient,proficient
+2261516768,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,5,False,Hispanic,True,False,False,True,True,False,628,640,656,667,681,698,basic,basic,proficient
+7645373778,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,False,Other,True,False,False,False,False,False,647,653,660,730,749,765,proficient,proficient,proficient
+1326453192,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,True,White,False,False,False,True,True,False,741,746,751,699,718,738,proficient,advanced,advanced
+1944968326,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,White,True,False,False,False,False,True,739,758,775,737,743,749,advanced,advanced,advanced
+6956064401,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,False,Native American,True,True,False,True,True,False,611,617,625,601,617,636,basic,basic,basic
+9700314010,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,False,Pacific Islander,True,True,False,False,True,True,676,693,712,650,667,689,basic,proficient,proficient
+9477033186,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,6,True,Asian,True,True,False,True,True,False,691,714,734,669,685,702,proficient,proficient,proficient
+1269885776,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,False,Native American,False,True,False,True,True,True,719,726,732,669,674,679,proficient,proficient,proficient
+4001378083,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,True,Pacific Islander,True,True,True,True,True,True,723,743,762,705,710,714,proficient,advanced,advanced
+5812403651,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,3,True,Pacific Islander,True,False,True,True,False,True,675,689,706,716,732,745,proficient,proficient,advanced
+8341181826,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,Native American,False,True,True,True,True,True,679,693,709,720,731,743,proficient,proficient,advanced
+1851778709,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,True,Hispanic,False,False,False,True,False,True,618,645,671,664,672,683,basic,basic,proficient
+9727084022,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,False,Hispanic,True,True,False,True,False,False,703,720,741,695,714,734,proficient,proficient,advanced
+9688175328,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,True,White,True,True,False,True,False,False,601,604,607,722,728,737,basic,basic,basic
+8636232748,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Hispanic,False,True,False,True,True,False,604,612,620,728,750,770,basic,proficient,proficient
+8696164079,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Native American,True,False,True,False,False,False,708,729,745,633,638,644,basic,proficient,proficient
+1235830037,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Hispanic,True,False,True,False,True,True,693,697,702,629,636,642,basic,basic,basic
+4978653826,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,True,Native American,True,False,True,True,False,False,694,697,700,612,630,654,basic,basic,proficient
+6182733233,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,True,Hispanic,True,True,True,True,False,False,710,715,720,733,750,764,proficient,advanced,advanced
+5214859050,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,Native American,True,False,True,True,False,True,718,723,726,744,753,764,advanced,advanced,advanced
+1810656111,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,True,Other,True,False,True,False,True,False,645,656,664,603,622,645,basic,basic,basic
+7392556106,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,False,Asian,True,True,True,False,True,True,665,682,698,743,754,763,proficient,proficient,advanced
+6116871897,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Black,True,True,False,False,False,True,622,646,665,704,714,724,basic,proficient,proficient
+7103640026,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,True,Pacific Islander,False,True,True,False,False,False,737,745,754,703,715,729,proficient,advanced,advanced
+9933384777,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,False,Other,True,False,True,False,True,False,605,615,626,661,664,667,basic,basic,basic
+8597152699,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Hispanic,False,False,True,True,True,False,668,678,686,705,722,739,proficient,proficient,proficient
+2211631246,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,-1,True,White,False,True,True,True,False,True,601,611,622,658,663,669,basic,basic,basic
+6641102341,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,False,Hispanic,False,True,False,False,True,True,640,650,659,662,668,674,basic,basic,basic
+2251475027,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Other,True,False,True,True,True,False,683,702,721,645,669,691,basic,proficient,proficient
+2252773234,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Other,True,True,False,True,True,True,643,645,647,687,698,709,basic,basic,proficient
+3315394934,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,7,True,Pacific Islander,True,True,False,False,False,True,663,677,691,722,742,764,proficient,proficient,advanced
+3701786185,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,False,Hispanic,True,True,True,False,True,False,701,721,737,646,651,658,basic,proficient,proficient
+7119941821,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,True,Asian,False,False,True,False,True,False,702,723,740,694,700,705,proficient,proficient,proficient
+1075371678,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,Pacific Islander,True,True,False,False,True,True,683,695,704,715,731,746,proficient,proficient,advanced
+4203062291,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,False,Hispanic,True,False,True,True,False,False,640,643,645,725,730,737,proficient,proficient,proficient
+6133041942,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,Native American,True,True,False,False,True,False,629,642,655,620,635,650,basic,basic,basic
+2147379955,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,False,Asian,True,False,False,True,False,False,661,667,675,607,626,651,basic,basic,basic
+1705423054,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,False,Asian,False,True,True,True,True,True,744,762,778,673,687,701,proficient,proficient,advanced
+5565986480,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,True,Native American,False,True,True,True,True,False,690,708,727,687,700,717,proficient,proficient,proficient
+9523689651,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,False,Other,True,False,True,False,False,True,693,707,722,602,607,613,basic,basic,basic
+9787144359,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,False,Pacific Islander,False,False,False,True,True,True,658,680,699,620,641,661,basic,basic,proficient
+9583745462,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,False,Asian,False,True,False,True,False,False,711,721,730,721,735,750,proficient,advanced,advanced
+1036476479,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,False,Native American,True,True,False,True,True,True,671,697,722,657,668,681,basic,proficient,proficient
+7196595841,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,7,False,Pacific Islander,False,True,True,True,True,True,703,715,728,622,630,640,basic,basic,proficient
+4286951858,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,True,White,False,False,False,False,True,False,703,706,708,631,642,653,basic,basic,proficient
+1904919888,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,5,True,Hispanic,False,True,True,False,True,True,648,666,681,747,757,766,proficient,proficient,proficient
+7601230058,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,True,White,True,False,False,True,False,True,738,747,757,696,720,736,proficient,advanced,advanced
+6344778721,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Other,True,False,False,False,True,False,686,696,710,739,743,748,proficient,proficient,advanced
+9212422892,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,True,Hispanic,True,False,False,True,False,True,608,622,634,728,742,755,basic,proficient,proficient
+8870920790,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,True,Pacific Islander,True,False,False,False,True,False,739,742,745,731,735,740,advanced,advanced,advanced
+6808907361,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Hispanic,True,False,True,True,False,False,748,757,764,712,731,748,advanced,advanced,advanced
+3782828487,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,White,True,True,False,False,False,True,667,682,698,662,667,671,basic,basic,proficient
+5125151358,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,Asian,True,True,True,False,True,False,659,665,671,718,723,727,proficient,proficient,proficient
+4068174680,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,False,Native American,False,True,False,False,False,False,615,632,653,622,633,644,basic,basic,basic
+9094592159,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,True,White,True,False,True,False,True,False,724,746,772,710,723,732,proficient,advanced,advanced
+6951388667,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Other,True,False,False,True,True,False,701,723,740,715,726,735,proficient,proficient,advanced
+8852644588,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,False,Hispanic,False,True,True,False,True,True,608,616,621,650,678,704,basic,basic,basic
+5495396213,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,False,Native American,False,False,True,False,False,False,715,721,725,648,657,663,proficient,proficient,proficient
+7125117002,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Hispanic,True,False,False,False,True,False,686,706,722,714,734,754,proficient,proficient,advanced
+2191104156,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,True,Black,False,True,False,True,True,True,732,739,748,711,728,742,proficient,advanced,advanced
+8972512017,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,False,Pacific Islander,True,False,True,False,True,True,749,759,768,686,713,733,proficient,advanced,advanced
+1660025121,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,True,Native American,False,True,True,True,True,True,684,701,720,730,738,744,proficient,proficient,advanced
+5190731296,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,True,Black,True,False,True,True,False,False,651,666,686,610,618,624,basic,basic,basic
+8537930974,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,2,False,Native American,False,True,True,False,False,True,696,700,704,711,725,735,proficient,proficient,proficient
+7771312151,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,True,Black,True,False,True,False,False,False,652,654,656,743,749,758,proficient,proficient,proficient
+6074551197,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,True,White,False,True,True,True,False,True,625,635,646,641,649,658,basic,basic,basic
+7018206689,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,True,Native American,False,True,False,False,False,False,729,747,764,692,710,725,proficient,advanced,advanced
+9366456532,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,6,True,Asian,True,False,True,True,True,False,743,756,769,638,655,677,proficient,proficient,proficient
+3956656731,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,Pacific Islander,False,True,False,False,False,True,697,706,716,705,720,735,proficient,proficient,advanced
+8822402277,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,False,Hispanic,True,False,False,True,False,False,645,654,662,623,634,648,basic,basic,basic
+2245709651,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,True,Native American,False,True,False,True,False,False,627,636,647,684,687,690,basic,basic,basic
+2194826491,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,False,White,False,False,False,True,True,True,743,746,750,650,662,674,proficient,proficient,proficient
+3288363597,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,True,Native American,False,False,True,True,True,False,709,724,734,612,627,645,basic,proficient,proficient
+5942296009,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,True,Asian,True,True,True,True,True,False,631,654,677,630,639,646,basic,basic,basic
+6016440087,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,False,Native American,False,True,True,False,True,False,691,706,724,731,734,737,proficient,proficient,advanced
+8831459233,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,True,Asian,True,True,True,False,True,False,682,700,720,687,704,718,proficient,proficient,proficient
+8572174733,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,Native American,True,True,False,False,True,False,696,707,718,686,699,713,proficient,proficient,proficient
+5987346665,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,True,Asian,False,True,True,False,False,True,712,721,731,667,670,673,proficient,proficient,proficient
+6486352767,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,False,Other,True,False,False,False,False,True,656,662,668,631,645,660,basic,basic,basic
+9708205976,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Native American,True,False,True,False,False,True,649,668,685,640,642,644,basic,basic,basic
+2264521308,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,False,Asian,False,True,True,False,True,True,677,688,698,605,612,620,basic,basic,basic
+8533355945,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,False,Asian,True,True,True,False,True,False,737,740,743,716,723,730,advanced,advanced,advanced
+2437980960,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,White,False,True,True,True,True,True,672,694,719,646,662,684,basic,proficient,proficient
+2794788024,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,True,White,False,True,False,True,True,False,743,759,776,737,757,777,advanced,advanced,advanced
+8498597239,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,7,True,Pacific Islander,True,False,False,True,False,True,654,674,693,686,707,730,basic,proficient,proficient
+9724957113,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,7,False,Black,True,True,False,True,False,False,680,693,704,671,684,697,proficient,proficient,proficient
+8982584107,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,True,White,False,False,True,False,True,True,639,643,647,674,680,687,basic,basic,basic
+2881790728,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,Other,False,False,False,True,False,False,673,692,711,683,700,721,proficient,proficient,proficient
+2493004376,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,2,False,Asian,True,False,True,False,False,False,664,679,695,674,679,685,basic,proficient,proficient
+7072551568,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,False,White,False,True,False,False,True,True,663,674,687,738,766,793,proficient,proficient,advanced
+6644113932,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,True,Pacific Islander,False,False,False,False,True,False,706,724,741,661,664,668,proficient,proficient,proficient
+8412559229,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Pacific Islander,True,True,True,False,True,True,664,674,685,600,602,604,basic,basic,basic
+7842489834,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,False,Other,True,False,True,False,True,True,681,684,688,647,656,664,basic,basic,proficient
+1184564898,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,True,Hispanic,False,False,True,True,False,True,605,619,635,662,680,695,basic,basic,basic
+8327075177,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,True,Black,False,True,True,True,True,False,616,639,658,740,746,754,proficient,proficient,proficient
+8909546335,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,False,Asian,True,True,True,False,False,True,702,719,741,698,717,733,proficient,proficient,advanced
+2859896713,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,False,Native American,False,True,True,False,True,False,626,640,655,660,666,672,basic,basic,basic
+7034824177,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Pacific Islander,False,False,True,False,False,False,619,644,664,735,751,766,proficient,proficient,proficient
+3885186483,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Pacific Islander,False,True,False,True,True,False,684,689,693,723,739,759,proficient,proficient,advanced
+1218320780,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Black,True,True,True,False,False,False,626,634,642,666,670,675,basic,basic,basic
+4235675643,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,True,Asian,False,True,True,True,True,True,687,708,734,696,703,711,proficient,proficient,proficient
+2072938148,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Asian,True,True,False,False,True,False,747,759,771,713,727,739,advanced,advanced,advanced
+3801726861,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,True,Other,True,False,False,False,True,True,672,677,683,600,610,620,basic,basic,basic
+2333895274,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,4,True,Asian,True,False,False,True,True,True,714,742,769,735,739,743,proficient,advanced,advanced
+9366158009,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,False,Asian,False,True,False,True,True,False,637,642,648,643,647,650,basic,basic,basic
+1725591513,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Pacific Islander,True,True,True,True,False,False,636,647,655,750,765,779,proficient,proficient,proficient
+2700064959,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,True,Asian,False,False,False,False,False,True,746,754,760,632,644,655,proficient,proficient,proficient
+6895313001,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Asian,False,False,True,True,False,True,716,722,727,747,767,785,advanced,advanced,advanced
+9956641088,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,Asian,False,True,False,False,True,False,683,691,698,677,685,694,proficient,proficient,proficient
+5223041039,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,False,Other,False,True,False,False,False,False,681,693,706,604,614,624,basic,basic,basic
+5712675625,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,False,Black,False,False,True,False,False,True,647,665,684,657,665,674,basic,basic,proficient
+5490045440,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,Black,False,False,True,True,True,True,662,666,670,600,603,608,basic,basic,basic
+6151749043,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,False,White,False,True,False,True,False,False,617,640,664,676,701,724,basic,basic,proficient
+5747283259,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,7,True,Pacific Islander,True,True,False,True,True,False,615,632,651,701,715,729,basic,basic,proficient
+5526485400,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,True,Black,True,True,False,True,False,True,723,736,750,623,636,655,basic,proficient,proficient
+9502624619,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,False,Asian,False,True,False,True,True,False,707,728,748,708,728,743,proficient,advanced,advanced
+4027147986,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,True,Pacific Islander,True,True,True,False,True,True,722,740,760,719,738,753,proficient,advanced,advanced
+4217930505,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Asian,False,False,True,False,False,True,690,703,721,702,721,746,proficient,proficient,advanced
+9156949143,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,False,White,False,False,True,True,True,True,692,707,723,642,658,671,basic,proficient,proficient
+1049545272,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,False,Asian,False,True,True,True,False,False,613,637,662,603,612,621,basic,basic,basic
+9581126864,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,True,Asian,True,True,True,True,False,False,734,740,747,702,709,716,proficient,proficient,advanced
+2532547757,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,True,Native American,False,True,False,True,False,False,643,656,669,709,732,755,proficient,proficient,proficient
+5968880925,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,White,False,False,True,True,False,False,716,724,734,676,687,700,proficient,proficient,proficient
+5137083332,4603381,Ware Ltd School District,205193,Chandler Inc High School,0,False,Native American,False,False,True,False,True,True,693,710,730,664,686,703,proficient,proficient,proficient
+6235640083,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,False,Hispanic,False,True,False,True,True,False,718,729,741,637,664,691,proficient,proficient,proficient
+7844941882,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,10,False,Other,False,False,True,False,True,True,612,630,646,600,623,644,basic,basic,basic
+9763344456,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,False,Hispanic,True,False,True,False,True,True,610,632,655,654,657,661,basic,basic,basic
+1618866323,5000332,Frederick-Zamora School District,164948,Flores PLC High School,11,False,Other,True,False,True,True,True,True,640,654,666,644,664,684,basic,basic,proficient
+9250093532,4603381,Ware Ltd School District,205193,Chandler Inc High School,1,False,Black,False,True,True,True,True,True,724,731,736,620,626,633,basic,proficient,proficient
+5568251019,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,True,Native American,True,False,True,False,False,True,697,714,733,628,651,668,basic,proficient,proficient
+8049601023,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,True,Black,True,False,False,False,False,True,621,645,664,658,663,668,basic,basic,basic
+6989247125,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Black,False,True,True,False,False,True,651,663,674,642,649,655,basic,basic,basic
+2937034167,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,False,Hispanic,True,False,False,True,True,True,713,733,752,682,685,687,proficient,proficient,proficient
+5934857113,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,White,False,True,True,True,False,True,702,728,749,730,741,750,proficient,advanced,advanced
+6346591807,4603381,Ware Ltd School District,205193,Chandler Inc High School,1,True,Asian,False,False,True,False,False,False,650,661,671,667,671,674,basic,basic,basic
+5825345601,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,White,True,True,False,True,False,True,679,687,695,710,718,728,proficient,proficient,proficient
+5192635889,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,False,Black,True,True,True,True,False,True,685,700,715,745,758,772,proficient,advanced,advanced
+7040817073,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,-1,True,Pacific Islander,False,False,True,True,True,False,611,623,637,664,685,703,basic,basic,basic
+9812396767,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,5,False,Black,False,True,False,True,True,False,725,731,739,634,637,640,proficient,proficient,proficient
+7947292978,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,5,False,Native American,False,True,False,False,False,True,633,636,639,728,735,743,proficient,proficient,proficient
+2465558341,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,False,Pacific Islander,True,True,True,False,True,False,622,629,637,708,729,751,basic,proficient,proficient
+6979607695,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,False,Other,True,True,False,False,False,True,726,740,754,744,750,755,advanced,advanced,advanced
+9810962223,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,Native American,False,False,False,False,False,False,609,628,649,718,731,741,basic,proficient,proficient
+6185512046,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,True,Other,False,False,True,False,False,True,661,663,665,690,711,732,proficient,proficient,proficient
+8962498089,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,Asian,True,True,True,True,False,True,742,745,748,621,643,663,proficient,proficient,proficient
+2281840418,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,True,Pacific Islander,False,False,False,False,False,False,748,765,788,604,623,645,proficient,proficient,proficient
+8905169631,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,True,Native American,False,True,False,True,False,True,633,636,638,745,767,795,proficient,proficient,proficient
+2755972164,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,Hispanic,True,True,False,True,False,True,692,710,733,749,760,774,proficient,advanced,advanced
+6313571828,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,False,Hispanic,True,True,False,True,True,False,648,657,665,635,647,657,basic,basic,basic
+5537078091,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Hispanic,False,True,True,True,True,False,608,619,629,735,743,751,basic,proficient,proficient
+6342930123,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Pacific Islander,False,False,True,True,False,True,682,701,718,717,722,727,proficient,proficient,proficient
+1285106395,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,Pacific Islander,True,True,False,True,True,False,619,627,633,669,681,692,basic,basic,basic
+1500718344,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,True,White,True,False,False,False,True,True,699,712,724,659,665,671,proficient,proficient,proficient
+7765583200,4603381,Ware Ltd School District,205193,Chandler Inc High School,2,True,White,True,True,False,True,False,True,725,731,737,720,737,751,proficient,advanced,advanced
+6792051478,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,Black,False,False,False,False,False,True,738,753,766,645,661,674,proficient,proficient,proficient
+2429349600,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,False,Pacific Islander,False,False,False,True,True,True,707,715,724,659,673,682,proficient,proficient,proficient
+7286798053,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,True,White,False,False,True,False,True,False,685,698,709,727,737,747,proficient,proficient,advanced
+2843549812,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,Native American,False,True,True,False,True,True,701,723,740,732,744,757,proficient,advanced,advanced
+5236210959,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,Asian,True,False,False,False,False,True,601,628,653,702,718,734,basic,basic,proficient
+6556133610,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,False,Hispanic,True,False,True,True,True,True,692,712,731,628,634,640,basic,basic,proficient
+8522701398,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,True,White,True,True,False,False,False,True,680,703,723,715,728,746,proficient,proficient,advanced
+8499438484,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,Hispanic,True,True,True,False,False,False,712,717,723,747,757,767,advanced,advanced,advanced
+7681645235,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,Black,False,True,False,False,False,True,618,629,642,656,668,683,basic,basic,basic
+6917133985,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,False,Other,True,False,True,True,True,True,709,721,734,739,750,763,proficient,advanced,advanced
+2784094906,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,True,Hispanic,False,True,True,True,False,True,625,642,660,642,666,687,basic,basic,basic
+4389767485,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,True,Black,False,True,True,True,False,False,661,685,703,672,691,713,basic,proficient,proficient
+8705530348,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,False,Hispanic,False,True,True,False,False,False,657,680,702,625,647,666,basic,basic,proficient
+7263808304,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,False,White,False,False,True,True,False,False,689,696,702,641,656,675,basic,proficient,proficient
+5222476445,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Pacific Islander,False,False,False,True,True,True,607,618,632,731,747,766,basic,proficient,proficient
+3621981713,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,False,Native American,True,False,True,False,False,True,736,758,780,727,744,760,advanced,advanced,advanced
+3080928798,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Black,True,False,False,True,False,True,712,717,722,697,700,702,proficient,proficient,proficient
+6959965734,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,False,Native American,False,False,True,False,False,False,746,765,785,601,608,615,basic,proficient,proficient
+6222264558,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,Native American,False,True,False,False,False,False,691,698,704,666,670,674,proficient,proficient,proficient
+5014370453,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Black,True,True,False,False,True,True,670,691,719,712,726,739,proficient,proficient,advanced
+4638485164,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Hispanic,True,False,True,False,False,True,738,757,775,704,727,746,proficient,advanced,advanced
+7455102528,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Hispanic,True,True,True,False,True,False,660,670,680,733,752,772,proficient,proficient,advanced
+7259258716,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,False,Asian,False,False,False,True,True,False,662,678,698,745,766,791,proficient,proficient,advanced
+9294117756,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,True,Black,False,False,True,False,True,False,664,680,695,625,630,636,basic,basic,basic
+5231597126,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,False,White,True,True,True,False,False,False,722,735,747,724,727,730,proficient,advanced,advanced
+3229877784,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,6,True,Black,False,False,False,True,False,False,700,721,744,631,633,635,basic,proficient,proficient
+6668936916,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,Black,True,True,False,True,False,True,672,697,720,610,626,638,basic,basic,proficient
+5312843204,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,White,False,False,True,False,False,True,659,667,675,660,682,700,basic,basic,proficient
+5930291793,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,True,Asian,False,False,False,False,True,False,669,690,718,683,696,709,proficient,proficient,proficient
+8932466351,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,False,Pacific Islander,True,False,True,False,True,True,728,743,763,614,620,626,basic,proficient,proficient
+6650863535,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,True,Asian,False,True,False,True,False,True,645,651,658,673,683,691,basic,basic,basic
+7644811524,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,False,Pacific Islander,False,True,False,True,False,False,615,628,647,632,648,671,basic,basic,basic
+7813573209,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,True,Black,False,True,False,True,False,False,703,715,732,699,720,737,proficient,proficient,advanced
+9482339567,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,True,Hispanic,False,True,True,True,True,False,665,680,695,604,608,613,basic,basic,basic
+7389696918,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,False,Asian,True,True,True,True,True,True,715,735,750,673,692,715,proficient,proficient,advanced
+6100387190,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,True,Other,True,False,False,False,True,True,722,745,771,716,736,758,proficient,advanced,advanced
+3948330957,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,True,White,False,True,True,True,False,False,710,716,725,691,710,726,proficient,proficient,advanced
+6035714028,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,False,Asian,False,False,False,False,True,False,673,696,712,633,644,655,basic,basic,proficient
+4912700878,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,False,White,True,False,False,False,True,False,612,621,629,603,612,621,basic,basic,basic
+9777029899,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Native American,True,True,False,True,True,True,670,686,700,622,636,650,basic,basic,proficient
+8911047776,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,True,Other,True,False,False,False,True,False,677,694,708,682,702,728,proficient,proficient,proficient
+4314601155,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,True,Black,False,False,True,False,True,True,609,633,658,664,687,716,basic,basic,proficient
+5992251225,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,White,True,False,True,True,True,True,606,619,633,685,705,723,basic,basic,proficient
+8889395586,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,False,Hispanic,True,True,True,False,True,False,709,724,740,726,743,759,proficient,advanced,advanced
+7271645158,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,Asian,False,False,True,False,True,False,714,724,732,717,721,726,proficient,proficient,advanced
+9211063421,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,False,Other,True,False,True,True,True,False,715,718,721,746,765,782,advanced,advanced,advanced
+8513356437,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,True,Pacific Islander,True,True,False,False,False,True,636,653,667,656,673,693,basic,basic,proficient
+6440755395,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,True,Black,True,False,True,False,True,False,694,700,705,639,647,655,basic,basic,proficient
+9086103618,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,False,Black,True,False,False,True,False,True,668,683,699,689,699,709,proficient,proficient,proficient
+3344550525,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,True,Other,False,False,False,False,True,False,706,718,728,703,713,723,proficient,proficient,advanced
+4299698174,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,False,Native American,False,False,False,False,False,True,714,728,741,707,713,717,proficient,proficient,advanced
+8087503827,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,True,White,True,True,True,False,False,False,706,722,741,693,711,726,proficient,proficient,advanced
+3528696637,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,True,Hispanic,False,True,False,False,True,False,721,725,729,625,649,673,basic,proficient,proficient
+5414126427,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,White,False,False,True,True,False,False,623,638,651,625,632,637,basic,basic,basic
+5227915403,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Native American,True,False,False,False,True,False,614,622,630,700,702,704,basic,basic,basic
+1279052184,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Native American,True,True,True,False,True,False,665,676,689,660,683,704,basic,proficient,proficient
+9353718475,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,True,Hispanic,True,False,True,True,True,False,614,621,627,669,680,691,basic,basic,basic
+9641802145,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,False,Pacific Islander,False,False,False,True,True,True,680,698,717,699,721,747,proficient,proficient,advanced
+4044457638,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,False,Other,True,True,False,False,True,False,683,691,698,742,755,768,proficient,proficient,advanced
+6655507085,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,False,White,False,True,False,False,False,False,635,651,667,733,743,756,proficient,proficient,proficient
+3479586055,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,False,Hispanic,False,True,True,True,True,True,667,671,674,747,758,769,proficient,proficient,proficient
+4960025229,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,12,True,Other,False,False,False,False,True,False,739,759,774,723,739,755,advanced,advanced,advanced
+3287077356,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Asian,True,False,False,True,False,False,666,683,702,636,647,658,basic,basic,proficient
+5883463349,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,True,Hispanic,False,False,False,False,False,False,717,732,745,632,650,674,basic,proficient,proficient
+4525696317,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,12,True,Native American,False,False,True,True,False,True,650,659,671,722,728,734,proficient,proficient,proficient
+4895773994,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,True,Asian,True,True,True,True,True,False,611,625,640,658,671,683,basic,basic,basic
+1051294855,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,False,Hispanic,False,False,False,False,False,False,647,663,680,633,641,650,basic,basic,basic
+6482439442,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,2,True,Hispanic,True,True,True,False,True,False,711,730,755,684,705,728,proficient,proficient,advanced
+4841103821,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,False,White,False,False,True,True,False,True,631,654,674,718,720,722,basic,proficient,proficient
+1390043346,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,True,Asian,False,True,True,True,True,True,670,682,694,720,735,750,proficient,proficient,proficient
+3749442812,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,True,Native American,False,True,False,True,True,True,609,611,614,616,634,652,basic,basic,basic
+6793421930,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,False,White,False,False,False,True,False,True,650,663,679,654,658,662,basic,basic,basic
+8352121636,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Pacific Islander,False,False,False,True,False,False,694,705,715,649,664,680,basic,proficient,proficient
+6062931402,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,Other,False,False,False,True,False,True,699,707,713,603,630,657,basic,basic,proficient
+8209225938,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,8,False,Hispanic,True,False,True,False,False,False,644,651,658,742,759,775,proficient,proficient,proficient
+8692193063,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Black,False,True,True,False,True,True,657,664,671,621,638,655,basic,basic,basic
+2599666897,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,True,Other,False,True,True,True,False,True,646,653,661,609,622,634,basic,basic,basic
+1561737132,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,True,Hispanic,False,True,True,True,False,True,614,618,622,638,645,651,basic,basic,basic
+6008949075,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,False,White,False,True,True,False,False,True,713,732,752,652,679,704,proficient,proficient,advanced
+4751185388,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,False,Hispanic,False,True,True,False,False,True,656,661,667,633,646,663,basic,basic,basic
+4785703841,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,True,Pacific Islander,False,True,False,False,True,False,748,757,766,740,757,772,advanced,advanced,advanced
+9306948217,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,True,White,False,False,True,True,False,False,748,768,788,616,636,652,proficient,proficient,proficient
+1537735742,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,5,False,Native American,True,False,False,False,True,False,732,735,738,722,734,745,advanced,advanced,advanced
+7940739332,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,False,Other,False,True,False,True,True,True,711,724,734,692,707,725,proficient,proficient,advanced
+7415866305,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,True,Pacific Islander,True,True,True,False,False,False,632,647,661,692,705,719,basic,proficient,proficient
+9257402653,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,False,White,False,False,True,True,False,False,735,750,765,614,634,651,basic,proficient,proficient
+8623724839,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,True,Pacific Islander,False,False,False,False,True,False,642,646,650,748,753,757,proficient,proficient,proficient
+8529572836,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Asian,True,True,False,False,False,True,684,688,692,677,700,718,proficient,proficient,proficient
+7431038656,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,False,Native American,False,False,False,True,True,False,640,644,649,692,711,736,basic,proficient,proficient
+9369037785,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,False,Native American,True,True,False,True,False,False,727,748,770,741,753,764,advanced,advanced,advanced
+6565220579,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,Pacific Islander,False,True,True,False,True,True,738,744,750,618,621,623,proficient,proficient,proficient
+9202504030,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,False,Pacific Islander,True,False,False,True,False,False,659,671,685,615,626,641,basic,basic,basic
+3171089760,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,True,Asian,True,True,True,True,False,True,674,688,707,644,651,659,basic,basic,proficient
+6021695856,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,True,Other,False,False,True,True,True,False,685,699,714,673,700,724,proficient,proficient,proficient
+6947403482,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,False,Hispanic,False,True,False,False,False,True,717,722,727,654,675,692,proficient,proficient,proficient
+1895268697,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,False,Other,True,True,False,False,False,True,739,764,787,619,625,633,proficient,proficient,proficient
+7569251812,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,False,Native American,True,False,True,False,True,False,611,634,659,694,701,708,basic,basic,proficient
+9823560620,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,True,Other,False,True,True,False,False,True,623,631,640,738,748,758,proficient,proficient,proficient
+9869555615,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,True,White,True,True,False,True,True,True,626,640,651,601,614,629,basic,basic,basic
+3630101688,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,Hispanic,True,False,False,True,False,True,646,654,665,722,738,753,proficient,proficient,proficient
+8007339776,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,False,White,False,True,False,False,False,True,682,709,730,734,749,766,proficient,advanced,advanced
+6922832551,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Black,False,True,True,True,False,False,632,647,664,606,609,613,basic,basic,basic
+3224259991,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Other,True,False,True,False,False,True,718,728,742,666,676,685,proficient,proficient,proficient
+5258047713,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,False,White,False,False,True,False,False,True,615,634,652,689,702,717,basic,basic,proficient
+7527094779,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,Black,False,False,False,True,False,True,616,633,650,719,722,725,basic,proficient,proficient
+2508899700,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,Native American,True,False,False,True,False,False,678,697,711,693,720,742,proficient,proficient,advanced
+5542734698,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,False,Pacific Islander,False,False,False,True,True,True,713,730,747,726,730,733,proficient,advanced,advanced
+9578944184,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,False,Asian,False,False,False,True,False,False,603,608,613,699,722,739,basic,basic,proficient
+2170200549,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,True,Pacific Islander,False,True,False,False,True,True,738,744,750,645,654,664,proficient,proficient,proficient
+1714379596,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,8,False,Other,True,False,True,False,True,True,739,760,784,644,668,690,proficient,proficient,advanced
+3192795194,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,True,White,True,False,False,True,True,False,688,703,718,652,654,657,basic,proficient,proficient
+9381676823,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,False,White,True,True,False,True,True,False,671,678,684,610,615,621,basic,basic,basic
+1901985739,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,12,True,Asian,True,False,True,True,False,False,733,740,746,694,720,749,proficient,advanced,advanced
+1722012636,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,Native American,True,True,True,False,True,True,648,662,676,666,683,697,basic,basic,proficient
+4855375373,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,True,Pacific Islander,False,True,True,True,False,True,658,678,703,682,690,701,basic,proficient,proficient
+5827379215,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,True,Black,True,False,True,False,False,True,661,677,696,607,618,633,basic,basic,basic
+5659350860,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,True,Black,False,True,False,True,True,True,618,628,639,712,734,752,basic,proficient,proficient
+5006022126,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,6,False,Other,False,True,True,True,True,False,738,741,744,695,715,731,proficient,advanced,advanced
+8235409054,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,True,Black,False,True,True,False,False,False,631,644,655,709,719,730,basic,proficient,proficient
+8556341729,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,True,Black,True,True,False,True,False,True,621,632,643,750,773,797,proficient,proficient,proficient
+4109178636,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,True,White,True,True,False,False,False,False,665,684,702,671,675,679,basic,proficient,proficient
+7490010282,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,True,Hispanic,True,True,False,False,True,False,749,755,759,601,608,617,proficient,proficient,proficient
+3388821009,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,7,False,Hispanic,False,True,False,True,True,False,716,725,732,671,695,716,proficient,proficient,proficient
+3867615480,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,False,White,False,True,False,True,True,True,691,703,715,684,699,716,proficient,proficient,proficient
+2899473018,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,2,True,Pacific Islander,False,True,False,True,True,False,721,742,766,610,625,642,basic,proficient,proficient
+2603968120,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,Hispanic,False,False,True,False,True,False,632,651,676,653,658,662,basic,basic,basic
+7434406947,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,Pacific Islander,False,True,True,False,False,True,678,702,721,637,650,662,basic,proficient,proficient
+7671871455,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,False,White,True,True,True,False,False,True,671,681,689,629,641,653,basic,basic,basic
+2921731587,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,True,Asian,True,False,False,False,False,True,712,723,738,687,692,697,proficient,proficient,proficient
+1263612780,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,White,False,False,False,False,False,False,677,704,723,609,625,641,basic,basic,proficient
+2618520335,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,White,False,False,False,True,False,False,709,715,722,712,738,763,proficient,advanced,advanced
+9879569880,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,True,White,False,True,True,True,True,True,651,667,682,731,749,767,proficient,proficient,proficient
+1757860238,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,False,Other,True,True,False,True,False,True,653,667,677,679,694,712,basic,proficient,proficient
+6780563316,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,True,Pacific Islander,True,True,False,True,False,True,704,726,755,668,674,681,proficient,proficient,proficient
+4231261154,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,True,Black,False,False,True,True,True,False,750,755,762,720,732,742,advanced,advanced,advanced
+8224740478,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,True,Hispanic,False,True,True,True,True,False,601,609,617,674,677,679,basic,basic,basic
+8995348197,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,Asian,False,True,False,True,False,True,632,653,672,648,669,687,basic,basic,proficient
+1608436821,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,Hispanic,False,True,True,True,True,False,626,630,633,637,650,662,basic,basic,basic
+2804896719,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Native American,True,True,False,True,False,True,735,742,750,633,655,677,proficient,proficient,proficient
+7527743256,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,Native American,True,True,False,True,True,False,682,690,699,648,652,655,basic,basic,proficient
+1168520832,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,True,Other,False,False,False,False,False,True,687,699,710,719,737,755,proficient,proficient,advanced
+6623507574,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Other,False,False,True,False,True,True,637,654,676,732,746,764,proficient,proficient,proficient
+7327788825,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,12,False,White,True,True,False,True,True,True,645,653,660,620,626,633,basic,basic,basic
+8926594099,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,False,Other,True,True,True,False,False,True,689,701,711,680,697,712,proficient,proficient,proficient
+6245950753,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,True,Asian,True,False,False,True,True,False,682,706,725,745,755,764,proficient,advanced,advanced
+5247473228,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,Hispanic,True,True,False,False,False,True,738,742,747,717,741,765,advanced,advanced,advanced
+5455400730,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,False,Black,False,False,False,False,False,True,638,644,648,667,683,698,basic,basic,basic
+9093994238,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,True,Other,True,True,False,False,True,True,746,751,755,623,631,638,proficient,proficient,proficient
+1652996829,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Hispanic,False,False,True,False,False,False,607,623,640,690,703,715,basic,basic,proficient
+9477920643,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,False,Black,True,True,True,True,False,True,617,621,624,708,718,730,basic,basic,proficient
+3187477123,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,False,Native American,False,True,True,True,True,False,729,742,756,711,717,723,proficient,advanced,advanced
+7558534237,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Black,False,True,False,True,True,True,723,741,759,708,713,719,proficient,advanced,advanced
+5330744205,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,False,Asian,False,True,False,False,True,False,677,695,713,626,647,664,basic,basic,proficient
+6702981493,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,Black,False,True,False,True,False,False,703,714,724,675,684,694,proficient,proficient,proficient
+9487705695,4603381,Ware Ltd School District,205193,Chandler Inc High School,2,False,Asian,True,True,False,False,False,True,711,720,731,607,625,646,basic,basic,proficient
+5611828899,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,False,Native American,True,True,True,True,False,True,678,699,724,613,634,655,basic,basic,proficient
+8166281514,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,False,Other,True,False,False,True,False,False,611,618,627,663,681,701,basic,basic,basic
+3119296060,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,False,Black,False,True,True,False,False,False,636,638,641,706,724,742,basic,proficient,proficient
+8814102048,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,False,Hispanic,False,False,True,True,True,False,619,621,623,671,697,717,basic,basic,basic
+5185234666,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,False,Asian,True,True,False,True,True,False,649,659,670,665,668,672,basic,basic,basic
+7210690862,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,False,Asian,True,False,True,False,False,False,679,686,692,704,708,713,proficient,proficient,proficient
+5897260443,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,7,True,Hispanic,False,False,True,True,True,True,700,712,724,642,644,647,basic,proficient,proficient
+2815822047,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,True,Asian,True,True,True,False,False,True,619,645,665,621,636,653,basic,basic,basic
+4594913471,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,True,Black,True,True,True,False,False,True,719,740,760,716,731,748,proficient,advanced,advanced
+8362859781,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,True,Other,False,True,False,False,True,True,712,725,736,628,645,666,basic,proficient,proficient
+2898562536,4603381,Ware Ltd School District,205193,Chandler Inc High School,2,False,Native American,True,True,True,True,True,True,694,699,706,624,632,641,basic,basic,basic
+4438431635,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,False,White,True,False,True,False,False,True,654,668,682,651,667,681,basic,basic,proficient
+5265159449,4603381,Ware Ltd School District,205193,Chandler Inc High School,1,True,Native American,True,True,False,False,False,False,634,642,649,720,732,742,proficient,proficient,proficient
+5546306516,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,True,Asian,False,False,True,True,False,False,677,701,729,606,611,617,basic,basic,basic
+7398430170,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,Native American,False,False,True,True,False,False,750,769,787,739,760,775,advanced,advanced,advanced
+7645181072,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,False,Other,False,True,True,True,True,False,736,756,775,682,693,704,proficient,proficient,advanced
+1513420585,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,10,False,Other,True,False,False,True,True,False,712,717,722,704,706,708,proficient,proficient,proficient
+4996597210,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,True,Hispanic,False,True,True,True,False,False,713,724,734,731,753,769,proficient,advanced,advanced
+3376864303,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Native American,False,False,True,True,False,True,747,769,791,625,654,680,proficient,proficient,advanced
+7412070774,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,Black,False,True,True,False,True,False,620,631,641,668,685,708,basic,basic,basic
+1784942998,5000332,Frederick-Zamora School District,164948,Flores PLC High School,11,True,Asian,True,False,False,False,False,False,609,629,653,613,624,633,basic,basic,basic
+2934831817,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,White,False,False,False,True,False,True,627,637,649,728,751,768,proficient,proficient,proficient
+3411333618,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,-1,False,Native American,True,True,False,False,False,False,600,604,608,643,667,691,basic,basic,basic
+8737004429,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,False,Asian,False,True,False,False,True,False,652,664,674,749,766,786,proficient,proficient,advanced
+1046089498,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,False,Pacific Islander,True,True,False,False,False,False,715,735,751,606,620,634,basic,proficient,proficient
+7393169065,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,7,True,Asian,True,False,False,False,True,False,620,630,641,737,760,786,proficient,proficient,proficient
+9908647794,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,False,White,False,False,True,False,True,False,601,610,617,656,659,663,basic,basic,basic
+7395310360,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,Hispanic,True,True,False,False,False,True,687,714,736,712,720,729,proficient,proficient,advanced
+8479689097,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,Native American,False,True,True,True,True,True,750,756,763,652,656,661,proficient,proficient,proficient
+4517173705,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,6,False,Native American,False,True,True,False,True,False,654,660,666,603,621,644,basic,basic,basic
+7360483687,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,White,True,True,True,False,True,True,614,625,635,672,690,704,basic,basic,basic
+7799300562,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,True,Pacific Islander,True,True,False,True,True,False,716,723,732,672,696,716,proficient,proficient,proficient
+3626581001,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,False,Other,False,False,True,True,True,True,641,661,686,647,667,689,basic,basic,proficient
+4020413798,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,False,Native American,False,True,False,False,True,True,704,708,712,622,636,648,basic,basic,proficient
+2945223643,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,False,Other,False,True,True,True,False,False,742,759,778,682,698,714,proficient,advanced,advanced
+9495173032,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,8,False,Pacific Islander,False,True,False,True,False,True,693,704,717,713,718,722,proficient,proficient,proficient
+9943544772,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,True,Native American,False,False,False,True,False,False,674,692,710,682,692,699,proficient,proficient,proficient
+8732689155,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Black,True,False,True,True,False,True,613,627,638,674,695,711,basic,basic,basic
+8678295828,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,True,Black,False,True,False,True,True,False,687,702,716,636,653,670,basic,proficient,proficient
+4357736839,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,White,True,True,True,False,False,True,733,749,766,639,651,663,proficient,proficient,proficient
+9676842200,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,False,Other,True,True,False,False,False,False,646,652,661,703,716,730,basic,proficient,proficient
+2718231668,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,False,Asian,True,False,True,True,False,False,642,656,673,613,623,633,basic,basic,basic
+2999023131,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Pacific Islander,True,False,True,False,True,False,644,664,684,704,723,750,basic,proficient,proficient
+8567654837,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,Hispanic,True,True,True,True,False,True,717,732,746,706,714,726,proficient,proficient,advanced
+6350697869,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Asian,True,False,True,True,True,True,613,622,630,704,723,737,basic,basic,proficient
+5275599749,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,False,Asian,True,True,True,True,False,True,636,651,667,607,616,625,basic,basic,basic
+2349121873,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,False,White,False,False,False,False,True,True,606,614,622,692,706,724,basic,basic,basic
+9256555295,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Other,False,False,True,True,False,True,613,641,668,744,752,760,proficient,proficient,proficient
+6314797054,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,False,Other,False,False,False,True,False,False,603,623,642,713,720,727,basic,basic,proficient
+1212539946,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Black,False,False,False,True,False,True,622,630,636,618,622,627,basic,basic,basic
+4701882790,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,True,Hispanic,True,False,True,False,True,True,610,634,654,663,677,695,basic,basic,basic
+8536239800,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,True,Asian,False,False,True,True,False,True,689,692,695,685,695,705,proficient,proficient,proficient
+4580055964,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,10,True,Native American,True,False,False,False,True,True,733,754,772,660,668,675,proficient,proficient,proficient
+6678562627,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Black,False,False,True,True,True,True,630,645,662,667,682,699,basic,basic,proficient
+5974481024,4603381,Ware Ltd School District,205193,Chandler Inc High School,0,False,Hispanic,True,True,False,True,True,True,681,685,688,611,629,648,basic,basic,basic
+7478976514,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,True,Black,True,False,False,True,True,True,740,743,746,744,752,759,advanced,advanced,advanced
+5812204698,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,True,White,False,False,False,True,True,True,722,724,726,730,734,737,advanced,advanced,advanced
+5833110820,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Native American,False,False,True,False,False,False,724,737,751,658,684,704,proficient,proficient,advanced
+1003381227,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Other,True,True,True,True,True,False,737,757,777,699,716,734,proficient,advanced,advanced
+3048622173,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,False,White,True,True,True,False,False,False,724,729,735,706,730,755,proficient,advanced,advanced
+5153365953,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,True,Asian,False,False,False,True,True,True,677,686,697,683,702,718,proficient,proficient,proficient
+9320220446,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,False,Native American,True,False,False,True,False,False,748,769,791,655,667,682,proficient,proficient,advanced
+3486301931,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,False,White,True,False,False,True,False,False,749,755,762,633,652,672,proficient,proficient,proficient
+1657137005,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,False,Black,False,False,False,True,False,False,661,679,699,748,755,763,proficient,proficient,advanced
+5432959951,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,False,White,True,True,True,True,True,False,750,777,798,703,710,718,advanced,advanced,advanced
+1855888746,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,True,Black,True,False,False,False,False,False,701,727,745,657,676,693,proficient,proficient,proficient
+3972537891,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,True,Black,True,True,False,False,True,False,725,735,744,662,671,678,proficient,proficient,proficient
+5177746385,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,True,Hispanic,True,True,True,True,False,True,683,700,721,749,766,779,proficient,advanced,advanced
+2690000042,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,True,Black,True,False,False,False,False,True,707,723,736,612,616,620,basic,basic,proficient
+1301886792,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,False,Hispanic,True,True,False,True,False,True,612,615,618,644,658,674,basic,basic,basic
+5805394060,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,True,Other,False,False,True,False,False,False,678,690,700,720,741,761,proficient,proficient,advanced
+1952324317,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,True,White,False,False,True,True,False,False,686,703,724,713,727,748,proficient,proficient,advanced
+8636349566,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Other,False,True,False,False,True,True,660,673,684,633,653,677,basic,basic,proficient
+1167017894,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Native American,True,False,False,True,False,True,617,624,633,611,622,638,basic,basic,basic
+2730120598,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Pacific Islander,False,True,True,True,True,False,682,703,725,600,611,625,basic,basic,proficient
+4003464357,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,False,Black,False,True,False,False,False,True,726,730,735,719,744,771,proficient,advanced,advanced
+4841057256,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,2,False,White,True,False,False,True,True,False,625,635,644,722,727,733,basic,proficient,proficient
+7079516966,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,Pacific Islander,False,True,True,False,False,False,630,646,664,603,607,612,basic,basic,basic
+9950908614,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,True,Black,True,True,True,True,False,True,603,624,641,674,691,709,basic,basic,proficient
+3251713342,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,False,Other,True,True,False,False,True,True,649,656,661,680,702,724,basic,proficient,proficient
+3896571260,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,False,Pacific Islander,False,True,True,False,True,True,685,690,695,628,632,637,basic,basic,basic
+1519482498,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,False,Hispanic,True,True,False,False,True,False,644,670,699,690,707,726,basic,proficient,proficient
+8717605339,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,True,Other,True,False,False,True,False,False,635,637,639,630,639,646,basic,basic,basic
+1362196034,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,False,Other,False,False,True,True,True,False,687,701,713,605,610,617,basic,basic,basic
+5511695249,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,True,Native American,False,False,True,True,False,False,684,697,711,706,709,712,proficient,proficient,proficient
+3210577939,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,False,Asian,False,True,True,False,False,False,742,755,764,634,653,671,proficient,proficient,proficient
+3491256520,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,7,False,Pacific Islander,True,True,False,False,False,True,695,706,717,735,754,772,proficient,advanced,advanced
+2365291132,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,True,Other,False,True,False,False,False,True,688,703,721,742,754,767,proficient,advanced,advanced
+6488618879,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,True,Pacific Islander,False,False,False,True,True,True,745,765,787,618,634,646,proficient,proficient,proficient
+4696312750,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Pacific Islander,True,False,False,False,False,False,666,678,695,738,751,763,proficient,proficient,advanced
+3663188466,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,True,Other,False,False,True,False,False,False,612,632,656,712,734,749,basic,proficient,proficient
+3744065915,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Hispanic,True,False,True,False,False,True,748,759,767,687,701,714,proficient,advanced,advanced
+7618178851,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,False,Hispanic,False,False,True,True,True,True,613,617,621,708,715,724,basic,basic,basic
+9556018367,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Other,False,False,False,False,False,False,610,625,637,609,623,640,basic,basic,basic
+1528835279,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,False,White,False,True,True,False,True,False,684,702,723,681,701,719,proficient,proficient,proficient
+8436308341,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Native American,True,True,True,False,True,False,641,654,665,656,658,660,basic,basic,basic
+1508360146,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,True,White,False,True,True,True,True,False,718,734,756,646,661,673,proficient,proficient,proficient
+4115658390,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,True,Native American,True,True,False,False,False,True,680,691,702,647,661,677,basic,proficient,proficient
+3446870883,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,6,False,Other,True,False,False,False,False,False,643,652,663,666,679,691,basic,basic,proficient
+4008290731,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,True,Native American,True,False,False,False,True,False,678,684,692,636,639,643,basic,basic,basic
+8018430856,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,Other,True,False,True,False,False,False,645,648,652,721,736,751,proficient,proficient,proficient
+5293291337,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,True,White,True,False,False,False,False,False,650,673,701,618,632,648,basic,basic,basic
+2180425193,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,True,White,False,False,False,False,True,False,692,711,733,675,684,693,proficient,proficient,proficient
+3898066555,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,False,White,True,False,True,False,True,False,728,750,773,693,709,725,proficient,advanced,advanced
+1028071238,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,True,Black,True,True,False,True,False,False,682,703,724,627,646,665,basic,basic,proficient
+8966942148,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,Native American,False,False,False,False,False,True,683,695,709,705,713,721,proficient,proficient,proficient
+3600630084,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,White,True,False,True,True,True,False,707,713,718,726,734,740,proficient,proficient,advanced
+6167001503,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,True,Hispanic,False,False,False,False,False,True,735,745,756,603,620,637,basic,proficient,proficient
+8881870214,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,True,Other,False,True,False,False,False,False,629,640,652,647,658,672,basic,basic,basic
+7195261916,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,False,Hispanic,False,True,True,False,False,False,626,634,644,743,759,773,proficient,proficient,proficient
+3707289125,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Black,True,True,True,True,False,True,606,611,615,656,663,669,basic,basic,basic
+1894885643,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,True,Pacific Islander,True,True,False,True,False,True,617,629,640,727,745,762,basic,proficient,proficient
+4752938953,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,False,Asian,False,True,True,True,False,False,696,719,740,671,679,687,proficient,proficient,proficient
+5772379390,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,Asian,False,False,False,False,False,True,709,732,749,719,740,760,proficient,advanced,advanced
+2625093467,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,True,Other,False,False,False,False,False,False,702,720,740,748,753,759,advanced,advanced,advanced
+1111995222,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,True,Hispanic,True,False,False,True,False,True,701,706,710,669,685,701,proficient,proficient,proficient
+3242622203,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,True,Native American,False,False,False,False,True,False,664,690,712,623,639,659,basic,basic,proficient
+3506633665,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,White,False,False,True,False,False,True,729,737,744,740,750,759,advanced,advanced,advanced
+2822417492,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,True,Hispanic,False,True,False,True,True,False,744,747,749,634,656,676,proficient,proficient,proficient
+3745875193,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,White,False,True,True,True,False,True,608,625,647,698,722,741,basic,basic,proficient
+3889259293,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,False,White,True,True,False,False,True,True,701,709,715,692,699,708,proficient,proficient,proficient
+2085943380,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Black,False,False,True,True,False,True,685,707,727,632,637,642,basic,basic,proficient
+6989838186,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,True,Asian,True,False,True,True,True,False,641,650,659,657,661,666,basic,basic,basic
+3067019142,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,False,Other,True,False,False,True,True,True,620,625,629,726,736,747,basic,proficient,proficient
+7237628013,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,6,True,White,True,False,False,False,False,False,626,631,637,722,733,745,basic,proficient,proficient
+7864229091,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Native American,False,True,False,True,False,False,690,716,735,717,732,747,proficient,proficient,advanced
+6960037162,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,False,Hispanic,True,False,True,True,False,False,619,644,670,673,685,697,basic,basic,proficient
+6059269261,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Pacific Islander,True,False,True,True,False,True,729,731,733,635,652,671,proficient,proficient,proficient
+5459096628,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,Native American,False,False,False,True,False,False,681,703,724,607,610,615,basic,basic,basic
+8591375906,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,True,Pacific Islander,False,False,False,True,False,False,679,695,712,621,634,648,basic,basic,proficient
+3544817829,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Asian,True,True,True,False,False,False,661,667,676,675,688,702,basic,proficient,proficient
+4710418135,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,False,Native American,True,True,True,True,False,True,738,760,776,665,675,686,proficient,proficient,advanced
+8956704623,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Hispanic,True,False,False,False,True,True,626,643,660,724,740,763,proficient,proficient,proficient
+1198471711,5000332,Frederick-Zamora School District,164948,Flores PLC High School,11,False,White,False,True,True,True,False,False,728,752,769,717,736,754,proficient,advanced,advanced
+7197645388,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,Other,False,False,True,True,True,False,653,665,681,627,638,648,basic,basic,basic
+2770183852,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,True,Black,False,True,True,False,True,False,736,740,746,621,628,634,proficient,proficient,proficient
+3423158977,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,False,Pacific Islander,True,True,True,False,True,False,645,647,650,727,752,778,proficient,proficient,proficient
+4971854456,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,True,Native American,False,False,True,True,False,True,694,705,716,742,762,781,proficient,advanced,advanced
+2256378500,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,True,Hispanic,False,False,True,False,False,True,718,733,746,635,649,663,proficient,proficient,proficient
+8142488965,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Other,False,False,False,False,True,True,719,735,755,621,627,633,basic,proficient,proficient
+1702262306,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,False,Other,False,True,False,False,False,True,705,723,740,690,698,708,proficient,proficient,proficient
+4956458836,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,True,Pacific Islander,False,True,True,False,True,True,644,667,686,715,726,735,proficient,proficient,proficient
+4397527666,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,True,Native American,True,True,True,False,False,False,659,684,710,637,646,657,basic,basic,proficient
+9579134769,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,Asian,False,True,True,False,True,True,745,748,750,694,705,715,proficient,advanced,advanced
+2015369046,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,True,Asian,True,False,False,False,True,False,677,696,709,729,739,746,proficient,proficient,advanced
+1649296389,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Asian,False,True,False,False,True,False,659,672,684,687,709,729,basic,proficient,proficient
+5932571846,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,False,Black,False,False,False,True,True,True,729,742,752,734,746,757,advanced,advanced,advanced
+2168923444,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,True,Native American,True,False,False,False,False,True,652,671,699,738,747,754,proficient,proficient,advanced
+3832281286,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,Asian,True,True,True,False,True,True,665,678,695,661,665,670,basic,basic,proficient
+5426158472,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,4,True,Hispanic,True,True,True,False,True,False,705,712,719,699,714,728,proficient,proficient,proficient
+7332388576,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,False,Native American,False,False,True,True,True,False,617,635,656,606,621,634,basic,basic,basic
+4083244720,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,False,Black,False,False,False,False,False,True,693,706,720,738,757,774,proficient,advanced,advanced
+8039052301,4603381,Ware Ltd School District,205193,Chandler Inc High School,2,False,White,False,False,False,True,False,True,729,755,783,669,688,704,proficient,proficient,advanced
+9958334015,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,7,False,Pacific Islander,False,False,True,False,False,True,670,677,683,631,640,649,basic,basic,basic
+7359112498,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,Pacific Islander,True,False,True,True,False,False,659,681,702,633,646,658,basic,basic,proficient
+5664775481,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,False,Native American,True,False,False,True,True,True,688,694,701,714,733,751,proficient,proficient,advanced
+4481830086,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,False,White,False,True,True,False,False,True,640,660,681,639,650,661,basic,basic,basic
+6105137236,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,Asian,False,False,False,False,False,False,658,673,689,695,704,712,proficient,proficient,proficient
+9994119192,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,White,False,True,False,False,True,False,696,701,709,624,626,628,basic,basic,basic
+8161893229,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Hispanic,True,False,False,True,False,True,655,667,678,699,722,748,proficient,proficient,proficient
+4793684758,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,True,Pacific Islander,True,False,True,False,False,True,603,605,608,694,703,710,basic,basic,basic
+1448211518,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,Other,False,False,True,False,True,False,747,771,790,723,739,751,advanced,advanced,advanced
+9471313310,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,Black,True,False,False,False,True,False,716,730,743,715,723,729,proficient,advanced,advanced
+1704451421,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,False,Pacific Islander,True,True,True,False,False,False,724,733,742,650,661,671,proficient,proficient,proficient
+5164449586,5000332,Frederick-Zamora School District,164948,Flores PLC High School,7,False,Black,True,False,False,True,False,False,708,711,713,727,748,775,proficient,advanced,advanced
+6707555426,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,False,Other,True,False,True,True,False,True,619,639,659,710,724,735,basic,proficient,proficient
+8114230039,4603381,Ware Ltd School District,205193,Chandler Inc High School,0,True,Other,True,True,True,True,True,False,641,656,671,741,749,758,proficient,proficient,proficient
+6995294832,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,True,Hispanic,True,True,True,True,False,False,615,634,658,643,667,688,basic,basic,basic
+1602401153,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,False,Pacific Islander,True,False,False,False,True,False,696,720,742,719,725,734,proficient,proficient,advanced
+6310536811,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,False,White,False,True,True,False,True,False,618,626,632,690,708,724,basic,basic,proficient
+1127118832,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Asian,False,True,True,True,False,True,605,618,631,619,641,661,basic,basic,basic
+1548635919,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,Pacific Islander,False,True,False,False,False,False,708,730,748,671,685,696,proficient,proficient,proficient
+2327545909,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,False,Asian,False,False,False,True,True,False,737,748,757,737,752,768,advanced,advanced,advanced
+6438762634,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,False,Black,True,False,False,False,True,True,672,693,712,650,670,685,basic,proficient,proficient
+9345425382,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,3,True,White,True,False,False,True,False,False,711,733,757,607,623,646,basic,proficient,proficient
+3335014960,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Hispanic,True,False,False,True,True,False,728,747,764,698,715,732,proficient,advanced,advanced
+3303816726,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,3,True,White,True,True,False,True,True,False,616,644,668,750,758,766,proficient,proficient,proficient
+2705388146,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,False,Hispanic,True,True,True,True,False,False,710,729,748,663,668,673,proficient,proficient,proficient
+2858452435,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,Asian,False,True,False,True,True,True,621,638,655,666,682,696,basic,basic,proficient
+6487478205,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,True,Asian,True,False,True,False,True,False,657,664,672,619,627,634,basic,basic,basic
+7448981168,5000332,Frederick-Zamora School District,164948,Flores PLC High School,11,False,Black,True,False,False,True,False,True,620,630,641,680,690,700,basic,basic,basic
+1987498542,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,False,Pacific Islander,False,True,False,True,False,False,664,674,682,602,621,636,basic,basic,basic
+9409891428,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,Pacific Islander,False,False,False,False,False,False,661,675,685,643,655,669,basic,basic,proficient
+8121310069,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,True,Native American,False,False,True,True,False,True,629,636,642,646,656,665,basic,basic,basic
+7053089541,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,False,Other,True,True,False,True,True,True,643,664,689,669,679,690,basic,basic,proficient
+7275231110,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,False,Asian,False,True,True,False,True,False,722,739,761,627,641,656,basic,proficient,proficient
+3921104276,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,True,Pacific Islander,True,False,False,True,True,False,666,678,687,624,644,662,basic,basic,basic
+5821118153,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,True,Native American,False,True,False,False,True,False,602,620,642,663,681,704,basic,basic,basic
+2594254374,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Pacific Islander,False,True,True,False,True,True,697,711,722,719,737,763,proficient,proficient,advanced
+8777716794,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,True,Pacific Islander,False,True,True,True,False,True,600,623,649,637,655,668,basic,basic,basic
+2243089404,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,False,Pacific Islander,True,True,True,False,True,False,673,678,685,616,621,627,basic,basic,basic
+6025131672,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,False,Native American,True,False,False,False,False,False,677,693,713,735,752,768,proficient,proficient,advanced
+3132928454,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,True,White,True,True,False,True,False,True,711,715,718,669,686,705,proficient,proficient,proficient
+9268193501,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,False,Hispanic,False,False,True,True,False,True,657,675,697,702,721,739,proficient,proficient,proficient
+8856440038,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,Black,False,True,False,False,False,True,606,610,614,715,732,754,basic,basic,proficient
+5906460006,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Asian,False,False,True,False,False,True,660,670,681,628,647,663,basic,basic,basic
+7744448345,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,True,Native American,False,False,True,False,True,False,716,723,730,627,647,667,basic,proficient,proficient
+7765084917,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Pacific Islander,True,True,True,True,False,True,656,676,692,743,757,770,proficient,proficient,advanced
+9442458875,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Black,False,False,True,True,True,False,710,726,745,642,661,685,proficient,proficient,proficient
+9778052575,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,False,Other,True,True,True,True,False,False,725,732,739,612,621,630,basic,proficient,proficient
+3137135241,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,False,Native American,True,True,False,True,True,False,750,754,757,708,715,724,advanced,advanced,advanced
+3814557457,5000332,Frederick-Zamora School District,164948,Flores PLC High School,11,False,Native American,False,False,False,True,True,False,672,682,695,685,701,718,proficient,proficient,proficient
+7087114146,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,False,Native American,False,True,True,True,False,True,647,668,688,724,744,763,proficient,proficient,advanced
+4440422392,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,True,Other,True,True,False,False,True,True,704,709,715,600,611,620,basic,basic,basic
+7394999963,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,False,Asian,False,False,False,True,False,True,613,618,624,717,725,733,basic,basic,proficient
+4043156208,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,True,Native American,True,True,True,True,True,False,730,742,753,683,695,709,proficient,proficient,advanced
+9377099131,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,False,Pacific Islander,True,True,True,False,True,False,705,709,712,634,650,666,basic,proficient,proficient
+1535470454,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,True,Native American,False,False,True,True,True,True,630,637,645,616,627,637,basic,basic,basic
+6391190782,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,Pacific Islander,True,True,True,False,False,False,658,674,687,734,745,755,proficient,proficient,proficient
+2694789903,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,True,Pacific Islander,True,False,False,False,True,False,749,767,785,716,726,737,advanced,advanced,advanced
+2797531534,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Pacific Islander,False,True,False,True,True,False,697,703,708,679,687,694,proficient,proficient,proficient
+3635301788,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,False,Other,True,False,True,True,False,True,636,642,649,602,607,614,basic,basic,basic
+7431041916,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Pacific Islander,False,True,False,True,False,False,682,699,720,679,687,695,proficient,proficient,proficient
+7372556866,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,True,Asian,True,True,True,True,False,False,726,747,772,644,662,680,proficient,proficient,advanced
+3078161022,4603381,Ware Ltd School District,205193,Chandler Inc High School,2,True,Pacific Islander,False,False,True,False,True,False,648,659,673,608,620,632,basic,basic,basic
+6883248804,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Other,True,True,True,True,True,True,716,723,730,633,638,642,basic,proficient,proficient
+6230686818,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,3,False,Asian,True,False,True,True,False,False,719,725,731,665,685,701,proficient,proficient,proficient
+9104359132,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,True,Hispanic,False,False,True,True,True,True,689,693,696,668,674,680,proficient,proficient,proficient
+7640642624,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Asian,True,True,True,False,False,False,715,718,721,666,671,677,proficient,proficient,proficient
+8969656405,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,True,Other,False,False,False,False,True,True,677,695,716,667,681,693,basic,proficient,proficient
+3873847073,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,False,Hispanic,True,True,True,True,True,True,646,660,673,685,700,715,basic,proficient,proficient
+1920172972,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,False,Hispanic,True,False,False,True,True,True,749,767,785,672,685,699,proficient,advanced,advanced
+8893294004,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,False,Pacific Islander,False,True,True,False,True,True,724,731,737,668,696,722,proficient,proficient,advanced
+9448575306,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,7,False,Hispanic,True,False,False,False,False,True,618,641,661,673,694,714,basic,basic,proficient
+2165228443,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,White,True,True,True,True,False,True,646,667,687,656,658,660,basic,basic,basic
+9689212471,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,True,Black,False,True,True,True,False,False,736,741,746,694,708,720,proficient,proficient,advanced
+8983796528,5000332,Frederick-Zamora School District,164948,Flores PLC High School,11,True,Native American,False,False,True,False,False,False,698,714,734,648,652,657,basic,proficient,proficient
+5936864830,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,False,Native American,False,False,False,False,True,False,672,682,692,643,668,690,basic,proficient,proficient
+4359134371,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,True,Native American,False,True,True,True,False,True,631,648,667,662,690,718,basic,basic,proficient
+6984599898,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,True,Native American,True,False,False,False,True,True,688,700,712,704,715,728,proficient,proficient,proficient
+2207739554,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,True,Hispanic,True,True,False,False,True,False,739,759,782,734,754,775,advanced,advanced,advanced
+1187062567,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,True,Hispanic,True,False,True,False,True,False,690,699,706,699,717,736,proficient,proficient,proficient
+2763323491,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,False,Pacific Islander,True,False,False,True,True,False,605,610,616,698,718,739,basic,basic,proficient
+8774439873,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,False,Black,True,False,True,False,True,True,706,729,747,675,690,707,proficient,proficient,advanced
+7626940622,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,False,Other,True,False,False,False,True,True,637,646,658,649,663,681,basic,basic,basic
+7382684395,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Black,False,True,False,False,True,True,660,680,699,746,753,761,proficient,proficient,advanced
+5094924373,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,True,Pacific Islander,True,False,False,True,True,False,641,662,690,650,661,671,basic,basic,proficient
+5415033333,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,False,Black,True,False,True,True,False,False,689,708,721,652,674,693,basic,proficient,proficient
+6034570296,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,True,Other,False,True,False,False,False,True,703,709,713,728,742,758,proficient,advanced,advanced
+3570078251,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,False,Native American,False,False,True,True,True,True,613,631,647,699,717,742,basic,basic,proficient
+2773729636,4603381,Ware Ltd School District,205193,Chandler Inc High School,5,False,Native American,True,True,True,False,True,False,601,608,614,723,740,758,basic,basic,proficient
+2652409571,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Hispanic,False,True,False,True,False,False,714,720,725,639,645,651,proficient,proficient,proficient
+6941700712,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,False,Hispanic,False,True,False,False,False,True,684,711,739,612,639,660,basic,proficient,proficient
+8880242120,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,False,White,False,True,True,True,True,True,709,733,755,746,749,752,advanced,advanced,advanced
+8217053217,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,False,Hispanic,False,True,False,True,True,False,609,613,617,603,621,634,basic,basic,basic
+1103692049,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,6,False,Native American,False,False,True,True,True,True,623,625,628,646,672,696,basic,basic,basic
+6204805021,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,9,False,Asian,False,True,False,False,True,True,688,711,729,618,626,632,basic,basic,proficient
+5317054688,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,False,Black,False,False,True,False,False,False,688,702,714,724,731,740,proficient,proficient,advanced
+8626981090,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,0,False,Hispanic,False,True,False,False,True,False,730,740,748,629,644,655,proficient,proficient,proficient
+1792119895,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,False,Hispanic,True,False,True,False,True,True,741,755,769,720,746,772,advanced,advanced,advanced
+5010018062,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Other,True,True,False,False,True,True,742,746,751,712,729,750,advanced,advanced,advanced
+9016170259,4603381,Ware Ltd School District,205193,Chandler Inc High School,1,True,Asian,True,True,True,True,True,True,621,637,658,620,638,656,basic,basic,basic
+7665549142,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Pacific Islander,False,True,True,True,False,True,709,712,715,697,718,737,proficient,proficient,advanced
+7705757070,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,True,Hispanic,False,False,True,False,True,True,715,722,728,630,636,642,basic,proficient,proficient
+9239402851,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,True,Pacific Islander,False,False,False,False,False,True,661,675,691,746,752,759,proficient,proficient,advanced
+4647529163,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,11,True,White,False,True,False,False,False,False,740,758,775,677,686,695,proficient,proficient,advanced
+9252353553,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,True,White,True,True,True,False,True,True,719,726,731,654,669,682,proficient,proficient,proficient
+3894162062,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,Other,True,True,True,False,True,False,706,726,744,639,658,677,basic,proficient,proficient
+4022241357,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,False,Pacific Islander,False,False,True,False,True,False,703,715,727,694,700,705,proficient,proficient,proficient
+1240671535,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,False,Pacific Islander,True,True,True,True,True,False,745,748,751,691,704,714,proficient,advanced,advanced
+6804333561,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,True,Other,True,True,False,False,True,True,724,744,761,741,755,769,advanced,advanced,advanced
+4725345768,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,6,False,White,False,True,True,False,True,False,603,614,624,634,647,656,basic,basic,basic
+9918167328,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,8,False,Black,True,True,True,True,False,False,644,647,649,725,747,765,proficient,proficient,proficient
+2798274925,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,True,Black,False,True,False,False,True,False,632,650,669,646,655,664,basic,basic,basic
+8212848878,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,8,True,Native American,False,False,True,False,True,True,681,701,719,619,623,626,basic,basic,basic
+2150036032,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,True,Pacific Islander,True,True,False,True,True,False,656,661,667,602,614,624,basic,basic,basic
+2866602528,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,False,Native American,True,True,False,True,True,True,672,682,694,688,693,698,proficient,proficient,proficient
+2336035867,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,Asian,True,False,True,True,True,False,644,652,658,656,668,682,basic,basic,basic
+8791091210,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,True,Pacific Islander,False,False,True,True,False,True,653,656,659,613,632,645,basic,basic,basic
+6346408190,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,False,Asian,True,False,True,False,False,True,644,658,672,603,625,644,basic,basic,basic
+8236403452,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,False,Native American,True,True,False,True,False,False,734,737,739,604,609,616,basic,basic,proficient
+1531260508,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,11,True,White,True,True,False,True,True,False,628,640,652,637,657,676,basic,basic,basic
+3935617374,5000332,Frederick-Zamora School District,164948,Flores PLC High School,12,False,Pacific Islander,True,True,True,True,True,True,649,655,661,643,650,657,basic,basic,basic
+7568675517,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,8,True,Asian,True,False,False,False,True,True,705,723,740,607,624,642,basic,basic,proficient
+9709858737,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,True,Other,True,True,False,True,False,True,740,747,753,612,617,622,proficient,proficient,proficient
+1923542399,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,True,Native American,True,True,False,False,True,True,698,702,706,735,757,777,proficient,advanced,advanced
+7935524071,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,True,Native American,True,False,False,True,False,False,685,689,694,728,734,738,proficient,proficient,proficient
+1167246523,4603381,Ware Ltd School District,205193,Chandler Inc High School,6,True,Asian,False,True,True,False,True,True,750,760,770,750,774,793,advanced,advanced,advanced
+8294729219,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,True,Hispanic,True,True,False,True,True,False,733,739,743,736,753,771,advanced,advanced,advanced
+1469390123,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Black,True,True,False,False,False,False,605,621,642,677,683,687,basic,basic,basic
+1588436118,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,False,Asian,True,False,False,True,True,False,732,754,775,692,699,709,proficient,advanced,advanced
+4224106306,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,Native American,False,True,True,False,False,False,748,752,756,609,614,618,proficient,proficient,proficient
+9607243493,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,5,False,Native American,False,False,True,False,False,True,717,735,754,690,701,710,proficient,proficient,advanced
+7183095304,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,6,True,Black,False,True,False,True,True,False,728,735,744,711,714,717,proficient,proficient,advanced
+5263930686,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,Pacific Islander,False,True,True,False,False,False,623,647,670,701,715,726,basic,proficient,proficient
+2986693404,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,True,Black,True,False,True,False,False,True,746,753,760,630,644,659,proficient,proficient,proficient
+8965884060,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,False,Other,True,True,True,True,True,True,728,732,735,631,636,640,proficient,proficient,proficient
+9035264745,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,8,True,Hispanic,False,False,False,True,True,False,694,700,707,612,628,652,basic,basic,proficient
+9296124269,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,3,False,Asian,True,True,False,False,False,False,698,714,732,643,650,658,basic,proficient,proficient
+6449060796,4603381,Ware Ltd School District,205193,Chandler Inc High School,1,True,Other,False,True,False,False,False,False,673,700,728,642,655,671,basic,proficient,proficient
+6786268075,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,-1,False,Other,False,True,False,True,True,True,746,773,800,712,721,730,advanced,advanced,advanced
+8520696989,4603381,Ware Ltd School District,205193,Chandler Inc High School,4,True,Pacific Islander,True,False,False,False,False,False,692,714,738,690,703,717,proficient,proficient,advanced
+4249843198,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Black,False,False,False,False,True,True,744,752,763,744,768,792,advanced,advanced,advanced
+5890653157,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,False,White,True,True,True,False,True,True,625,629,633,689,699,706,basic,basic,basic
+1001633410,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,True,Hispanic,False,False,True,False,True,False,686,700,718,662,665,667,basic,proficient,proficient
+5233197491,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,3,False,Native American,True,False,False,False,False,True,710,719,730,616,635,654,basic,proficient,proficient
+4068200325,5000332,Frederick-Zamora School District,164948,Flores PLC High School,0,True,Other,False,False,False,False,False,False,705,711,717,677,704,729,proficient,proficient,proficient
+7936210791,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,7,False,Hispanic,False,False,False,False,False,False,709,714,721,728,748,770,proficient,advanced,advanced
+7634264508,5000332,Frederick-Zamora School District,164948,Flores PLC High School,5,True,Asian,False,False,False,False,False,False,636,640,645,697,702,706,basic,basic,proficient
+5875383582,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,12,False,White,True,True,False,True,True,False,745,764,789,615,620,626,proficient,proficient,proficient
+8941218656,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,5,False,Black,True,False,False,True,False,False,600,615,634,707,731,753,basic,basic,proficient
+2112854509,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,True,Pacific Islander,False,True,False,False,True,False,602,611,618,746,767,784,basic,proficient,proficient
+3027962606,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,True,Black,False,True,True,True,False,True,660,679,707,699,703,707,proficient,proficient,proficient
+6420723653,4603381,Ware Ltd School District,205193,Chandler Inc High School,12,False,Pacific Islander,False,True,False,True,True,False,727,730,733,690,696,703,proficient,proficient,proficient
+6511153140,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,5,True,Pacific Islander,False,True,True,True,True,False,668,686,709,702,707,712,proficient,proficient,proficient
+6751005465,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Black,False,False,False,False,False,False,731,751,768,675,690,709,proficient,proficient,advanced
+7847650899,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,True,Black,False,False,False,False,True,True,737,763,782,612,621,632,basic,proficient,proficient
+6856161434,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,True,Other,False,False,True,False,False,True,617,627,635,724,740,752,basic,proficient,proficient
+6312006532,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,True,Asian,True,False,True,False,False,False,725,739,752,643,663,679,proficient,proficient,proficient
+2821212886,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,Native American,True,False,False,False,False,False,740,743,745,623,640,655,proficient,proficient,proficient
+1343986664,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,True,Hispanic,False,False,False,True,False,False,707,710,713,600,612,625,basic,basic,basic
+4170558589,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,2,False,White,True,False,True,False,True,True,621,644,665,745,766,795,proficient,proficient,advanced
+7238409819,4603381,Ware Ltd School District,205193,Chandler Inc High School,9,True,Other,True,False,False,False,True,True,707,709,712,748,758,766,advanced,advanced,advanced
+5771604917,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,False,Native American,False,False,False,False,True,True,699,716,733,728,742,757,proficient,advanced,advanced
+7048260227,4603381,Ware Ltd School District,205193,Chandler Inc High School,10,True,White,False,False,False,False,True,True,654,666,681,716,736,752,proficient,proficient,proficient
+7976286986,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,6,True,Asian,False,False,False,True,False,False,626,648,669,719,725,734,basic,proficient,proficient
+2508368975,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,True,Hispanic,True,False,False,True,False,True,708,717,724,623,646,671,basic,proficient,proficient
+8454707656,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,-1,False,Hispanic,True,False,True,False,False,False,746,749,752,617,631,647,proficient,proficient,proficient
+8021587942,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,9,True,Black,True,True,False,True,False,False,724,735,744,674,699,720,proficient,proficient,advanced
+3514576367,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,8,True,Pacific Islander,False,True,False,True,False,False,638,658,679,646,663,684,basic,basic,proficient
+5772756449,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,4,True,Hispanic,False,True,True,True,True,False,723,741,760,668,687,708,proficient,proficient,advanced
+7185426141,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,-1,False,Other,True,False,False,False,False,False,745,768,786,729,740,750,advanced,advanced,advanced
+8155512434,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,True,White,False,True,False,False,False,False,745,762,779,672,685,699,proficient,proficient,advanced
+7135981966,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,White,True,True,True,False,True,False,710,725,745,640,661,687,proficient,proficient,proficient
+8176724439,5000332,Frederick-Zamora School District,164948,Flores PLC High School,8,False,Native American,False,False,False,True,True,False,709,726,743,650,657,663,proficient,proficient,proficient
+5882729647,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,0,False,Black,False,False,False,False,False,True,704,717,727,668,689,706,proficient,proficient,proficient
+2335699481,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,11,False,Asian,True,True,False,False,False,False,635,660,684,651,664,674,basic,basic,proficient
+2032901199,4603381,Ware Ltd School District,205193,Chandler Inc High School,11,False,Asian,False,True,True,False,False,False,622,631,638,693,701,709,basic,basic,basic
+4562759314,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,White,True,True,False,True,False,True,731,735,739,608,634,657,basic,proficient,proficient
+6024689204,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,False,Hispanic,True,False,True,True,True,False,654,657,660,632,647,663,basic,basic,basic
+9282879062,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,White,False,False,True,False,True,False,671,687,704,706,727,747,proficient,proficient,advanced
+1541352600,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,False,Pacific Islander,True,True,True,False,False,True,659,667,674,646,659,669,basic,basic,basic
+1202948335,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,-1,True,Pacific Islander,False,True,False,True,False,True,693,708,720,728,736,743,proficient,proficient,advanced
+6034354997,5000332,Frederick-Zamora School District,164948,Flores PLC High School,6,True,Pacific Islander,True,False,False,True,True,False,660,666,674,649,654,659,basic,basic,basic
+8230015176,4603381,Ware Ltd School District,205193,Chandler Inc High School,8,False,Pacific Islander,True,False,False,False,True,False,734,748,765,681,687,693,proficient,proficient,advanced
+9095415535,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,10,True,Asian,True,True,False,True,True,True,727,748,775,731,756,780,advanced,advanced,advanced
+6217118601,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,5,False,Hispanic,True,False,True,False,False,True,723,735,746,613,634,653,basic,proficient,proficient
+3799370858,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,True,Black,False,False,False,True,False,False,625,642,661,646,669,692,basic,basic,proficient
+5691474883,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,False,Asian,True,True,False,True,False,False,702,706,710,679,704,724,proficient,proficient,proficient
+5816892007,4603381,Ware Ltd School District,205193,Chandler Inc High School,0,False,Asian,True,True,True,True,False,False,622,644,668,655,679,702,basic,basic,proficient
+5064221354,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,4,True,Hispanic,True,False,True,False,True,True,727,739,750,690,706,721,proficient,proficient,advanced
+7209597915,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,False,Native American,True,True,False,True,False,False,634,656,673,641,662,681,basic,basic,proficient
+5515182300,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,White,True,False,True,True,False,True,643,668,692,610,630,649,basic,basic,basic
+3467666004,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,True,Other,True,True,False,True,False,True,688,691,695,656,685,705,basic,proficient,proficient
+8514949486,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,True,Native American,True,True,False,False,True,True,746,757,769,604,619,634,proficient,proficient,proficient
+6486333258,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,False,Other,False,True,True,False,False,True,673,689,704,740,760,788,proficient,proficient,advanced
+3455172237,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,False,Pacific Islander,False,False,False,True,False,True,625,644,669,722,726,729,basic,proficient,proficient
+6664828892,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,False,Pacific Islander,True,True,True,False,True,True,664,681,693,656,669,684,basic,proficient,proficient
+3504853246,5000332,Frederick-Zamora School District,164948,Flores PLC High School,3,True,Native American,True,False,False,True,False,False,716,718,720,700,702,704,proficient,proficient,proficient
+4889350683,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,-1,False,Other,False,True,False,True,False,True,641,650,657,614,622,630,basic,basic,basic
+8407756393,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,3,True,Black,False,True,False,True,True,False,714,718,722,651,673,692,proficient,proficient,proficient
+8639598274,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,7,True,Native American,True,False,True,True,False,True,660,683,705,739,748,761,proficient,proficient,advanced
+9331499652,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,True,Pacific Islander,True,False,False,False,False,False,740,748,756,655,662,667,proficient,proficient,proficient
+1347255420,4603381,Ware Ltd School District,205193,Chandler Inc High School,1,False,Other,True,True,False,False,True,True,616,628,639,623,638,656,basic,basic,basic
+8596847462,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,2,True,Black,False,False,False,True,True,True,696,710,727,732,749,769,proficient,advanced,advanced
+5721559558,4603381,Ware Ltd School District,205193,Chandler Inc High School,-1,True,White,True,True,True,False,True,False,716,727,735,686,696,706,proficient,proficient,proficient
+4626946335,5000332,Frederick-Zamora School District,164948,Flores PLC High School,4,False,Native American,False,True,False,False,True,True,658,676,700,722,725,727,proficient,proficient,proficient
+2414397828,4603381,Ware Ltd School District,205193,Chandler Inc High School,3,True,Pacific Islander,True,True,True,False,False,False,717,733,748,709,720,730,proficient,advanced,advanced
+1195451383,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,9,False,Asian,True,False,True,False,True,False,653,661,670,620,627,632,basic,basic,basic
+9594988323,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,0,False,Other,True,False,True,False,False,False,610,627,640,657,675,692,basic,basic,basic
+4782085283,5000332,Frederick-Zamora School District,164948,Flores PLC High School,9,False,Native American,False,True,False,False,False,False,744,747,750,711,729,750,advanced,advanced,advanced
+4275651265,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,0,False,Native American,False,False,False,True,False,True,729,750,770,646,651,657,proficient,proficient,proficient
+8939135819,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,True,Black,False,False,True,True,True,True,667,688,714,749,766,782,proficient,advanced,advanced
+2259494178,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,False,White,True,False,True,True,False,True,679,688,701,735,754,775,proficient,proficient,advanced
+7410886845,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,11,False,Asian,True,False,False,True,True,False,687,697,709,719,727,736,proficient,proficient,proficient
+4253143327,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,1,True,Asian,False,True,True,True,False,False,699,725,748,645,648,652,basic,proficient,proficient
+8569453193,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,12,False,Other,False,True,False,False,True,True,699,711,721,658,678,701,proficient,proficient,proficient
+5838902728,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,2,True,Native American,False,False,False,False,False,True,613,628,639,643,672,697,basic,basic,basic
+7116545702,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,5,False,Other,False,True,False,True,True,True,635,654,673,686,688,690,basic,basic,proficient
+2263620797,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,True,Hispanic,False,False,False,False,False,True,743,755,764,731,739,748,advanced,advanced,advanced
+9369213750,5000332,Frederick-Zamora School District,164948,Flores PLC High School,-1,False,Black,False,True,True,False,False,False,693,717,743,627,634,641,basic,proficient,proficient
+2078564782,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,4,False,Other,True,True,True,False,False,True,746,749,752,700,709,721,proficient,advanced,advanced
+2711246738,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,9,True,Other,True,True,True,False,True,False,684,693,701,628,630,632,basic,basic,basic
+9121232100,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,7,False,Black,False,True,False,False,True,False,667,687,706,609,622,639,basic,basic,basic
+1688290005,5000332,Frederick-Zamora School District,164948,Flores PLC High School,10,False,Black,True,True,True,False,True,True,737,760,778,747,762,782,advanced,advanced,advanced
+6580861560,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,12,False,Other,False,True,False,True,True,False,668,684,708,731,748,765,proficient,proficient,advanced
+7041431745,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,1,True,Asian,False,False,True,False,False,False,702,724,742,746,760,775,proficient,advanced,advanced
+3485939852,5000332,Frederick-Zamora School District,164948,Flores PLC High School,2,False,Hispanic,False,False,True,False,False,True,659,666,674,690,694,698,basic,proficient,proficient
+8144131577,4603381,Ware Ltd School District,206941,Johnson-Bowen High School,1,True,Native American,False,True,False,False,True,True,669,680,689,657,666,673,basic,basic,proficient
+8742852669,4603381,Ware Ltd School District,834022,Rodriguez-Palmer High School,10,True,Black,False,True,False,False,True,False,731,748,763,697,702,706,proficient,advanced,advanced
+5233112027,4603381,Ware Ltd School District,532820,Kennedy-Gibbs High School,1,False,Native American,True,True,False,False,True,False,749,766,783,650,665,679,proficient,proficient,advanced
+7697831811,5000332,Frederick-Zamora School District,254717,Vega-Mooney High School,10,False,Other,False,True,False,True,False,True,615,618,620,741,752,764,proficient,proficient,proficient
+3431455328,5000332,Frederick-Zamora School District,164948,Flores PLC High School,1,True,Pacific Islander,True,True,False,True,True,True,714,723,730,743,755,767,advanced,advanced,advanced
+9011854362,4603381,Ware Ltd School District,205193,Chandler Inc High School,7,True,Asian,True,False,True,True,False,False,683,698,715,719,745,772,proficient,proficient,advanced
