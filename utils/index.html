@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATAS – The Tutoring Data Standard</title>
+    
+    <!-- Basic SEO -->
+    <meta name="description" content="DATAS is a dead-simple standard that lets schools, districts, providers, and platforms share tutoring data securely and instantly.">
+
+    <!-- Open Graph (used by Slack, Facebook, LinkedIn, iMessage…) -->
+    <meta property="og:title"       content="DATAS – The Tutoring Data Standard">
+    <meta property="og:description" content="Collect once, use everywhere. DATAS unifies tutoring records and provides on-device analytics—no data leaves your secure environment.">
+    <meta property="og:url"         content="https://accelerate.us/datas">
+    <meta property="og:type"        content="website">
+    <meta property="og:image"       content="https://accelerate.us/assets/datas-preview.png"> <!-- 1200×630 px is ideal -->
+
+    <!-- Twitter Card (X) -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="DATAS – The Tutoring Data Standard">
+    <meta name="twitter:description" content="Collect once, use everywhere. DATAS unifies tutoring records and provides on-device analytics—no data leaves your secure environment.">
+    <meta name="twitter:image"       content="https://accelerate.us/assets/datas-preview.png">
+
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%);
+      color: #1d1d1f;
+      line-height: 1.47059;
+      font-weight: 400;
+      letter-spacing: -0.022em;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .datas-wrapper {
+      width: 100%;
+      min-height: 100vh;
+      padding: 0;
+      background: linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%);
+      position: relative;
+    }
+
+    .hero-section {
+      padding: 12vh 5vw 8vh;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(240,242,245,0.95) 0%, rgba(255,255,255,1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(15,29,47,0.08);
+    }
+  
+    .datas-title {
+      font-size: clamp(6rem, 20vw, 12rem);
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #304A6F 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 0.9;
+      width: 100%;
+    }
+  
+    .datas-subtitle {
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      font-weight: 500;
+      margin-top: 0.5rem;
+      color: #0F1D2F;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+
+    .hero-description {
+      max-width: 800px;
+      margin: 4rem auto 0;
+      font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+      color: #86868b;
+      line-height: 1.6;
+      text-align: center;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      position: relative;
+      padding: 0 2rem;
+    }
+
+    .hero-description::before {
+      content: '';
+      position: absolute;
+      top: -1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #d2d2d7 50%, transparent 100%);
+    }
+
+    .divider {
+      margin: 8vh auto 6vh;
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #658DC0 50%, transparent 100%);
+    }
+
+    .content-section {
+      padding: 8vh 5vw 8vh;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .how-datas-helps {
+      margin-top: 0;
+      padding: 0;
+    }
+
+    .how-datas-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+      background: linear-gradient(135deg, #304A6F 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-top: 0;
+    }
+
+    .how-datas-subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      color: #658DC0;
+      margin-bottom: 4rem;
+      text-align: center;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+      margin-top: 0;
+    }
+
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: nowrap;
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-top: 2rem;
+      overflow-x: auto;
+      padding: 2rem 1rem;
+      min-height: 480px;
+      align-items: flex-start;
+    }
+
+    .card {
+      width: 300px;
+      height: 420px;
+      perspective: 1200px;
+      cursor: pointer;
+      margin-bottom: 2rem;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+      transform-style: preserve-3d;
+      border-radius: 24px;
+      box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2.5rem;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(224,226,231,0.95) 100%);
+      border: 1px solid rgba(15,29,47,0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .card-back {
+      background: linear-gradient(135deg, #10A59C 0%, #658DC0 100%);
+      color: white;
+      transform: rotateY(180deg);
+      box-shadow: 
+        0 8px 32px rgba(16,165,156,0.3),
+        0 2px 8px rgba(16,165,156,0.2);
+    }
+
+    .card-icon {
+      font-size: 4.5rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .card-title {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      color: #0F1D2F;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .card-back .card-title {
+      color: white;
+    }
+
+    .card-description {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #658DC0;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .card-back .card-description {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .card:hover .card-inner {
+      transform: translateY(-8px);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .card.flipped:hover .card-inner {
+      transform: rotateY(180deg) translateY(-8px);
+    }
+
+    .card:active .card-inner {
+      transform: translateY(-4px);
+      transition: all 0.2s ease;
+    }
+
+    .card.flipped:active .card-inner {
+      transform: rotateY(180deg) translateY(-4px);
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 8vh 4vw 6vh;
+      }
+
+      .content-section {
+        padding: 6vh 4vw 6vh;
+      }
+
+      .cards-container {
+        justify-content: flex-start;
+        gap: 1.5rem;
+        padding: 2rem 0.5rem;
+        min-height: 440px;
+        margin-top: 1.5rem;
+      }
+      
+      .card {
+        width: 280px;
+        height: 380px;
+      }
+      
+      .how-datas-title {
+        font-size: 2.5rem;
+      }
+      
+      .how-datas-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 3rem;
+      }
+
+      .datas-description {
+        margin-bottom: 6vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-section {
+        padding: 6vh 3vw 4vh;
+      }
+
+      .content-section {
+        padding: 4vh 3vw 4vh;
+      }
+
+      .card {
+        width: 260px;
+        height: 360px;
+      }
+
+      .card-front, .card-back {
+        padding: 2rem;
+      }
+
+      .cards-container {
+        min-height: 400px;
+      }
+    }
+
+    .see-it-in-action {
+      padding: 8vh 5vw;
+      background: linear-gradient(135deg, rgba(235,238,242,0.95) 0%, rgba(255,255,255,1) 100%);
+      border-top: 1px solid rgba(15,29,47,0.08);
+    }
+
+    .action-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1rem;
+      margin-top: 0;
+      background: linear-gradient(135deg, #304A6F 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .action-subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      color: #658DC0;
+      text-align: center;
+      margin-bottom: 4rem;
+      margin-top: 0;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .action-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-top: 2rem;
+    }
+
+    .action-link {
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(224,226,231,0.95) 100%);
+      border: 1px solid rgba(15,29,47,0.08);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(16,165,156,0.05) 0%, rgba(101,141,192,0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      border-radius: 20px;
+    }
+
+    .action-link:hover {
+      transform: translateY(-8px);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 8px 16px rgba(0, 0, 0, 0.06);
+      border-color: rgba(16,165,156,0.2);
+    }
+
+    .action-link:hover::before {
+      opacity: 1;
+    }
+
+    .action-link-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .action-link-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: #0F1D2F;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      position: relative;
+      z-index: 1;
+    }
+
+    .action-link-description {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #658DC0;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .action-link-arrow {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      font-size: 1.2rem;
+      color: #10A59C;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+      z-index: 1;
+    }
+
+    .action-link:hover .action-link-arrow {
+      transform: translateX(4px);
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .see-it-in-action {
+        padding: 6vh 4vw;
+      }
+
+      .action-links {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .action-link {
+        padding: 2rem;
+      }
+
+      .action-link-arrow {
+        top: 1.5rem;
+        right: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .see-it-in-action {
+        padding: 4vh 3vw;
+      }
+
+      .get-started {
+        padding: 4vh 3vw;
+      }
+
+      .see-who-committed {
+        padding: 4vh 3vw;
+      }
+
+      .get-involved {
+        padding: 4vh 3vw;
+      }
+
+      .action-link {
+        padding: 1.5rem;
+      }
+
+      .action-link-arrow {
+        top: 1rem;
+        right: 1rem;
+      }
+    }
+
+    .get-started {
+      padding: 8vh 5vw;
+      background: linear-gradient(135deg, rgba(230,233,238,0.95) 0%, rgba(255,255,255,1) 100%);
+      border-top: 1px solid rgba(15,29,47,0.08);
+    }
+
+    .get-started-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1rem;
+      margin-top: 0;
+      background: linear-gradient(135deg, #304A6F 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .get-started-button {
+      display: block;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      text-align: center;
+      margin: 0 auto 3rem;
+      margin-top: 3rem;
+      background: linear-gradient(135deg, #304A6F 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      text-decoration: none;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      width: fit-content;
+    }
+
+    .get-started-button:hover {
+      background: linear-gradient(135deg, #10A59C 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transform: translateY(-2px);
+      border-color: rgba(16,165,156,0.3);
+      box-shadow: 
+        0 8px 24px rgba(16,165,156,0.15),
+        0 4px 12px rgba(16,165,156,0.1);
+    }
+
+    .get-started-button:active {
+      transform: translateY(0);
+      transition: all 0.1s ease;
+    }
+
+    .get-started-button::after {
+      content: ' →';
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      color: #10A59C;
+      -webkit-text-fill-color: #10A59C;
+    }
+
+    .get-started-button:hover::after {
+      opacity: 1;
+    }
+
+    .commitment-container {
+      max-width: 900px;
+      margin: 0 auto;
+      margin-top: 2rem;
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(224,226,231,0.98) 100%);
+      border: 1px solid rgba(15,29,47,0.08);
+      border-radius: 24px;
+      padding: 2rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .commitment-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #304A6F 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .commitment-intro {
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      line-height: 1.5;
+      color: #0F1D2F;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      font-style: italic;
+    }
+
+    .commitment-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .commitment-item {
+      margin-bottom: 1rem;
+      padding: 1.25rem;
+      background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(248,248,250,0.9) 100%);
+      border: 1px solid rgba(16,165,156,0.1);
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .commitment-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 24px rgba(16,165,156,0.1),
+        0 2px 8px rgba(16,165,156,0.05);
+      border-color: rgba(16,165,156,0.2);
+    }
+
+    .commitment-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .commitment-heading {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 700;
+      color: #10A59C;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+
+    .commitment-text {
+      font-size: clamp(0.95rem, 1.6vw, 1rem);
+      line-height: 1.4;
+      color: #0F1D2F;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    @media (max-width: 768px) {
+      .get-started {
+        padding: 6vh 4vw;
+      }
+
+      .get-started-title {
+        margin-bottom: 1rem;
+      }
+
+      .get-started-button {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .commitment-container {
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .commitment-item {
+        padding: 1rem;
+        margin-bottom: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .get-started {
+        padding: 2vh 3vw;
+      }
+
+      .commitment-container {
+        padding: 1.25rem;
+      }
+
+      .commitment-item {
+        padding: 0.8rem;
+      }
+    }
+
+    .see-who-committed {
+      padding: 8vh 5vw;
+      background: linear-gradient(135deg, rgba(225,228,233,0.95) 0%, rgba(255,255,255,1) 100%);
+      border-top: 1px solid rgba(15,29,47,0.08);
+    }
+
+    .committed-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1rem;
+      margin-top: 0;
+      background: linear-gradient(135deg, #304A6F 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      margin-bottom: 4rem;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(224,226,231,0.95) 100%);
+      border: 1px solid rgba(15,29,47,0.08);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-number {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      color: #10A59C;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: #0F1D2F;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .carousel-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-top: 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      animation: scroll 30s linear infinite;
+      width: max-content;
+    }
+
+    .carousel-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .carousel-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 200px;
+      height: 80px;
+      margin: 0 1rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(224,226,231,0.95) 100%);
+      border: 1px solid rgba(15,29,47,0.08);
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+
+    .carousel-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.06);
+      border-color: rgba(16,165,156,0.2);
+    }
+
+    .carousel-logo {
+      max-width: 120px;
+      max-height: 50px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+
+    .carousel-item:hover .carousel-logo {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+
+    .carousel-name {
+      font-size: 0.9rem;
+      color: #658DC0;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .see-who-committed {
+        padding: 6vh 4vw;
+      }
+
+      .stats-container {
+        gap: 2rem;
+        margin-bottom: 3rem;
+        margin-top: 2rem;
+      }
+
+      .stat-item {
+        padding: 1.5rem;
+      }
+
+      .carousel-item {
+        min-width: 150px;
+        height: 60px;
+        margin: 0 0.5rem;
+      }
+
+      .carousel-container {
+        margin-top: 1.5rem;
+      }
+
+      .carousel-logo {
+        max-width: 80px;
+        max-height: 35px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .see-who-committed {
+        padding: 3vh 3vw;
+      }
+
+      .stats-container {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .carousel-item {
+        min-width: 120px;
+        height: 50px;
+      }
+    }
+
+    .get-involved {
+      padding: 8vh 5vw;
+      background: linear-gradient(135deg, rgba(220,223,228,0.95) 0%, rgba(255,255,255,1) 100%);
+      border-top: 1px solid rgba(15,29,47,0.08);
+      text-align: center;
+    }
+
+    .get-involved-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      margin-top: 0;
+      background: linear-gradient(135deg, #304A6F 0%, #658DC0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .get-involved-subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      color: #658DC0;
+      margin-bottom: 4rem;
+      margin-top: 0;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .get-involved-button {
+      display: inline-block;
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 600;
+      text-align: center;
+      background: linear-gradient(135deg, #10A59C 0%, #658DC0 100%);
+      color: white;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 4px 16px rgba(16,165,156,0.2),
+        0 2px 8px rgba(16,165,156,0.1);
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .get-involved-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .get-involved-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 24px rgba(16,165,156,0.3),
+        0 4px 12px rgba(16,165,156,0.2);
+    }
+
+    .get-involved-button:hover::before {
+      left: 100%;
+    }
+
+    .get-involved-button:active {
+      transform: translateY(-1px);
+      transition: all 0.1s ease;
+    }
+
+    .section-link {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      opacity: 0;
+      color: #658DC0;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 6px;
+      padding: 0.5rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(15,29,47,0.1);
+    }
+
+    .section-link:hover {
+      color: #10A59C;
+      transform: scale(1.1);
+    }
+
+    .section-link.copied {
+      color: #10A59C;
+      transform: scale(1.2);
+    }
+
+    .section-link.copied::after {
+      content: '✓';
+      position: absolute;
+      top: -0.5rem;
+      right: -0.5rem;
+      background: #10A59C;
+      color: white;
+      border-radius: 50%;
+      width: 1.2rem;
+      height: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .section-container {
+      position: relative;
+    }
+
+    .section-container:hover .section-link {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .get-involved {
+        padding: 6vh 4vw;
+      }
+
+      .get-involved-subtitle {
+        margin-bottom: 3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .get-involved {
+        padding: 3vh 3vw;
+      }
+
+      .get-involved-button {
+        padding: 0.8rem 1.5rem;
+      }
+    }
+  </style>
+  
+  <div class="datas-wrapper">
+    <div class="section-container">
+      <div class="hero-section" id="home">
+        <a href="#" class="section-link" onclick="copySectionLink('home', event)">🔗</a>
+    <h1 class="datas-title">DATAS</h1>
+    <div class="datas-subtitle">Data Alignment and Tutoring Assessment Standards</div>
+        <div class="hero-description">
+          DATAS lets schools, districts, providers, and platforms speak the same language. Use the schema, run the tools, and get instant insight. <br>No data ever leaves your secure environment.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-container">
+      <div class="content-section" id="how-it-helps">
+        <a href="#" class="section-link" onclick="copySectionLink('how-it-helps', event)">🔗</a>
+        <div class="how-datas-helps">
+          <h2 class="how-datas-title">Interoperability helps everyone</h2>
+          <!-- /* <p class="how-datas-subtitle">Empowering every stakeholder in the education ecosystem</p> */ -->        
+          <div class="cards-container">
+            <div class="card" onclick="flipCard(this)">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-icon">🏫</div>
+                  <h3 class="card-title">Districts</h3>
+                  <!-- <p class="card-description">Standardize data collection and gain insights across all tutoring programs</p> -->
+                </div>
+                <div class="card-back">
+                  <h3 class="card-title">Districts</h3>
+                  <p class="card-description">DATAS includes RFP language to ensure providers deliver essential data, a validation tool for instant standard compliance checks, and a dashboard for actionable insights. Districts can implement DATAS in 10 hours, with ongoing maintenance under an hour per week.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" onclick="flipCard(this)">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-icon">🗺️</div>
+                  <h3 class="card-title">States</h3>
+                  <!-- <p class="card-description">Scale effective tutoring programs statewide with consistent metrics</p> -->
+                </div>
+                <div class="card-back">
+                  <h3 class="card-title">States</h3>
+                  <p class="card-description">DATAS helps states by offering RFP language to mandate interoperable data, model regulations (already passed in LA) to set a data floor, and guidance on building an approved provider list that fosters a scalable, effective ecosystem.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" onclick="flipCard(this)">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-icon">💼</div>
+                  <h3 class="card-title">Providers</h3>
+                  <!-- <p class="card-description">Integrate seamlessly with existing systems and demonstrate impact</p> -->
+                </div>
+                <div class="card-back">
+                  <h3 class="card-title">Providers</h3>
+                  <p class="card-description">DATAS helps providers build lasting partnerships with partners by enabling shared insight. Its lightweight tools surface implementation challenges early, support continuous improvement, and create a feedback loop that strengthens both outcomes and relationships.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-container">
+      <div class="see-it-in-action" id="tools">
+        <a href="#" class="section-link" onclick="copySectionLink('tools', event)">🔗</a>
+        <h2 class="action-title">See it in action</h2>
+        <p class="action-subtitle">Explore the tools and resources that make DATAS work</p>
+        
+        <div class="action-links">
+          <a href="https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770" class="action-link" target="_blank">
+            <span class="action-link-arrow">→</span>
+            <span class="action-link-icon">📚</span>
+            <h3 class="action-link-title">Data Dictionary</h3>
+            <p class="action-link-description">Comprehensive schema definitions and field specifications for standardized tutoring data collection</p>
+          </a>
+
+          <a href="https://drive.google.com/file/d/1FjTLaWGRQd6zlgaXkqHkAU_Gj8kUzgGY/view" class="action-link" target="_blank">
+            <span class="action-link-arrow">→</span>
+            <span class="action-link-icon">📊</span>
+            <h3 class="action-link-title">Sample Data</h3>
+            <p class="action-link-description">Real-world examples and templates to help you implement DATAS in your environment</p>
+          </a>
+
+          <a href="https://datas-toolkit.streamlit.app/" class="action-link" target="_blank">
+            <span class="action-link-arrow">→</span>
+            <span class="action-link-icon">📈</span>
+            <h3 class="action-link-title">Dashboard</h3>
+            <p class="action-link-description">Interactive analytics and insights to track progress and identify opportunities for improvement</p>
+          </a>
+
+          <a href="https://drive.google.com/file/d/1q5nXY8AIneafrcLnf2gdswmb3T9JNvIx/view?usp=drive_link" class="action-link" target="_blank">
+            <span class="action-link-arrow">→</span>
+            <span class="action-link-icon">⚖️</span>
+            <h3 class="action-link-title">Model Regulations</h3>
+            <p class="action-link-description">Ready-to-use regulatory language and policy frameworks for state and district adoption</p>
+          </a>
+
+          <a href="https://datas-toolkit.streamlit.app/" class="action-link" target="_blank">
+            <span class="action-link-arrow">→</span>
+            <span class="action-link-icon">✅</span>
+            <h3 class="action-link-title">Validator</h3>
+            <p class="action-link-description">Instant compliance checking tool to validate your data against DATAS standards</p>
+          </a>
+
+          <a href="https://datas-toolkit.streamlit.app/" class="action-link" target="_blank">
+            <span class="action-link-arrow">→</span>
+            <span class="action-link-icon">🛠️</span>
+            <h3 class="action-link-title">Toolkit</h3>
+            <p class="action-link-description">Essential tools and utilities for implementing and managing DATAS in your organization</p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-container">
+      <div class="get-started" id="commitment">
+        <a href="#" class="section-link" onclick="copySectionLink('commitment', event)">🔗</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSemlK2W10PMF1JihPQkJou1CshiAoPxlGPN3HY6n1RwhZDzZw/viewform" target="_blank" class="get-started-button">Get started. Sign the commitment</a>
+        <div class="commitment-container">
+          
+          <p class="commitment-intro">
+            I, [Name], [Title/Position], of [Organization Name], affirm my commitment to advancing student outcomes and maximizing the impact of tutoring investments by championing standardized data collection and reporting. Together, we can build a foundation of transparency, accountability, interoperability, and continuous improvement in high-dosage tutoring programs.
+          </p>
+
+          <ol class="commitment-list">
+            <li class="commitment-item">
+              <h3 class="commitment-heading">Champion Data-Driven Decisions for Equity and Excellence</h3>
+              <p class="commitment-text">We commit to using data as a tool to promote educational equity and drive effective decision-making. By supporting robust data systems, we will ensure that every student has access to impactful, high-quality tutoring that meets their individual needs.</p>
+            </li>
+            
+            <li class="commitment-item">
+              <h3 class="commitment-heading">Empower Partners with Interoperable Data</h3>
+              <p class="commitment-text">We will strive for seamless data interoperability between our organization and our partners. This includes establishing clear, secure guidelines that enable data sharing while protecting student privacy and ensuring compliance with regulations.</p>
+            </li>
+            
+            <li class="commitment-item">
+              <h3 class="commitment-heading">Adopt National Standards for Data Collection and Implementation</h3>
+              <p class="commitment-text">We will collect and report on the variables defined in the high-dosage tutoring data dictionary, ensuring consistency across programs. Relevant data on student characteristics, dosage, and outcomes will be gathered and stored in standardized formats to facilitate comparability and actionable insights.</p>
+            </li>
+            
+            <li class="commitment-item">
+              <h3 class="commitment-heading">Commit to Continuous Improvement through Transparency and Insights</h3>
+              <p class="commitment-text">We will leverage the data collected to reflect on progress, share insights, and refine tutoring programs. By fostering a culture of transparency and collaboration, we aim to ensure that all investments are effectively aligned with student success.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  
+    <div class="section-container">
+      <div class="see-who-committed" id="participants">
+        <a href="#" class="section-link" onclick="copySectionLink('participants', event)">🔗</a>
+        <h2 class="committed-title">See who has committed</h2>
+        
+        <div class="stats-container">
+          <div class="stat-item">
+            <div class="stat-number">26</div>
+            <div class="stat-label">Participating Agencies</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">721,000</div>
+            <div class="stat-label">Students Pledged For</div>
+          </div>
+        </div>
+
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <!-- First set of logos -->
+            <div class="carousel-item">
+              <img src="https://resources.finalsite.net/images/v1735905200/jacksonk12msus/wvxefwrjz8ar9fwkgei1/district-header-logo-colored.svg" alt="JPS" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://images.squarespace-cdn.com/content/v1/60c764fb72a7d1000f34a5c8/88545457-01c3-436d-89ed-971dd7662fde/Ampact_Horizontal_FullColor_Tagline.png?format=1500w" alt="Ampact" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://accelerate.us/wp-content/uploads/2023/11/Accelerate-Logo-2-2.png" alt="Accelerate" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://resources.finalsite.net/images/v1549996363/sd129org/piakzr96erfyioqullbm/logo.svg" alt="West Aurora School District 129" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://dti.delaware.gov/wp-content/themes/dosgic_DTI_theme/img/dti-logo.png" alt="Delaware Department of Technology & Information" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.litteraeducation.com/wp-content/uploads/2024/07/Littera-logo.png" alt="Littera" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://nceducationcorps.org/wp-content/uploads/2023/12/NCEC-Logo_Primary_RGB_Full-Color.png" alt="NC Education Corps" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://gofellows.org/wp-content/uploads/2024/09/GO-Tudor-Corps-Full-Color.png" alt="Go Tutor Corps" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://images.squarespace-cdn.com/content/v1/627455e85010cd2fd9f042c7/5f51cb23-dac3-4e6a-8e7a-2fa4116c1db0/Reading-Futures-logo-primary-reverse.png?format=1500w" alt="Reading Futures" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://tutored.live/wp-content/uploads/2023/06/logo.svg" alt="Tutored by Teachers" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://cmsv2-assets.apptegy.net/uploads/20429/logo/23243/WSFCS_Logo.png" alt="Winston-Salem / Forsyth County Schools" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://mathamaticstutoring.com/wp-content/uploads/2023/06/logo-copy-300x118.jpg" alt="Math-A-Matics Tutoring" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.booknook.com/hs-fs/hubfs/Branding/newbooknook-logo-main-transparent.png?width=216&height=42&name=newbooknook-logo-main-transparent.png" alt="BookNook" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://media.licdn.com/dms/image/v2/C560BAQGqlT5FNai5pQ/company-logo_200_200/company-logo_200_200/0/1675693070598/innovations_for_learning_logo?e=2147483647&v=beta&t=PLdHpQHZY4VyryxStzWEzyXD_H27ssx-TUq8jwy3MLg" alt="Chapter One NFP" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://cityschoolscollab.org/wp-content/uploads/2023/05/rgb-cityschools-primary_navy%E2%80%93shadow-optimized.webp" alt="CityTutor DC" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://paper.co/hs-fs/hubfs/PAPER_LOGO_white.png?width=670&height=224&name=PAPER_LOGO_white.png" alt="Paper Education of America, Inc." class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://airtutors.org/wp-content/uploads/2022/09/at-logo.png" alt="Air Tutors" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.cmu.edu/brand/brand-guidelines/images/wordmarksquare-red-600x600.png" alt="Carnegie Mellon University" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.hootreading.com/hs-fs/hubfs/New%20Website/logo-black-no-padding.png?width=120&height=100&name=logo-black-no-padding.png" alt="Hoot Reading Inc." class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://cdn.prod.website-files.com/63190e43bf6532bb9bbbf31b/63ddaa4328516999e408007a_OnceLogoBlue.svg" alt="Once" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.cignition.com/hubfs/cignition_logo_dark-bg.svg" alt="Cignition Inc" class="carousel-logo">
+            </div>
+            <!-- Duplicate set for seamless loop -->
+            <div class="carousel-item">
+              <img src="https://resources.finalsite.net/images/v1735905200/jacksonk12msus/wvxefwrjz8ar9fwkgei1/district-header-logo-colored.svg" alt="JPS" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://images.squarespace-cdn.com/content/v1/60c764fb72a7d1000f34a5c8/88545457-01c3-436d-89ed-971dd7662fde/Ampact_Horizontal_FullColor_Tagline.png?format=1500w" alt="Ampact" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://accelerate.us/wp-content/uploads/2023/11/Accelerate-Logo-2-2.png" alt="Accelerate" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://resources.finalsite.net/images/v1549996363/sd129org/piakzr96erfyioqullbm/logo.svg" alt="West Aurora School District 129" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://dti.delaware.gov/wp-content/themes/dosgic_DTI_theme/img/dti-logo.png" alt="Delaware Department of Technology & Information" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.litteraeducation.com/wp-content/uploads/2024/07/Littera-logo.png" alt="Littera" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://nceducationcorps.org/wp-content/uploads/2023/12/NCEC-Logo_Primary_RGB_Full-Color.png" alt="NC Education Corps" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://gofellows.org/wp-content/uploads/2024/09/GO-Tudor-Corps-Full-Color.png" alt="Go Tutor Corps" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://images.squarespace-cdn.com/content/v1/627455e85010cd2fd9f042c7/5f51cb23-dac3-4e6a-8e7a-2fa4116c1db0/Reading-Futures-logo-primary-reverse.png?format=1500w" alt="Reading Futures" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://tutored.live/wp-content/uploads/2023/06/logo.svg" alt="Tutored by Teachers" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://cmsv2-assets.apptegy.net/uploads/20429/logo/23243/WSFCS_Logo.png" alt="Winston-Salem / Forsyth County Schools" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://mathamaticstutoring.com/wp-content/uploads/2023/06/logo-copy-300x118.jpg" alt="Math-A-Matics Tutoring" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.booknook.com/hs-fs/hubfs/Branding/newbooknook-logo-main-transparent.png?width=216&height=42&name=newbooknook-logo-main-transparent.png" alt="BookNook" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://media.licdn.com/dms/image/v2/C560BAQGqlT5FNai5pQ/company-logo_200_200/company-logo_200_200/0/1675693070598/innovations_for_learning_logo?e=2147483647&v=beta&t=PLdHpQHZY4VyryxStzWEzyXD_H27ssx-TUq8jwy3MLg" alt="Chapter One NFP" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://cityschoolscollab.org/wp-content/uploads/2023/05/rgb-cityschools-primary_navy%E2%80%93shadow-optimized.webp" alt="CityTutor DC" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://paper.co/hs-fs/hubfs/PAPER_LOGO_white.png?width=670&height=224&name=PAPER_LOGO_white.png" alt="Paper Education of America, Inc." class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://airtutors.org/wp-content/uploads/2022/09/at-logo.png" alt="Air Tutors" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.cmu.edu/brand/brand-guidelines/images/wordmarksquare-red-600x600.png" alt="Carnegie Mellon University" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.hootreading.com/hs-fs/hubfs/New%20Website/logo-black-no-padding.png?width=120&height=100&name=logo-black-no-padding.png" alt="Hoot Reading Inc." class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://cdn.prod.website-files.com/63190e43bf6532bb9bbbf31b/63ddaa4328516999e408007a_OnceLogoBlue.svg" alt="Once" class="carousel-logo">
+            </div>
+            <div class="carousel-item">
+              <img src="https://www.cignition.com/hubfs/cignition_logo_dark-bg.svg" alt="Cignition Inc" class="carousel-logo">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-container">
+      <div class="get-involved" id="get-involved">
+        <a href="#" class="section-link" onclick="copySectionLink('get-involved', event)">🔗</a>
+        <h2 class="get-involved-title">Want to get involved?</h2>
+        <p class="get-involved-subtitle">We're a coalition of district, state, and provider leaders shaping the future of tutoring data. Even direct competitors are working together for this. <br>Help set the standard.</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfdmA12Q-l9SA92c9PxHuasEd-61K0tgkSwe8Lbro4wE9fSiw/viewform?usp=sf_link" target="_blank" class="get-involved-button">Join the steering committee</a>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function flipCard(card) {
+      card.classList.toggle('flipped');
+    }
+
+    function copySectionLink(sectionId, event) {
+      event.preventDefault();
+      
+      // Create the full URL with the section anchor
+      const currentUrl = window.location.href.split('#')[0]; // Remove any existing anchor
+      const sectionUrl = `${currentUrl}#${sectionId}`;
+      
+      // Copy to clipboard
+      navigator.clipboard.writeText(sectionUrl).then(() => {
+        // Visual feedback
+        const linkElement = event.target;
+        linkElement.classList.add('copied');
+        
+        // Remove the copied class after 2 seconds
+          setTimeout(() => {
+          linkElement.classList.remove('copied');
+          }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = sectionUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        // Visual feedback even for fallback
+        const linkElement = event.target;
+        linkElement.classList.add('copied');
+        setTimeout(() => {
+          linkElement.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+  

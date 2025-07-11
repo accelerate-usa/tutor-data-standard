@@ -228,7 +228,81 @@ with tab3:
             merged_session_df = session_df.merge(student_df, on="student_id", how="inner")
             merged_session_df['session_duration_hours'] = (merged_session_df['session_duration'] / 60).round()
 
-            tutoring_hours_per_student = merged_session_df.groupby("student_id")["session_duration_hours"].sum().reset_index()
+            # --- FILTER CONTROLS ---
+            with st.expander("Filters", expanded=False):
+                school_options = ["All"] + sorted(merged_session_df["school_name"].dropna().unique().tolist())
+                school_sel = st.selectbox(
+                    "School Name",
+                    options=school_options,
+                    index=0
+                )
+                grade_sel = st.multiselect(
+                    "Current Grade Level",
+                    options=merged_session_df["current_grade_level"].unique(),
+                    default=list(merged_session_df["current_grade_level"].unique())
+                )
+                gender_sel = st.multiselect(
+                    "Gender",
+                    options=merged_session_df["gender"].unique(),
+                    default=list(merged_session_df["gender"].unique())
+                )
+                ethnicity_sel = st.multiselect(
+                    "Ethnicity",
+                    options=merged_session_df["ethnicity"].unique(),
+                    default=list(merged_session_df["ethnicity"].unique())
+                )
+                ell_sel = st.multiselect(
+                    "ELL",
+                    options=merged_session_df["ell"].unique(),
+                    default=list(merged_session_df["ell"].unique())
+                )
+                iep_sel = st.multiselect(
+                    "IEP",
+                    options=merged_session_df["iep"].unique(),
+                    default=list(merged_session_df["iep"].unique())
+                )
+                gifted_sel = st.multiselect(
+                    "Gifted Flag",
+                    options=merged_session_df["gifted_flag"].unique(),
+                    default=list(merged_session_df["gifted_flag"].unique())
+                )
+                homeless_sel = st.multiselect(
+                    "Homeless Flag",
+                    options=merged_session_df["homeless_flag"].unique(),
+                    default=list(merged_session_df["homeless_flag"].unique())
+                )
+                disability_sel = st.multiselect(
+                    "Disability",
+                    options=merged_session_df["disability"].unique(),
+                    default=list(merged_session_df["disability"].unique())
+                )
+                econ_sel = st.multiselect(
+                    "Economic Disadvantage",
+                    options=merged_session_df["economic_disadvantage"].unique(),
+                    default=list(merged_session_df["economic_disadvantage"].unique())
+                )
+
+            # Apply filters
+            filtered_df = merged_session_df[
+                (merged_session_df["school_name"].isin(school_sel)) &
+                (merged_session_df["current_grade_level"].isin(grade_sel)) &
+                (merged_session_df["gender"].isin(gender_sel)) &
+                (merged_session_df["ethnicity"].isin(ethnicity_sel)) &
+                (merged_session_df["ell"].isin(ell_sel)) &
+                (merged_session_df["iep"].isin(iep_sel)) &
+                (merged_session_df["gifted_flag"].isin(gifted_sel)) &
+                (merged_session_df["homeless_flag"].isin(homeless_sel)) &
+                (merged_session_df["disability"].isin(disability_sel)) &
+                (merged_session_df["economic_disadvantage"].isin(econ_sel))
+            ]
+
+            # Compute hours per student (filtered)
+            tutoring_hours_per_student = (
+                filtered_df
+                .groupby("student_id")["session_duration_hours"]
+                .sum()
+                .reset_index()
+            )
             tutoring_hours_per_student['session_duration_hours'] = tutoring_hours_per_student['session_duration_hours'].round()
 
             # Retrieve threshold and total cost
@@ -252,7 +326,7 @@ with tab3:
                 y="student_count",
                 color="dosage_category",
                 color_discrete_map={
-                    "Below Full Dosage": "#FF6384",  # Example palette
+                    "Below Full Dosage": "#FF6384",
                     "Full Dosage or Above": "#36A2EB"
                 },
                 labels={
