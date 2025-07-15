@@ -3,6 +3,8 @@ import pandas as pd
 import plotly.express as px
 import re
 from datetime import datetime
+import openai
+import json
 
 st.set_page_config(page_title="DATAS Analysis Toolkit", layout="wide")
 
@@ -139,6 +141,7 @@ def validate_data(df: pd.DataFrame, data_type: str):
 
 # Tabs
 tab1, tab2, tab3 = st.tabs(["Step 1: Validate Data", "Step 2: Program Characteristics", "Step 3: Charts & Results"])
+# tab4 = st.tabs(["Step 4: Personalized Results"])  # Commented out
 
 # Session state to hold data
 if "session_data" not in st.session_state:
@@ -283,8 +286,14 @@ with tab3:
                 )
 
             # Apply filters
+            # Handle "All" selection for school
+            if school_sel == "All":
+                school_filter = True
+            else:
+                school_filter = merged_session_df["school_name"] == school_sel
+            
             filtered_df = merged_session_df[
-                (merged_session_df["school_name"].isin(school_sel)) &
+                school_filter &
                 (merged_session_df["current_grade_level"].isin(grade_sel)) &
                 (merged_session_df["gender"].isin(gender_sel)) &
                 (merged_session_df["ethnicity"].isin(ethnicity_sel)) &
@@ -483,6 +492,207 @@ with tab3:
             st.error(f"An error occurred: {str(e)}")
     else:
         st.info("Please complete Steps 1 and 2 before viewing results.")
+
+# ---- STEP 4: PERSONALIZED RESULTS ----
+# with tab4:
+#     st.header("4. Ask AI About Your Data")
+#     st.write("Get personalized insights and recommendations about your tutoring program data. Ask specific questions and receive data-driven advice.")
+#     
+#     # Check if data is available
+#     if st.session_state["session_data"] is not None and st.session_state["student_data"] is not None:
+#         
+#         # Load API key from secrets.txt
+#         api_key = None
+#         try:
+#             with open("secrets.txt", "r") as f:
+#                 for line in f:
+#                     # Check for both "API key:" and "API Key:" (case insensitive)
+#                     if line.strip().lower().startswith("api key:"):
+#                         api_key = line.strip().split(":", 1)[1].strip()
+#                         break
+#         except FileNotFoundError:
+#             st.error("❌ secrets.txt file not found. Please create a secrets.txt file with your API key in the format: 'API key: [your_key_here]'")
+#             st.stop()
+#         except Exception as e:
+#             st.error(f"❌ Error reading secrets.txt: {str(e)}")
+#             st.stop()
+#         
+#         if not api_key:
+#             st.error("❌ API key not found in secrets.txt. Please ensure the file contains 'API key: [your_key_here]'")
+#             st.stop()
+#         
+#         # API key is now passed directly to the client
+#         
+#         # Function to get AI insights
+#         def get_ai_insights(question, session_df, student_df, full_dosage_threshold, total_cost):
+#             try:
+#                 # Prepare data summary for the AI
+#                 session_summary = {
+#                     "total_sessions": len(session_df),
+#                     "unique_students": session_df['student_id'].nunique(),
+#                     "unique_tutors": session_df['tutor_id'].nunique(),
+#                     "avg_session_duration": session_df['session_duration'].mean(),
+#                     "total_hours": session_df['session_duration'].sum() / 60,
+#                     "math_sessions": len(session_df[session_df['session_topic'].str.lower() == 'math']),
+#                     "ela_sessions": len(session_df[session_df['session_topic'].str.lower() == 'ela']),
+#                     "date_range": f"{session_df['session_date'].min()} to {session_df['session_date'].max()}"
+#                 }
+#                 
+#                 # Helper function to safely check boolean fields
+#                 def count_boolean_field(df, field_name):
+#                     try:
+#                         # Convert to string and then check
+#                         return len(df[df[field_name].astype(str).str.lower().isin(['true', '1', 'yes', 't', 'y'])])
+#                     except:
+#                         # If conversion fails, try direct boolean check
+#                         try:
+#                             return len(df[df[field_name] == True])
+#                         except:
+#                             return 0
+#                 
+#                 student_summary = {
+#                     "total_students": len(student_df),
+#                     "grade_levels": student_df['current_grade_level'].unique().tolist(),
+#                     "schools": student_df['school_name'].nunique(),
+#                     "districts": student_df['district_id'].nunique(),
+#                     "ell_students": count_boolean_field(student_df, 'ell'),
+#                     "iep_students": count_boolean_field(student_df, 'iep'),
+#                     "gifted_students": count_boolean_field(student_df, 'gifted_flag'),
+#                     "homeless_students": count_boolean_field(student_df, 'homeless_flag'),
+#                     "avg_ela_current": student_df['ela_state_score_current_year'].mean(),
+#                     "avg_math_current": student_df['math_state_score_current_year'].mean(),
+#                     "avg_ela_prior": student_df['ela_state_score_one_year_ago'].mean(),
+#                     "avg_math_prior": student_df['math_state_score_one_year_ago'].mean()
+#                 }
+#                 
+#                 # Calculate dosage metrics
+#                 merged_df = session_df.merge(student_df, on="student_id", how="inner")
+#                 hours_per_student = merged_df.groupby("student_id")["session_duration"].sum() / 60
+#                 full_dosage_students = len(hours_per_student[hours_per_student >= full_dosage_threshold])
+#                 dosage_percentage = (full_dosage_students / len(hours_per_student)) * 100 if len(hours_per_student) > 0 else 0
+#                 
+#                 # Calculate value-added metrics
+#                 student_df['ela_value_added'] = (
+#                     (student_df['ela_state_score_current_year'] - student_df['ela_state_score_one_year_ago']) -
+#                     (student_df['ela_state_score_one_year_ago'] - student_df['ela_state_score_two_years_ago'])
+#                 )
+#                 student_df['math_value_added'] = (
+#                     (student_df['math_state_score_current_year'] - student_df['math_state_score_one_year_ago']) -
+#                     (student_df['math_state_score_one_year_ago'] - student_df['math_state_score_two_years_ago'])
+#                 )
+#                 avg_ela_va = student_df['ela_value_added'].mean()
+#                 avg_math_va = student_df['math_value_added'].mean()
+#                 
+#                 # Calculate statistical significance (p-values)
+#                 from scipy import stats
+#                 
+#                 # ELA value-added significance
+#                 ela_va_pvalue = stats.ttest_1samp(student_df['ela_value_added'].dropna(), 0)[1]
+#                 math_va_pvalue = stats.ttest_1samp(student_df['math_value_added'].dropna(), 0)[1]
+#                 
+#                 # Raw score improvements significance
+#                 ela_raw_improvement = student_df['ela_state_score_current_year'] - student_df['ela_state_score_one_year_ago']
+#                 math_raw_improvement = student_df['math_state_score_current_year'] - student_df['math_state_score_one_year_ago']
+#                 ela_raw_pvalue = stats.ttest_1samp(ela_raw_improvement.dropna(), 0)[1]
+#                 math_raw_pvalue = stats.ttest_1samp(math_raw_improvement.dropna(), 0)[1]
+#                 
+#                 # Create the comprehensive prompt
+#                 system_prompt = f"""You are an expert educational data analyst. Provide concise, data-driven insights about this tutoring program.
+
+# CONTEXT:
+# - Full dosage threshold: {full_dosage_threshold} hours
+# - Total program cost: ${total_cost:,.2f}
+# - Dosage achievement: {dosage_percentage:.1f}% of students receiving full dosage
+
+# DATA SUMMARY:
+# {json.dumps(session_summary, indent=2)}
+
+# STUDENT DATA:
+# {json.dumps(student_summary, indent=2)}
+
+# PERFORMANCE (with statistical significance):
+# - ELA Value-Added: {avg_ela_va:.2f} points (p={ela_va_pvalue:.3f})
+# - Math Value-Added: {avg_math_va:.2f} points (p={math_va_pvalue:.3f})
+# - ELA Raw Improvement: {ela_raw_improvement.mean():.2f} points (p={ela_raw_pvalue:.3f})
+# - Math Raw Improvement: {math_raw_improvement.mean():.2f} points (p={math_raw_pvalue:.3f})
+# - Cost per student: ${total_cost/student_summary['total_students']:.2f}
+
+# INSTRUCTIONS:
+# - Answer directly and concisely
+# - Reference specific data points and p-values
+# - Provide actionable recommendations
+# - Use bullet points for clarity
+# - Focus on educational program analysis only
+
+# Note: p-values < 0.05 indicate statistically significant results."""
+
+#                 # Make the API call using new OpenAI API format
+#                 client = openai.OpenAI(api_key=api_key)
+#                 response = client.chat.completions.create(
+#                     model="gpt-4o-mini",
+#                     messages=[
+#                         {"role": "system", "content": system_prompt},
+#                         {"role": "user", "content": question}
+#                     ],
+#                     max_tokens=1000,
+#                     temperature=0.3
+#                 )
+#                 
+#                 return response.choices[0].message.content
+#                 
+#             except Exception as e:
+#                 return f"Error generating insights: {str(e)}"
+#         
+#         # Question input - streamlined like ChatGPT
+#         user_question = st.text_area(
+#             "Ask about your tutoring program data:",
+#             placeholder="How can I improve dosage rates for ELL students? What patterns do you see in our cost-effectiveness? Which student groups are performing best and why? How does our value-added performance compare to typical tutoring programs?",
+#             height=80
+#         )
+#         
+#         if st.button("Get AI Insights", type="primary"):
+#             if user_question.strip():
+#                 # Create a single placeholder for both loading and response
+#                 content_placeholder = st.empty()
+#                 
+#                 # Show loading animation
+#                 content_placeholder.markdown("""
+#                 <div style="text-align: center; padding: 20px;">
+#                     <div style="display: inline-block; animation: pulse 1.5s infinite;">
+#                         <span style="font-size: 24px;">🤖</span>
+#                     </div>
+#                     <p style="margin-top: 10px; color: #666;">Analyzing your data...</p>
+#                 </div>
+#                 <style>
+#                 @keyframes pulse {
+#                     0% { opacity: 1; }
+#                     50% { opacity: 0.5; }
+#                     100% { opacity: 1; }
+#                 }
+#                 </style>
+#                 """, unsafe_allow_html=True)
+#                 
+#                 session_df = st.session_state["session_data"]
+#                 student_df = st.session_state["student_data"]
+#                 full_dosage_threshold = st.session_state.get("full_dosage_threshold", 60.0)
+#                 total_cost = st.session_state.get("total_cost", 0.0)
+#                 
+#                 response = get_ai_insights(user_question, session_df, student_df, full_dosage_threshold, total_cost)
+#                 
+#                 # Replace loading animation with response
+#                 content_placeholder.markdown(response)
+#                 
+#                 # Add a download button for the response
+#                 st.download_button(
+#                     label="Download Analysis",
+#                     data=response,
+#                     file_name=f"ai_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
+#                     mime="text/plain"
+#                 )
+#             else:
+#                 st.warning("Please enter a question to get AI insights.")
+#     else:
+#         st.warning("No data available. Please complete Steps 1 and 2 to upload and configure your data first.")
 
 st.write("---")
 st.caption("This tool requires no data upload. Please feel free to run this tool [locally](https://github.com/accelerate-usa/tutor-data-standard/tree/main/toolkit). If you use this tool as is, all data are erased upon refresh.")
