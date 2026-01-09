@@ -1,698 +1,2020 @@
+"""
+DATAS Analysis Toolkit - Enhanced Version
+A production-quality Streamlit application for analyzing tutoring program data.
+
+Designed for policymakers, district leaders, and funders.
+"""
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
+from scipy import stats
+from typing import Dict, List, Tuple, Optional
 import re
 from datetime import datetime
-import openai
-import json
 
-st.set_page_config(page_title="DATAS Analysis Toolkit", layout="wide")
+# Page configuration
+st.set_page_config(
+    page_title="DATAS Program Analysis",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-# Title
-st.title("📊 DATAS Analysis Toolkit")
+# Custom CSS for professional styling
+st.markdown("""
+<style>
+    .main-header {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f77b4;
+        margin-bottom: 0.5rem;
+    }
+    .metric-card {
+        background-color: #f0f2f6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #1f77b4;
+    }
+    .insight-box {
+        background-color: #fff3cd;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #ffc107;
+        margin: 1rem 0;
+    }
+    .warning-box {
+        background-color: #f8d7da;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #dc3545;
+        margin: 1rem 0;
+    }
+    .success-box {
+        background-color: #d4edda;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #28a745;
+        margin: 1rem 0;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-# util functions
-def validate_data(df: pd.DataFrame, data_type: str):
-    errors = []
+# ============================================================================
+# DATA VALIDATION FUNCTIONS
+# ============================================================================
 
-    # 1. Empty or header-only file
-    if df.shape[0] <= 0:
-        errors.append("The file appears to be empty or only contains headers.")
+def validate_data_comprehensive(df: pd.DataFrame, data_type: str) -> Dict[str, List[str]]:
+    """
+    Comprehensive data validation function.
+    Returns a dictionary with error categories and messages.
+    """
+    errors = {
+        'critical': [],  # Errors that prevent analysis
+        'warnings': [],  # Issues that may affect analysis
+        'info': []       # Informational messages
+    }
+    
+    # Check if dataframe is empty
+    if df is None or df.empty:
+        errors['critical'].append("The file is empty or could not be read.")
         return errors
-
-    # Normalize column names
-    headers = [c.strip() for c in df.columns]
-
-    if data_type == 'school':
-        expected = [
-            "student_id","district_id","district_name","school_id","school_name",
-            "current_grade_level","gender","ethnicity","ell","iep","gifted_flag",
-            "homeless_flag","ela_state_score_two_years_ago","ela_state_score_one_year_ago",
-            "ela_state_score_current_year","math_state_score_two_years_ago",
-            "math_state_score_one_year_ago","math_state_score_current_year",
-            "performance_level_prior_year","performance_level_current_year",
-            "disability","economic_disadvantage"
+    
+    # Normalize column names (strip whitespace)
+    df.columns = df.columns.str.strip()
+    headers = list(df.columns)
+    
+    # Define expected columns based on data type
+    if data_type == 'session':
+        expected_required = ["student_id", "session_topic", "session_date", "session_duration", "tutor_id"]
+        expected_optional = ["session_ratio"]  # Optional columns
+    elif data_type == 'student':
+        expected_required = [
+            "student_id", "district_id", "district_name", "school_id", "school_name",
+            "current_grade_level", "gender", "ethnicity", "ell", "iep", "gifted_flag",
+            "homeless_flag", "ela_state_score_two_years_ago", "ela_state_score_one_year_ago",
+            "ela_state_score_current_year", "math_state_score_two_years_ago",
+            "math_state_score_one_year_ago", "math_state_score_current_year",
+            "performance_level_prior_year", "performance_level_current_year",
+            "disability", "economic_disadvantage"
         ]
-        missing = [h for h in expected if h not in headers]
-        if missing:
-            errors.append("Invalid Headers – missing or misspelled:")
-            errors += [f"  • {h}" for h in missing]
-            return errors
-
-        unique_eth = set()
-        unique_pp = set()
-        unique_pc = set()
-
-        for i, row in df.iterrows():
-            vals = row.astype(str).str.strip().tolist()
-            if all(v == '' for v in vals):
-                continue
-
-            def chk(field, val):
-                if field == "student_id" and not re.fullmatch(r"\d{10}", val):
-                    return f'Row {i+2}: Invalid student_id "{val}" (should be 10 digits)'
-                if field == "district_id" and not re.fullmatch(r"\d{7}", val):
-                    return f'Row {i+2}: Invalid district_id "{val}" (7 digits)'
-                if field == "school_id" and not re.fullmatch(r"\d{6}", val):
-                    return f'Row {i+2}: Invalid school_id "{val}" (6 digits)'
-                if field == "current_grade_level":
-                    try:
-                        iv = int(val)
-                        if iv < -1 or iv > 12:
-                            return f'Row {i+2}: current_grade_level "{val}" must be -1–12'
-                    except:
-                        return f'Row {i+2}: current_grade_level "{val}" not an integer'
-                if field in ["ell", "iep", "gifted_flag", "homeless_flag", "disability", "economic_disadvantage", "gender"]:
-                    bool_val = str(val).lower()
-                    if bool_val not in ("true", "false", "1", "0", "t", "f", "yes", "no", "y", "n", "TRUE", "FALSE", "YES", "NO", "T", "F", "male", "female"):
-                        return f'Row {i+2}: {field} "{val}" must be a boolean value (TRUE/FALSE, True/False, 1/0, etc.)'
-                if field in [
-                    "ela_state_score_two_years_ago","ela_state_score_one_year_ago",
-                    "ela_state_score_current_year","math_state_score_two_years_ago",
-                    "math_state_score_one_year_ago","math_state_score_current_year"
-                ]:
-                    try:
-                        iv = float(val)
-                    except:
-                        return f'Row {i+2}: {field} "{val}" must be a number'
-                if field == "ethnicity":
-                    unique_eth.add(val)
-                if field == "performance_level_prior_year":
-                    unique_pp.add(val)
-                if field == "performance_level_current_year":
-                    unique_pc.add(val)
-                return None
-
-            for col in expected:
-                err = chk(col, str(row[col]))
-                if err:
-                    errors.append(err)
-
-        if len(unique_eth) > 10:
-            errors.append(f"The 'ethnicity' column has >10 unique values ({len(unique_eth)})")
-        if len(unique_pp) > 6:
-            errors.append(f"'performance_level_prior_year' has >6 unique values ({len(unique_pp)})")
-        if len(unique_pc) > 6:
-            errors.append(f"'performance_level_current_year' has >6 unique values ({len(unique_pc)})")
-
-    elif data_type == 'session':
-        expected = ["student_id","session_topic","session_date","session_duration","tutor_id"]
-        missing = [h for h in expected if h not in headers]
-        if missing:
-            errors.append("Invalid Headers – missing or misspelled:")
-            errors += [f"  • {h}" for h in missing]
-            return errors
-
-        for i, row in df.iterrows():
-            vals = row.astype(str).str.strip().tolist()
-            if all(v == '' for v in vals):
-                continue
-
-            sid = str(row["student_id"])
-            if not re.fullmatch(r"\d+", sid):
-                errors.append(f'Row {i+2}: Invalid student_id "{sid}"')
-
-            topic = str(row["session_topic"]).lower()
-            if topic not in ("math","ela"):
-                errors.append(f'Row {i+2}: session_topic "{row["session_topic"]}" must be math or ela')
-
-            date = str(row["session_date"])
-            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
-                errors.append(f'Row {i+2}: Invalid session_date "{date}"')
-            else:
-                try:
-                    y,m,d = map(int, date.split("-"))
-                    _ = datetime(y,m,d)
-                except:
-                    errors.append(f'Row {i+2}: session_date "{date}" is not a real date')
-
-            try:
-                dur = float(row["session_duration"])
-                if dur <= 0:
-                    errors.append(f'Row {i+2}: session_duration "{row["session_duration"]}" must be >0')
-            except:
-                errors.append(f'Row {i+2}: session_duration "{row["session_duration"]}" not a number')
-
-            tid = str(row["tutor_id"]).strip()
-            if not tid:
-                errors.append(f'Row {i+2}: tutor_id must be non-empty')
-
+        expected_optional = ["performance_level_two_years_ago"]  # Optional columns
+    else:
+        errors['critical'].append(f"Unknown data type: {data_type}")
+        return errors
+    
+    # Check for missing required columns (treat as warnings, not blocking)
+    missing_required = [col for col in expected_required if col not in headers]
+    if missing_required:
+        errors['warnings'].append(f"**Missing Recommended Columns ({len(missing_required)}):**")
+        errors['warnings'].append("**Note:** Analysis will proceed, but some features may not work without these columns.")
+        for col in missing_required:
+            errors['warnings'].append(f"  • `{col}`")
+    
+    # Check for unexpected/extra columns
+    all_expected = expected_required + expected_optional
+    extra_columns = [col for col in headers if col not in all_expected]
+    if extra_columns:
+        errors['warnings'].append(f"**Unexpected Columns Found ({len(extra_columns)}):**")
+        for col in extra_columns[:10]:  # Limit to first 10
+            errors['warnings'].append(f"  • `{col}` (will be ignored)")
+        if len(extra_columns) > 10:
+            errors['warnings'].append(f"  ... and {len(extra_columns) - 10} more")
+    
+    # Validate data types and values row by row
+    if data_type == 'session':
+        errors = _validate_session_data(df, errors)
+    elif data_type == 'student':
+        errors = _validate_student_data(df, errors)
+    
     return errors
 
-# Tabs
-tab1, tab2, tab3 = st.tabs(["Step 1: Validate Data", "Step 2: Program Characteristics", "Step 3: Charts & Results"])
-# tab4 = st.tabs(["Step 4: Personalized Results"])  # Commented out
 
-# Session state to hold data
-if "session_data" not in st.session_state:
-    st.session_state["session_data"] = None
-if "student_data" not in st.session_state:
-    st.session_state["student_data"] = None
-
-# ---- STEP 1: VALIDATE DATA ----
-with tab1:
-    st.header("1. Validate Your Data")
-    st.write("This tool checks the format of your data against the [DATAS dictionary](https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770). Input your session and student data below, and it will return a list of errors or prompt you to proceed to Step 2.")
-    st.write("If you're just exploring the toolkit, feel free to use our example [session](https://drive.google.com/file/d/1ivNs9gFkIIgiABUHEOvsm8mCmvg9nKJ3/view) and [student](https://drive.google.com/file/d/1FjTLaWGRQd6zlgaXkqHkAU_Gj8kUzgGY/view) datasets.")
-    # st.write("To use your own data, upload your session and student below.")
-
-    uploaded_session_file = st.file_uploader("Upload Tutoring Session Data (CSV)", type="csv", key="session_uploader")
-    uploaded_student_file  = st.file_uploader("Upload Student Data (CSV)",  type="csv", key="student_uploader")
-
-    if uploaded_session_file and uploaded_student_file:
-        try:
-            session_df = pd.read_csv(uploaded_session_file)
-            student_df  = pd.read_csv(uploaded_student_file)
-
-            prov_errs = validate_data(session_df, 'session')
-            stud_errs = validate_data(student_df,  'school')
-
-            if prov_errs or stud_errs:
-                st.error("Errors Found:")
-                for e in prov_errs + stud_errs:
-                    st.write(f"- {e}")
+def _validate_session_data(df: pd.DataFrame, errors: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    """Validate session data row by row."""
+    row_errors = []
+    missing_value_errors = []
+    
+    # Check for missing values in important columns
+    important_cols = ['student_id', 'session_topic', 'session_date', 'session_duration', 'tutor_id']
+    for col in important_cols:
+        if col in df.columns:
+            missing_count = df[col].isna().sum()
+            if missing_count > 0:
+                missing_value_errors.append(f"  • `{col}`: {missing_count:,} missing values")
+    
+    if missing_value_errors:
+        errors['warnings'].append("**Missing Values in Important Columns:**")
+        errors['warnings'].extend(missing_value_errors)
+    
+    # Validate each row
+    for idx, row in df.iterrows():
+        row_num = idx + 2  # +2 because Excel/CSV row 1 is header
+        
+        # Validate student_id
+        if 'student_id' in df.columns:
+            sid = str(row['student_id']).strip()
+            if pd.isna(row['student_id']) or sid == '' or sid == 'nan':
+                row_errors.append(f"Row {row_num}: `student_id` is missing")
+            elif not re.match(r'^\d+$', sid):
+                row_errors.append(f"Row {row_num}: `student_id` '{sid}' should contain only digits")
+        
+        # Validate session_topic
+        if 'session_topic' in df.columns:
+            topic = str(row['session_topic']).strip().lower()
+            if pd.isna(row['session_topic']) or topic == '' or topic == 'nan':
+                row_errors.append(f"Row {row_num}: `session_topic` is missing")
+            elif topic not in ['math', 'ela']:
+                row_errors.append(f"Row {row_num}: `session_topic` '{row['session_topic']}' must be 'math' or 'ela'")
+        
+        # Validate session_date
+        if 'session_date' in df.columns:
+            date_str = str(row['session_date']).strip()
+            if pd.isna(row['session_date']) or date_str == '' or date_str == 'nan':
+                row_errors.append(f"Row {row_num}: `session_date` is missing")
             else:
-                st.success("🎉 Congratulations! Your data are valid.")
-                st.session_state["session_data"] = session_df
-                st.session_state["student_data"]  = student_df
-                with st.expander("Preview Data"):
-                    st.write("### session Data Sample")
-                    st.dataframe(session_df.head())
-                    st.write("### Student Data Sample")
-                    st.dataframe(student_df.head())
-
-        except Exception as e:
-            st.error(f"Error reading files: {e}")
-    else:
-        st.info("Please upload both CSV files to proceed.")
-
-# ---- STEP 2: ANALYSIS SETTINGS ----
-with tab2:
-    st.header("2. Adjust Parameters")
-    if st.session_state["session_data"] is not None and st.session_state["student_data"] is not None:
-        # User inputs
-        full_dosage_threshold = st.number_input(
-            "Full dosage threshold (hours)",
-            min_value=0.0,
-            value=st.session_state.get("full_dosage_threshold", 60.0),
-            step=1.0
-        )
-        total_cost = st.number_input(
-            "Total program cost (in dollars)",
-            min_value=0.0,
-            value=st.session_state.get("total_cost", 0.0),
-            step=100.0,
-            help="Used to calculate cost per student and cost per point."
-        )
-
-        # Store values in session state
-        st.session_state["full_dosage_threshold"] = full_dosage_threshold
-        st.session_state["total_cost"] = total_cost
-
-        st.success("Parameters updated.")
-    else:
-        st.warning("No data available. Go to Step 1 to upload data first.")
-
-
-# ---- STEP 3: CHARTS & RESULTS ----
-with tab3:
-    st.header("3. View Charts & Metrics")
-    st.write("---")
-    st.subheader("Dosage Insights")
-    if st.session_state["session_data"] is not None and st.session_state["student_data"] is not None:
-        session_df = st.session_state["session_data"]
-        student_df = st.session_state["student_data"]
-
-        try:
-            # Data prep
-            session_df['student_id'] = session_df['student_id'].astype(str).str.strip()
-            student_df['student_id'] = student_df['student_id'].astype(str).str.strip()
-
-            merged_session_df = session_df.merge(student_df, on="student_id", how="inner")
-            merged_session_df['session_duration_hours'] = (merged_session_df['session_duration'] / 60).round()
-
-            # --- FILTER CONTROLS ---
-            with st.expander("Filters", expanded=False):
-                school_options = ["All"] + sorted(merged_session_df["school_name"].dropna().unique().tolist())
-                school_sel = st.selectbox(
-                    "School Name",
-                    options=school_options,
-                    index=0
-                )
-                grade_sel = st.multiselect(
-                    "Current Grade Level",
-                    options=merged_session_df["current_grade_level"].unique(),
-                    default=list(merged_session_df["current_grade_level"].unique())
-                )
-                gender_sel = st.multiselect(
-                    "Gender",
-                    options=merged_session_df["gender"].unique(),
-                    default=list(merged_session_df["gender"].unique())
-                )
-                ethnicity_sel = st.multiselect(
-                    "Ethnicity",
-                    options=merged_session_df["ethnicity"].unique(),
-                    default=list(merged_session_df["ethnicity"].unique())
-                )
-                ell_sel = st.multiselect(
-                    "ELL",
-                    options=merged_session_df["ell"].unique(),
-                    default=list(merged_session_df["ell"].unique())
-                )
-                iep_sel = st.multiselect(
-                    "IEP",
-                    options=merged_session_df["iep"].unique(),
-                    default=list(merged_session_df["iep"].unique())
-                )
-                gifted_sel = st.multiselect(
-                    "Gifted Flag",
-                    options=merged_session_df["gifted_flag"].unique(),
-                    default=list(merged_session_df["gifted_flag"].unique())
-                )
-                homeless_sel = st.multiselect(
-                    "Homeless Flag",
-                    options=merged_session_df["homeless_flag"].unique(),
-                    default=list(merged_session_df["homeless_flag"].unique())
-                )
-                disability_sel = st.multiselect(
-                    "Disability",
-                    options=merged_session_df["disability"].unique(),
-                    default=list(merged_session_df["disability"].unique())
-                )
-                econ_sel = st.multiselect(
-                    "Economic Disadvantage",
-                    options=merged_session_df["economic_disadvantage"].unique(),
-                    default=list(merged_session_df["economic_disadvantage"].unique())
-                )
-
-            # Apply filters
-            # Handle "All" selection for school
-            if school_sel == "All":
-                school_filter = True
+                # Try to parse as datetime - accept various formats
+                date_valid = False
+                # Try common datetime formats
+                date_formats = [
+                    '%Y-%m-%d',           # YYYY-MM-DD
+                    '%Y-%m-%d %H:%M:%S',  # YYYY-MM-DD HH:MM:SS
+                    '%Y-%m-%d %H:%M',     # YYYY-MM-DD HH:MM
+                    '%Y/%m/%d',           # YYYY/MM/DD
+                    '%Y/%m/%d %H:%M:%S',  # YYYY/MM/DD HH:MM:SS
+                    '%m/%d/%Y',           # MM/DD/YYYY
+                    '%m/%d/%Y %H:%M:%S',  # MM/DD/YYYY HH:MM:SS
+                ]
+                
+                for fmt in date_formats:
+                    try:
+                        datetime.strptime(date_str, fmt)
+                        date_valid = True
+                        break
+                    except ValueError:
+                        continue
+                
+                # Also try pandas to_datetime as fallback (handles many formats)
+                if not date_valid:
+                    try:
+                        pd.to_datetime(date_str)
+                        date_valid = True
+                    except (ValueError, TypeError):
+                        pass
+                
+                if not date_valid:
+                    row_errors.append(f"Row {row_num}: `session_date` '{date_str}' is not a valid date or datetime")
+        
+        # Validate session_duration
+        if 'session_duration' in df.columns:
+            if pd.isna(row['session_duration']):
+                row_errors.append(f"Row {row_num}: `session_duration` is missing")
             else:
-                school_filter = merged_session_df["school_name"] == school_sel
-            
-            filtered_df = merged_session_df[
-                school_filter &
-                (merged_session_df["current_grade_level"].isin(grade_sel)) &
-                (merged_session_df["gender"].isin(gender_sel)) &
-                (merged_session_df["ethnicity"].isin(ethnicity_sel)) &
-                (merged_session_df["ell"].isin(ell_sel)) &
-                (merged_session_df["iep"].isin(iep_sel)) &
-                (merged_session_df["gifted_flag"].isin(gifted_sel)) &
-                (merged_session_df["homeless_flag"].isin(homeless_sel)) &
-                (merged_session_df["disability"].isin(disability_sel)) &
-                (merged_session_df["economic_disadvantage"].isin(econ_sel))
-            ]
+                try:
+                    dur = float(row['session_duration'])
+                    if dur < 0:
+                        row_errors.append(f"Row {row_num}: `session_duration` {dur} must be greater than or equal to 0")
+                except (ValueError, TypeError):
+                    row_errors.append(f"Row {row_num}: `session_duration` '{row['session_duration']}' must be a number")
+        
+        # Validate tutor_id
+        if 'tutor_id' in df.columns:
+            tid = str(row['tutor_id']).strip()
+            if pd.isna(row['tutor_id']) or tid == '' or tid == 'nan':
+                row_errors.append(f"Row {row_num}: `tutor_id` is missing")
+    
+    # Limit row errors to prevent overwhelming output
+    if row_errors:
+        errors['warnings'].append(f"**Data Quality Issues (showing first 20):**")
+        errors['warnings'].extend(row_errors[:20])
+        if len(row_errors) > 20:
+            errors['warnings'].append(f"  ... and {len(row_errors) - 20} more issues")
+    
+    return errors
 
-            # Compute hours per student (filtered)
-            tutoring_hours_per_student = (
-                filtered_df
-                .groupby("student_id")["session_duration_hours"]
+
+def _validate_student_data(df: pd.DataFrame, errors: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    """Validate student data row by row."""
+    row_errors = []
+    missing_value_errors = []
+    
+    # Check for missing values in important columns
+    important_cols = ['student_id', 'district_id', 'school_id']
+    for col in important_cols:
+        if col in df.columns:
+            missing_count = df[col].isna().sum()
+            if missing_count > 0:
+                missing_value_errors.append(f"  • `{col}`: {missing_count:,} missing values")
+    
+    if missing_value_errors:
+        errors['warnings'].append("**Missing Values in Important Columns:**")
+        errors['warnings'].extend(missing_value_errors)
+    
+    # Track unique values for validation
+    unique_ethnicities = set()
+    unique_perf_levels_prior = set()
+    unique_perf_levels_current = set()
+    
+    # Validate each row
+    for idx, row in df.iterrows():
+        row_num = idx + 2  # +2 because Excel/CSV row 1 is header
+        
+        # Validate student_id
+        if 'student_id' in df.columns:
+            sid = str(row['student_id']).strip()
+            if pd.isna(row['student_id']) or sid == '' or sid == 'nan':
+                row_errors.append(f"Row {row_num}: `student_id` is missing")
+        
+        # Validate district_id
+        if 'district_id' in df.columns:
+            did = str(row['district_id']).strip()
+            if pd.isna(row['district_id']) or did == '' or did == 'nan':
+                row_errors.append(f"Row {row_num}: `district_id` is missing")
+        
+        # Validate school_id
+        if 'school_id' in df.columns:
+            sid = str(row['school_id']).strip()
+            if pd.isna(row['school_id']) or sid == '' or sid == 'nan':
+                row_errors.append(f"Row {row_num}: `school_id` is missing")
+        
+        # Validate current_grade_level
+        if 'current_grade_level' in df.columns:
+            if pd.isna(row['current_grade_level']):
+                row_errors.append(f"Row {row_num}: `current_grade_level` is missing")
+            else:
+                try:
+                    grade = int(float(row['current_grade_level']))
+                    if grade < -1 or grade > 12:
+                        row_errors.append(f"Row {row_num}: `current_grade_level` {grade} must be between -1 and 12")
+                except (ValueError, TypeError):
+                    row_errors.append(f"Row {row_num}: `current_grade_level` '{row['current_grade_level']}' must be an integer")
+        
+        # Validate boolean fields
+        bool_fields = ['ell', 'iep', 'gifted_flag', 'homeless_flag', 'disability', 'economic_disadvantage']
+        for field in bool_fields:
+            if field in df.columns:
+                val = str(row[field]).strip().lower()
+                valid_bools = ['true', 'false', '1', '0', 't', 'f', 'yes', 'no', 'y', 'n', 'male', 'female']
+                if pd.isna(row[field]) or val == '' or val == 'nan':
+                    # Missing boolean values are warnings, not critical
+                    pass
+                elif val not in valid_bools:
+                    row_errors.append(f"Row {row_num}: `{field}` '{row[field]}' must be a boolean (TRUE/FALSE, 1/0, Yes/No, etc.)")
+        
+        # Validate numeric score fields
+        score_fields = [
+            'ela_state_score_two_years_ago', 'ela_state_score_one_year_ago', 'ela_state_score_current_year',
+            'math_state_score_two_years_ago', 'math_state_score_one_year_ago', 'math_state_score_current_year'
+        ]
+        for field in score_fields:
+            if field in df.columns and not pd.isna(row[field]):
+                try:
+                    float(row[field])
+                except (ValueError, TypeError):
+                    row_errors.append(f"Row {row_num}: `{field}` '{row[field]}' must be a number")
+        
+        # Track unique values
+        if 'ethnicity' in df.columns and not pd.isna(row.get('ethnicity')):
+            unique_ethnicities.add(str(row['ethnicity']).strip())
+        if 'performance_level_prior_year' in df.columns and not pd.isna(row.get('performance_level_prior_year')):
+            unique_perf_levels_prior.add(str(row['performance_level_prior_year']).strip())
+        if 'performance_level_current_year' in df.columns and not pd.isna(row.get('performance_level_current_year')):
+            unique_perf_levels_current.add(str(row['performance_level_current_year']).strip())
+    
+    # Check for too many unique values (data quality issue)
+    if len(unique_ethnicities) > 10:
+        errors['warnings'].append(f"`ethnicity` column has {len(unique_ethnicities)} unique values (expected ≤10). This may indicate data quality issues.")
+    if len(unique_perf_levels_prior) > 6:
+        errors['warnings'].append(f"`performance_level_prior_year` column has {len(unique_perf_levels_prior)} unique values (expected ≤6).")
+    if len(unique_perf_levels_current) > 6:
+        errors['warnings'].append(f"`performance_level_current_year` column has {len(unique_perf_levels_current)} unique values (expected ≤6).")
+    
+    # Limit row errors to prevent overwhelming output
+    if row_errors:
+        errors['warnings'].append(f"**Data Quality Issues (showing first 20):**")
+        errors['warnings'].extend(row_errors[:20])
+        if len(row_errors) > 20:
+            errors['warnings'].append(f"  ... and {len(row_errors) - 20} more issues")
+    
+    return errors
+
+
+def display_validation_errors(errors: Dict[str, List[str]], data_type: str) -> bool:
+    """
+    Display validation errors in a user-friendly way.
+    Returns True if there are any issues (errors or warnings), False otherwise.
+    Note: This function no longer blocks data loading - it just informs the user.
+    """
+    has_critical = len(errors.get('critical', [])) > 0
+    has_warnings = len(errors.get('warnings', [])) > 0
+    has_info = len(errors.get('info', [])) > 0
+    
+    if not (has_critical or has_warnings or has_info):
+        st.success(f"✅ **{data_type.capitalize()} data validation passed!**")
+        return False
+    
+    # Display critical errors as warnings (since we're not blocking)
+    if has_critical:
+        st.warning("### ⚠️ Data Quality Issues Found")
+        st.markdown("**The following issues were detected in your data:**")
+        for error in errors['critical']:
+            st.markdown(error)
+        st.markdown("**Note:** Analysis will proceed, but results may be affected by these issues.")
+        st.markdown("---")
+    
+    # Display warnings
+    if has_warnings:
+        st.warning("### ⚠️ Warnings")
+        st.markdown("**These issues may affect analysis quality:**")
+        for warning in errors['warnings']:
+            st.markdown(warning)
+        st.markdown("---")
+    
+    # Display info messages
+    if has_info:
+        st.info("### ℹ️ Information")
+        for info in errors['info']:
+            st.markdown(info)
+        st.markdown("---")
+    
+    return has_critical or has_warnings
+
+
+# ============================================================================
+# DATA PREPARATION FUNCTIONS
+# ============================================================================
+
+def prepare_data(session_df: pd.DataFrame, student_df: pd.DataFrame) -> pd.DataFrame:
+    """Merge and prepare data for analysis. Handles missing columns gracefully."""
+    session_df = session_df.copy()
+    student_df = student_df.copy()
+    
+    # Standardize student_id if it exists
+    if 'student_id' in session_df.columns:
+        session_df['student_id'] = session_df['student_id'].astype(str).str.strip()
+    if 'student_id' in student_df.columns:
+        student_df['student_id'] = student_df['student_id'].astype(str).str.strip()
+    else:
+        # If student_id is missing, we can't proceed
+        return student_df
+    
+    # Convert session duration to hours if column exists
+    if 'session_duration' in session_df.columns:
+        try:
+            session_df['session_duration_hours'] = pd.to_numeric(session_df['session_duration'], errors='coerce') / 60
+        except:
+            session_df['session_duration_hours'] = 0
+    else:
+        session_df['session_duration_hours'] = 0
+    
+    # Merge datasets
+    try:
+        merged_df = session_df.merge(student_df, on='student_id', how='inner')
+    except:
+        # If merge fails, return student_df with zero hours
+        student_df['total_hours'] = 0
+        return student_df
+    
+    # Calculate tutoring hours per student
+    if 'session_duration_hours' in merged_df.columns:
+        try:
+            hours_per_student = (
+                merged_df.groupby('student_id')['session_duration_hours']
                 .sum()
                 .reset_index()
+                .rename(columns={'session_duration_hours': 'total_hours'})
             )
-            tutoring_hours_per_student['session_duration_hours'] = tutoring_hours_per_student['session_duration_hours'].round()
-
-            # Retrieve threshold and total cost
-            full_dosage_threshold = st.session_state.get("full_dosage_threshold", 60.0)
-            total_cost = st.session_state.get("total_cost", 0.0)
-
-            # Categorize dosage
-            tutoring_hours_per_student['dosage_category'] = tutoring_hours_per_student['session_duration_hours'].apply(
-                lambda x: "Below Full Dosage" if x < full_dosage_threshold else "Full Dosage or Above"
-            )
-
-            # Distribution
-            hourly_distribution = tutoring_hours_per_student.groupby(
-                ['session_duration_hours', 'dosage_category']
-            ).size().reset_index(name='student_count')
-
-            # Plotly bar chart
-            fig = px.bar(
-                hourly_distribution,
-                x="session_duration_hours",
-                y="student_count",
-                color="dosage_category",
-                color_discrete_map={
-                    "Below Full Dosage": "#FF6384",
-                    "Full Dosage or Above": "#36A2EB"
-                },
-                labels={
-                    "session_duration_hours": "Total Tutoring Hours (Rounded)",
-                    "student_count": "Number of Students",
-                    "dosage_category": "Dosage Category"
-                },
-                title="Distribution of Tutoring Hours per Student"
-            )
-            fig.update_layout(
-                xaxis=dict(dtick=5),
-                bargap=0.1,
-                legend_title="Dosage Category",
-                yaxis_title="Number of Students"
-            )
-            # Vertical line for threshold
-            fig.add_vline(
-                x=full_dosage_threshold,
-                line_width=2,
-                line_dash="dash",
-                line_color="orange",
-                annotation_text="Dosage Threshold",
-                annotation_position="top right"
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-            # Calculate percentage of students receiving full dosage
-            full_dosage_students = tutoring_hours_per_student[
-                tutoring_hours_per_student['dosage_category'] == "Full Dosage or Above"
-            ].shape[0]
-            total_students = tutoring_hours_per_student.shape[0]
-            if total_students > 0:
-                percentage_full_dosage = (full_dosage_students / total_students) * 100
-            else:
-                percentage_full_dosage = 0
-
-            # Display percentage
-            st.write(f"**{percentage_full_dosage:.2f}% of students** are receiving the full dosage or above.")
-
-            # Cost metrics
-            st.write("---")
-            st.subheader("Cost Analysis")
-
-            col1, col2, col3 = st.columns(3)
-            total_students = len(tutoring_hours_per_student)
-            if total_students > 0:
-                cost_per_student = total_cost / total_students
-                col1.metric(
-                    label="Cost Per Student",
-                    value=f"${cost_per_student:,.2f}",
-                    delta=f"Total Students: {total_students}",
-                    help="Cost Per Student: `Total Cost / Total Students`\n\nThis metric represents the average cost allocated for each student."
-                )
-            else:
-                st.warning("No students found.")
-
-            # Value-added calculations
-            student_df['ela_value_added'] = (
-                (student_df['ela_state_score_current_year'] - student_df['ela_state_score_one_year_ago']) -
-                (student_df['ela_state_score_one_year_ago'] - student_df['ela_state_score_two_years_ago'])
-            )
-            student_df['math_value_added'] = (
-                (student_df['math_state_score_current_year'] - student_df['math_state_score_one_year_ago']) -
-                (student_df['math_state_score_one_year_ago'] - student_df['math_state_score_two_years_ago'])
-            )
-            average_ela_value_added = student_df['ela_value_added'].mean()
-            average_math_value_added = student_df['math_value_added'].mean()
-            average_total_value_added = (average_ela_value_added + average_math_value_added) / 2
-
-            # Raw point gains (from two years ago to current year)
-            student_df['ela_raw_points_gained'] = student_df['ela_state_score_current_year'] - student_df['ela_state_score_two_years_ago']
-            student_df['math_raw_points_gained'] = student_df['math_state_score_current_year'] - student_df['math_state_score_two_years_ago']
-            average_ela_raw_gain = student_df['ela_raw_points_gained'].mean()
-            average_math_raw_gain = student_df['math_raw_points_gained'].mean()
-            average_total_raw_gain = (average_ela_raw_gain + average_math_raw_gain) / 2
-
-            # Value-Added Analysis Tooltip (always present)
-            value_added_help = (
-                "Value-Added Cost Per Point:\n\n"
-                "• $VA = (S_{current} - S_{1yr}) - (S_{1yr} - S_{2yr})$\n\n"
-                "• $\\text{Average VA} = \\frac{\\text{ELA VA} + \\text{Math VA}}{2}$\n\n"
-                "This metric shows the cost for each additional point of improvement beyond the typical yearly change."
-            )
-
-            if average_total_value_added < 1:
-                value_added_help += "\n\nNote: The average value-added is less than 1 point, indicating non-substantial improvement."
-
-            st.write("### 📈 Value-Added Analysis")
-            if average_total_value_added >= 1:
-                value_added_cost_per_point = total_cost / average_total_value_added
-                st.metric(
-                    label="Value-Added Cost Per Point",
-                    value=f"${value_added_cost_per_point:.2f} per point",
-                    delta=f"Avg. Value-Added: {average_total_value_added:.2f} points",
-                    help=value_added_help
-                )
-            else:
-                st.metric(
-                    label="Value-Added Cost Per Point",
-                    value="N/A",
-                    delta=f"Avg. Value-Added: {average_total_value_added:.2f} points",
-                    help=value_added_help
-                )
-
-            # Raw Cost Per Point, Per Student
-            if average_total_raw_gain > 0:
-                raw_cost_per_point = total_cost / (average_total_raw_gain * total_students)
-                st.metric(
-                    label="Raw Cost Per Point, Per Student",
-                    value=f"${raw_cost_per_point:.2f} per point, per student",
-                    delta=f"Avg. Total Points Gained: {average_total_raw_gain:.2f} points",
-                    help="Raw Cost Per Point, Per Student:\n\n"
-                        "• $\\text{Cost Per Point} = \\frac{\\text{Total Cost}}{\\text{Avg Total Raw Gain} × \\text{Total Students}}$\n\n"
-                        "This metric shows the average cost incurred for each point of raw score improvement per student."
-                )
-            else:
-                st.warning("No raw points gained on average. Check your dataset.")
-
-            #
-            st.write("---")
-            st.subheader("More in-depth tools below:")
-            buttons_html = """
-            <div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap;">
-                <a href="https://studentsupportaccelerator.org/tutoring" target="_blank">
-                    <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
-                                    border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
-                        Toolkit for Tutoring Programs
-                    </button>
-                </a>
-                <a href="https://accelerate.us/cost-analysis-tool/" target="_blank">
-                    <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
-                                    border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
-                        Cost-Analysis Tool
-                    </button>
-                </a>
-                <a href="https://accelerate.us/state-field-guide/ target="_blank">
-                    <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
-                                    border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
-                        State Field Guide
-                    </button>
-                </a>
-                <a href="https://docs.google.com/spreadsheets/d/1x8Y2kNCWsixtWp_MAZn_m7_XjBQ8y6iHTc11OS4fixE/edit?gid=2003973770#gid=2003973770" target="_blank">
-                    <button style="background-color: transparent; color: rgb(255,255,255); padding: 0.5em 1em; 
-                                    border: 2px solid rgb(255,255,255); border-radius: 4px; cursor: pointer;">
-                        Data Dictionary
-                    </button>
-                </a>
-            </div>
-            """
-
-            st.markdown(buttons_html, unsafe_allow_html=True)
-            #
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
+        except:
+            hours_per_student = pd.DataFrame({'student_id': student_df['student_id'].unique(), 'total_hours': 0})
     else:
-        st.info("Please complete Steps 1 and 2 before viewing results.")
+        hours_per_student = pd.DataFrame({'student_id': student_df['student_id'].unique(), 'total_hours': 0})
+    
+    # Merge hours back
+    try:
+        student_with_hours = student_df.merge(hours_per_student, on='student_id', how='left')
+        student_with_hours['total_hours'] = student_with_hours['total_hours'].fillna(0)
+    except:
+        student_with_hours = student_df.copy()
+        student_with_hours['total_hours'] = 0
+    
+    # Calculate value-added metrics (only if required columns exist)
+    ela_score_cols = ['ela_state_score_current_year', 'ela_state_score_one_year_ago', 'ela_state_score_two_years_ago']
+    math_score_cols = ['math_state_score_current_year', 'math_state_score_one_year_ago', 'math_state_score_two_years_ago']
+    
+    if all(col in student_with_hours.columns for col in ela_score_cols):
+        try:
+            student_with_hours['ela_value_added'] = (
+                (pd.to_numeric(student_with_hours['ela_state_score_current_year'], errors='coerce') - 
+                 pd.to_numeric(student_with_hours['ela_state_score_one_year_ago'], errors='coerce')) -
+                (pd.to_numeric(student_with_hours['ela_state_score_one_year_ago'], errors='coerce') - 
+                 pd.to_numeric(student_with_hours['ela_state_score_two_years_ago'], errors='coerce'))
+            )
+            student_with_hours['ela_raw_gain'] = (
+                pd.to_numeric(student_with_hours['ela_state_score_current_year'], errors='coerce') - 
+                pd.to_numeric(student_with_hours['ela_state_score_two_years_ago'], errors='coerce')
+            )
+        except:
+            student_with_hours['ela_value_added'] = np.nan
+            student_with_hours['ela_raw_gain'] = np.nan
+    else:
+        student_with_hours['ela_value_added'] = np.nan
+        student_with_hours['ela_raw_gain'] = np.nan
+    
+    if all(col in student_with_hours.columns for col in math_score_cols):
+        try:
+            student_with_hours['math_value_added'] = (
+                (pd.to_numeric(student_with_hours['math_state_score_current_year'], errors='coerce') - 
+                 pd.to_numeric(student_with_hours['math_state_score_one_year_ago'], errors='coerce')) -
+                (pd.to_numeric(student_with_hours['math_state_score_one_year_ago'], errors='coerce') - 
+                 pd.to_numeric(student_with_hours['math_state_score_two_years_ago'], errors='coerce'))
+            )
+            student_with_hours['math_raw_gain'] = (
+                pd.to_numeric(student_with_hours['math_state_score_current_year'], errors='coerce') - 
+                pd.to_numeric(student_with_hours['math_state_score_two_years_ago'], errors='coerce')
+            )
+        except:
+            student_with_hours['math_value_added'] = np.nan
+            student_with_hours['math_raw_gain'] = np.nan
+    else:
+        student_with_hours['math_value_added'] = np.nan
+        student_with_hours['math_raw_gain'] = np.nan
+    
+    # Normalize boolean fields
+    bool_fields = ['ell', 'iep', 'gifted_flag', 'homeless_flag', 'disability', 'economic_disadvantage']
+    for field in bool_fields:
+        if field in student_with_hours.columns:
+            try:
+                student_with_hours[field] = student_with_hours[field].astype(str).str.lower()
+                student_with_hours[field] = student_with_hours[field].isin(['true', '1', 'yes', 't', 'y'])
+            except:
+                student_with_hours[field] = False
+    
+    return student_with_hours
 
-# ---- STEP 4: PERSONALIZED RESULTS ----
-# with tab4:
-#     st.header("4. Ask AI About Your Data")
-#     st.write("Get personalized insights and recommendations about your tutoring program data. Ask specific questions and receive data-driven advice.")
-#     
-#     # Check if data is available
-#     if st.session_state["session_data"] is not None and st.session_state["student_data"] is not None:
-#         
-#         # Load API key from secrets.txt
-#         api_key = None
-#         try:
-#             with open("secrets.txt", "r") as f:
-#                 for line in f:
-#                     # Check for both "API key:" and "API Key:" (case insensitive)
-#                     if line.strip().lower().startswith("api key:"):
-#                         api_key = line.strip().split(":", 1)[1].strip()
-#                         break
-#         except FileNotFoundError:
-#             st.error("❌ secrets.txt file not found. Please create a secrets.txt file with your API key in the format: 'API key: [your_key_here]'")
-#             st.stop()
-#         except Exception as e:
-#             st.error(f"❌ Error reading secrets.txt: {str(e)}")
-#             st.stop()
-#         
-#         if not api_key:
-#             st.error("❌ API key not found in secrets.txt. Please ensure the file contains 'API key: [your_key_here]'")
-#             st.stop()
-#         
-#         # API key is now passed directly to the client
-#         
-#         # Function to get AI insights
-#         def get_ai_insights(question, session_df, student_df, full_dosage_threshold, total_cost):
-#             try:
-#                 # Prepare data summary for the AI
-#                 session_summary = {
-#                     "total_sessions": len(session_df),
-#                     "unique_students": session_df['student_id'].nunique(),
-#                     "unique_tutors": session_df['tutor_id'].nunique(),
-#                     "avg_session_duration": session_df['session_duration'].mean(),
-#                     "total_hours": session_df['session_duration'].sum() / 60,
-#                     "math_sessions": len(session_df[session_df['session_topic'].str.lower() == 'math']),
-#                     "ela_sessions": len(session_df[session_df['session_topic'].str.lower() == 'ela']),
-#                     "date_range": f"{session_df['session_date'].min()} to {session_df['session_date'].max()}"
-#                 }
-#                 
-#                 # Helper function to safely check boolean fields
-#                 def count_boolean_field(df, field_name):
-#                     try:
-#                         # Convert to string and then check
-#                         return len(df[df[field_name].astype(str).str.lower().isin(['true', '1', 'yes', 't', 'y'])])
-#                     except:
-#                         # If conversion fails, try direct boolean check
-#                         try:
-#                             return len(df[df[field_name] == True])
-#                         except:
-#                             return 0
-#                 
-#                 student_summary = {
-#                     "total_students": len(student_df),
-#                     "grade_levels": student_df['current_grade_level'].unique().tolist(),
-#                     "schools": student_df['school_name'].nunique(),
-#                     "districts": student_df['district_id'].nunique(),
-#                     "ell_students": count_boolean_field(student_df, 'ell'),
-#                     "iep_students": count_boolean_field(student_df, 'iep'),
-#                     "gifted_students": count_boolean_field(student_df, 'gifted_flag'),
-#                     "homeless_students": count_boolean_field(student_df, 'homeless_flag'),
-#                     "avg_ela_current": student_df['ela_state_score_current_year'].mean(),
-#                     "avg_math_current": student_df['math_state_score_current_year'].mean(),
-#                     "avg_ela_prior": student_df['ela_state_score_one_year_ago'].mean(),
-#                     "avg_math_prior": student_df['math_state_score_one_year_ago'].mean()
-#                 }
-#                 
-#                 # Calculate dosage metrics
-#                 merged_df = session_df.merge(student_df, on="student_id", how="inner")
-#                 hours_per_student = merged_df.groupby("student_id")["session_duration"].sum() / 60
-#                 full_dosage_students = len(hours_per_student[hours_per_student >= full_dosage_threshold])
-#                 dosage_percentage = (full_dosage_students / len(hours_per_student)) * 100 if len(hours_per_student) > 0 else 0
-#                 
-#                 # Calculate value-added metrics
-#                 student_df['ela_value_added'] = (
-#                     (student_df['ela_state_score_current_year'] - student_df['ela_state_score_one_year_ago']) -
-#                     (student_df['ela_state_score_one_year_ago'] - student_df['ela_state_score_two_years_ago'])
-#                 )
-#                 student_df['math_value_added'] = (
-#                     (student_df['math_state_score_current_year'] - student_df['math_state_score_one_year_ago']) -
-#                     (student_df['math_state_score_one_year_ago'] - student_df['math_state_score_two_years_ago'])
-#                 )
-#                 avg_ela_va = student_df['ela_value_added'].mean()
-#                 avg_math_va = student_df['math_value_added'].mean()
-#                 
-#                 # Calculate statistical significance (p-values)
-#                 from scipy import stats
-#                 
-#                 # ELA value-added significance
-#                 ela_va_pvalue = stats.ttest_1samp(student_df['ela_value_added'].dropna(), 0)[1]
-#                 math_va_pvalue = stats.ttest_1samp(student_df['math_value_added'].dropna(), 0)[1]
-#                 
-#                 # Raw score improvements significance
-#                 ela_raw_improvement = student_df['ela_state_score_current_year'] - student_df['ela_state_score_one_year_ago']
-#                 math_raw_improvement = student_df['math_state_score_current_year'] - student_df['math_state_score_one_year_ago']
-#                 ela_raw_pvalue = stats.ttest_1samp(ela_raw_improvement.dropna(), 0)[1]
-#                 math_raw_pvalue = stats.ttest_1samp(math_raw_improvement.dropna(), 0)[1]
-#                 
-#                 # Create the comprehensive prompt
-#                 system_prompt = f"""You are an expert educational data analyst. Provide concise, data-driven insights about this tutoring program.
 
-# CONTEXT:
-# - Full dosage threshold: {full_dosage_threshold} hours
-# - Total program cost: ${total_cost:,.2f}
-# - Dosage achievement: {dosage_percentage:.1f}% of students receiving full dosage
+def apply_filters(df: pd.DataFrame, filters: Dict) -> pd.DataFrame:
+    """Apply filters to dataframe."""
+    filtered_df = df.copy()
+    
+    if filters.get('school') and filters['school'] != 'All':
+        filtered_df = filtered_df[filtered_df['school_name'] == filters['school']]
+    
+    if filters.get('grades'):
+        filtered_df = filtered_df[filtered_df['current_grade_level'].isin(filters['grades'])]
+    
+    if filters.get('ell') is not None:
+        filtered_df = filtered_df[filtered_df['ell'] == filters['ell']]
+    
+    if filters.get('iep') is not None:
+        filtered_df = filtered_df[filtered_df['iep'] == filters['iep']]
+    
+    if filters.get('economic_disadvantage') is not None:
+        filtered_df = filtered_df[filtered_df['economic_disadvantage'] == filters['economic_disadvantage']]
+    
+    if filters.get('gender'):
+        filtered_df = filtered_df[filtered_df['gender'].isin(filters['gender'])]
+    
+    if filters.get('ethnicity'):
+        filtered_df = filtered_df[filtered_df['ethnicity'].isin(filters['ethnicity'])]
+    
+    return filtered_df
 
-# DATA SUMMARY:
-# {json.dumps(session_summary, indent=2)}
 
-# STUDENT DATA:
-# {json.dumps(student_summary, indent=2)}
+# ============================================================================
+# METRICS CALCULATION FUNCTIONS
+# ============================================================================
 
-# PERFORMANCE (with statistical significance):
-# - ELA Value-Added: {avg_ela_va:.2f} points (p={ela_va_pvalue:.3f})
-# - Math Value-Added: {avg_math_va:.2f} points (p={math_va_pvalue:.3f})
-# - ELA Raw Improvement: {ela_raw_improvement.mean():.2f} points (p={ela_raw_pvalue:.3f})
-# - Math Raw Improvement: {math_raw_improvement.mean():.2f} points (p={math_raw_pvalue:.3f})
-# - Cost per student: ${total_cost/student_summary['total_students']:.2f}
+def calculate_dosage_metrics(df: pd.DataFrame, target_dosage: float) -> Dict:
+    """Calculate comprehensive dosage metrics."""
+    hours = df['total_hours'].dropna()
+    
+    if len(hours) == 0:
+        return {}
+    
+    metrics = {
+        'median_hours': hours.median(),
+        'mean_hours': hours.mean(),
+        'q25': hours.quantile(0.25),
+        'q75': hours.quantile(0.75),
+        'iqr': hours.quantile(0.75) - hours.quantile(0.25),
+        'total_students': len(hours),
+        'target_dosage': target_dosage
+    }
+    
+    # Dosage categories
+    metrics['pct_below_25'] = (hours < target_dosage * 0.25).sum() / len(hours) * 100
+    metrics['pct_25_50'] = ((hours >= target_dosage * 0.25) & (hours < target_dosage * 0.5)).sum() / len(hours) * 100
+    metrics['pct_50_99'] = ((hours >= target_dosage * 0.5) & (hours < target_dosage)).sum() / len(hours) * 100
+    metrics['pct_full_dosage'] = (hours >= target_dosage).sum() / len(hours) * 100
+    
+    # Gini coefficient (simple proxy for inequality)
+    sorted_hours = np.sort(hours)
+    n = len(sorted_hours)
+    if n > 0 and sorted_hours.sum() > 0:
+        cumsum = np.cumsum(sorted_hours)
+        metrics['gini'] = (2 * np.sum((np.arange(1, n + 1)) * sorted_hours)) / (n * cumsum[-1]) - (n + 1) / n
+    else:
+        metrics['gini'] = 0
+    
+    return metrics
 
-# INSTRUCTIONS:
-# - Answer directly and concisely
-# - Reference specific data points and p-values
-# - Provide actionable recommendations
-# - Use bullet points for clarity
-# - Focus on educational program analysis only
 
-# Note: p-values < 0.05 indicate statistically significant results."""
+def calculate_equity_metrics(df: pd.DataFrame) -> Dict:
+    """Calculate equity gaps in dosage."""
+    metrics = {}
+    
+    # ELL vs non-ELL
+    if 'ell' in df.columns:
+        ell_hours = df[df['ell'] == True]['total_hours'].dropna()
+        non_ell_hours = df[df['ell'] == False]['total_hours'].dropna()
+        if len(ell_hours) > 0 and len(non_ell_hours) > 0:
+            metrics['ell_gap'] = non_ell_hours.mean() - ell_hours.mean()
+            metrics['ell_ell_mean'] = ell_hours.mean()
+            metrics['ell_non_ell_mean'] = non_ell_hours.mean()
+            metrics['ell_ell_n'] = len(ell_hours)
+            metrics['ell_non_ell_n'] = len(non_ell_hours)
+    
+    # IEP vs non-IEP
+    if 'iep' in df.columns:
+        iep_hours = df[df['iep'] == True]['total_hours'].dropna()
+        non_iep_hours = df[df['iep'] == False]['total_hours'].dropna()
+        if len(iep_hours) > 0 and len(non_iep_hours) > 0:
+            metrics['iep_gap'] = non_iep_hours.mean() - iep_hours.mean()
+            metrics['iep_iep_mean'] = iep_hours.mean()
+            metrics['iep_non_iep_mean'] = non_iep_hours.mean()
+            metrics['iep_iep_n'] = len(iep_hours)
+            metrics['iep_non_iep_n'] = len(non_iep_hours)
+    
+    # Economic disadvantage
+    if 'economic_disadvantage' in df.columns:
+        econ_hours = df[df['economic_disadvantage'] == True]['total_hours'].dropna()
+        non_econ_hours = df[df['economic_disadvantage'] == False]['total_hours'].dropna()
+        if len(econ_hours) > 0 and len(non_econ_hours) > 0:
+            metrics['econ_gap'] = non_econ_hours.mean() - econ_hours.mean()
+            metrics['econ_disadv_mean'] = econ_hours.mean()
+            metrics['econ_adv_mean'] = non_econ_hours.mean()
+            metrics['econ_disadv_n'] = len(econ_hours)
+            metrics['econ_adv_n'] = len(non_econ_hours)
+    
+    # High-need students reaching full dosage
+    target_dosage = st.session_state.get('full_dosage_threshold', 60.0)
+    high_need_mask = (
+        (df.get('ell', pd.Series([False] * len(df))) == True) |
+        (df.get('iep', pd.Series([False] * len(df))) == True) |
+        (df.get('economic_disadvantage', pd.Series([False] * len(df))) == True)
+    )
+    high_need_students = df[high_need_mask]
+    if len(high_need_students) > 0:
+        metrics['high_need_full_dosage_pct'] = (
+            (high_need_students['total_hours'] >= target_dosage).sum() / len(high_need_students) * 100
+        )
+        metrics['high_need_n'] = len(high_need_students)
+    
+    return metrics
 
-#                 # Make the API call using new OpenAI API format
-#                 client = openai.OpenAI(api_key=api_key)
-#                 response = client.chat.completions.create(
-#                     model="gpt-4o-mini",
-#                     messages=[
-#                         {"role": "system", "content": system_prompt},
-#                         {"role": "user", "content": question}
-#                     ],
-#                     max_tokens=1000,
-#                     temperature=0.3
-#                 )
-#                 
-#                 return response.choices[0].message.content
-#                 
-#             except Exception as e:
-#                 return f"Error generating insights: {str(e)}"
-#         
-#         # Question input - streamlined like ChatGPT
-#         user_question = st.text_area(
-#             "Ask about your tutoring program data:",
-#             placeholder="How can I improve dosage rates for ELL students? What patterns do you see in our cost-effectiveness? Which student groups are performing best and why? How does our value-added performance compare to typical tutoring programs?",
-#             height=80
-#         )
-#         
-#         if st.button("Get AI Insights", type="primary"):
-#             if user_question.strip():
-#                 # Create a single placeholder for both loading and response
-#                 content_placeholder = st.empty()
-#                 
-#                 # Show loading animation
-#                 content_placeholder.markdown("""
-#                 <div style="text-align: center; padding: 20px;">
-#                     <div style="display: inline-block; animation: pulse 1.5s infinite;">
-#                         <span style="font-size: 24px;">🤖</span>
-#                     </div>
-#                     <p style="margin-top: 10px; color: #666;">Analyzing your data...</p>
-#                 </div>
-#                 <style>
-#                 @keyframes pulse {
-#                     0% { opacity: 1; }
-#                     50% { opacity: 0.5; }
-#                     100% { opacity: 1; }
-#                 }
-#                 </style>
-#                 """, unsafe_allow_html=True)
-#                 
-#                 session_df = st.session_state["session_data"]
-#                 student_df = st.session_state["student_data"]
-#                 full_dosage_threshold = st.session_state.get("full_dosage_threshold", 60.0)
-#                 total_cost = st.session_state.get("total_cost", 0.0)
-#                 
-#                 response = get_ai_insights(user_question, session_df, student_df, full_dosage_threshold, total_cost)
-#                 
-#                 # Replace loading animation with response
-#                 content_placeholder.markdown(response)
-#                 
-#                 # Add a download button for the response
-#                 st.download_button(
-#                     label="Download Analysis",
-#                     data=response,
-#                     file_name=f"ai_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
-#                     mime="text/plain"
-#                 )
-#             else:
-#                 st.warning("Please enter a question to get AI insights.")
-#     else:
-#         st.warning("No data available. Please complete Steps 1 and 2 to upload and configure your data first.")
 
-st.write("---")
-st.caption("This tool requires no data upload. Please feel free to run this tool [locally](https://github.com/accelerate-usa/tutor-data-standard/tree/main/toolkit). If you use this tool as is, all data are erased upon refresh.")
+def calculate_outcome_metrics(df: pd.DataFrame) -> Dict:
+    """Calculate outcome metrics for ELA and Math."""
+    metrics = {}
+    
+    # ELA metrics
+    ela_va = df['ela_value_added'].dropna()
+    ela_raw = df['ela_raw_gain'].dropna()
+    
+    if len(ela_va) > 0:
+        metrics['ela_va_mean'] = ela_va.mean()
+        metrics['ela_va_median'] = ela_va.median()
+        metrics['ela_va_std'] = ela_va.std()
+        metrics['ela_va_positive_pct'] = (ela_va > 0).sum() / len(ela_va) * 100
+        metrics['ela_va_n'] = len(ela_va)
+        
+        # Statistical significance
+        if len(ela_va) > 1:
+            t_stat, p_value = stats.ttest_1samp(ela_va, 0)
+            metrics['ela_va_pvalue'] = p_value
+            metrics['ela_va_significant'] = p_value < 0.05
+            
+            # Standardized effect size (Cohen's d)
+            if metrics['ela_va_std'] > 0:
+                metrics['ela_va_effect_size'] = metrics['ela_va_mean'] / metrics['ela_va_std']
+                # Weeks of learning (assuming ~0.1 SD per month, ~4.3 weeks per month)
+                # Effect size * 4.3 gives approximate weeks
+                metrics['ela_va_weeks_learning'] = metrics['ela_va_effect_size'] * 4.3
+    
+    if len(ela_raw) > 0:
+        metrics['ela_raw_mean'] = ela_raw.mean()
+        metrics['ela_raw_positive_pct'] = (ela_raw > 0).sum() / len(ela_raw) * 100
+        metrics['ela_raw_n'] = len(ela_raw)
+        
+        # Standardized effect size for raw gains
+        if len(ela_raw) > 1 and ela_raw.std() > 0:
+            metrics['ela_raw_effect_size'] = ela_raw.mean() / ela_raw.std()
+            metrics['ela_raw_weeks_learning'] = metrics['ela_raw_effect_size'] * 4.3
+    
+    # Math metrics
+    math_va = df['math_value_added'].dropna()
+    math_raw = df['math_raw_gain'].dropna()
+    
+    if len(math_va) > 0:
+        metrics['math_va_mean'] = math_va.mean()
+        metrics['math_va_median'] = math_va.median()
+        metrics['math_va_std'] = math_va.std()
+        metrics['math_va_positive_pct'] = (math_va > 0).sum() / len(math_va) * 100
+        metrics['math_va_n'] = len(math_va)
+        
+        # Statistical significance
+        if len(math_va) > 1:
+            t_stat, p_value = stats.ttest_1samp(math_va, 0)
+            metrics['math_va_pvalue'] = p_value
+            metrics['math_va_significant'] = p_value < 0.05
+            
+            # Standardized effect size (Cohen's d)
+            if metrics['math_va_std'] > 0:
+                metrics['math_va_effect_size'] = metrics['math_va_mean'] / metrics['math_va_std']
+                # Weeks of learning
+                metrics['math_va_weeks_learning'] = metrics['math_va_effect_size'] * 4.3
+    
+    if len(math_raw) > 0:
+        metrics['math_raw_mean'] = math_raw.mean()
+        metrics['math_raw_positive_pct'] = (math_raw > 0).sum() / len(math_raw) * 100
+        metrics['math_raw_n'] = len(math_raw)
+        
+        # Standardized effect size for raw gains
+        if len(math_raw) > 1 and math_raw.std() > 0:
+            metrics['math_raw_effect_size'] = math_raw.mean() / math_raw.std()
+            metrics['math_raw_weeks_learning'] = metrics['math_raw_effect_size'] * 4.3
+    
+    return metrics
+
+
+def calculate_cost_metrics(df: pd.DataFrame, total_cost: float, target_dosage: float) -> Dict:
+    """Calculate cost-effectiveness metrics."""
+    metrics = {}
+    n_students = len(df)
+    
+    if n_students == 0:
+        return metrics
+    
+    total_hours = df['total_hours'].sum()
+    
+    metrics['cost_per_student'] = total_cost / n_students if n_students > 0 else 0
+    metrics['cost_per_hour'] = total_cost / total_hours if total_hours > 0 else 0
+    
+    # Cost per point gained - use sum of all value-added points
+    outcome_metrics = calculate_outcome_metrics(df)
+    
+    # Calculate total value-added points (sum across all students)
+    ela_va_sum = df['ela_value_added'].dropna().sum()
+    math_va_sum = df['math_value_added'].dropna().sum()
+    total_va_points = ela_va_sum + math_va_sum
+    
+    # Calculate total raw gain points
+    ela_raw_sum = df['ela_raw_gain'].dropna().sum()
+    math_raw_sum = df['math_raw_gain'].dropna().sum()
+    total_raw_points = ela_raw_sum + math_raw_sum
+    
+    if total_va_points > 0:
+        metrics['cost_per_va_point'] = total_cost / total_va_points
+    else:
+        metrics['cost_per_va_point'] = None
+    
+    if total_raw_points > 0:
+        metrics['cost_per_raw_point'] = total_cost / total_raw_points
+    else:
+        metrics['cost_per_raw_point'] = None
+    
+    return metrics
+
+
+# ============================================================================
+# VISUALIZATION FUNCTIONS
+# ============================================================================
+
+def plot_dosage_distribution(df: pd.DataFrame, target_dosage: float):
+    """Create dosage distribution visualization."""
+    hours = df['total_hours'].dropna()
+    
+    if len(hours) == 0:
+        st.warning("No dosage data available for visualization.")
+        return
+    
+    # Create histogram with dosage categories
+    df_viz = df.copy()
+    df_viz['dosage_category'] = pd.cut(
+        df_viz['total_hours'],
+        bins=[0, target_dosage * 0.25, target_dosage * 0.5, target_dosage, float('inf')],
+        labels=['<25%', '25-50%', '50-99%', '100%+']
+    )
+    
+    fig = px.histogram(
+        df_viz,
+        x='total_hours',
+        color='dosage_category',
+        nbins=30,
+        labels={'total_hours': 'Tutoring Hours', 'count': 'Number of Students'},
+        title='Distribution of Tutoring Hours per Student',
+        color_discrete_map={
+            '<25%': '#dc3545',
+            '25-50%': '#ffc107',
+            '50-99%': '#17a2b8',
+            '100%+': '#28a745'
+        }
+    )
+    
+    fig.add_vline(
+        x=target_dosage,
+        line_dash="dash",
+        line_color="orange",
+        annotation_text=f"Target: {target_dosage} hrs",
+        annotation_position="top right"
+    )
+    
+    fig.update_layout(
+        showlegend=True,
+        legend_title="Dosage Category",
+        height=400
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def plot_equity_comparison(df: pd.DataFrame):
+    """Create equity comparison visualizations."""
+    equity_data = []
+    
+    # ELL comparison
+    if 'ell' in df.columns:
+        ell_avg = df[df['ell'] == True]['total_hours'].mean()
+        non_ell_avg = df[df['ell'] == False]['total_hours'].mean()
+        ell_n = len(df[df['ell'] == True])
+        non_ell_n = len(df[df['ell'] == False])
+        if not pd.isna(ell_avg) and not pd.isna(non_ell_avg):
+            equity_data.append({
+                'Group': 'ELL',
+                'Subgroup': 'ELL Students',
+                'Average Hours': ell_avg,
+                'N': ell_n
+            })
+            equity_data.append({
+                'Group': 'ELL',
+                'Subgroup': 'Non-ELL Students',
+                'Average Hours': non_ell_avg,
+                'N': non_ell_n
+            })
+    
+    # IEP comparison
+    if 'iep' in df.columns:
+        iep_avg = df[df['iep'] == True]['total_hours'].mean()
+        non_iep_avg = df[df['iep'] == False]['total_hours'].mean()
+        iep_n = len(df[df['iep'] == True])
+        non_iep_n = len(df[df['iep'] == False])
+        if not pd.isna(iep_avg) and not pd.isna(non_iep_avg):
+            equity_data.append({
+                'Group': 'IEP',
+                'Subgroup': 'IEP Students',
+                'Average Hours': iep_avg,
+                'N': iep_n
+            })
+            equity_data.append({
+                'Group': 'IEP',
+                'Subgroup': 'Non-IEP Students',
+                'Average Hours': non_iep_avg,
+                'N': non_iep_n
+            })
+    
+    # Economic disadvantage comparison
+    if 'economic_disadvantage' in df.columns:
+        econ_avg = df[df['economic_disadvantage'] == True]['total_hours'].mean()
+        non_econ_avg = df[df['economic_disadvantage'] == False]['total_hours'].mean()
+        econ_n = len(df[df['economic_disadvantage'] == True])
+        non_econ_n = len(df[df['economic_disadvantage'] == False])
+        if not pd.isna(econ_avg) and not pd.isna(non_econ_avg):
+            equity_data.append({
+                'Group': 'Economic Status',
+                'Subgroup': 'Economically Disadvantaged',
+                'Average Hours': econ_avg,
+                'N': econ_n
+            })
+            equity_data.append({
+                'Group': 'Economic Status',
+                'Subgroup': 'Not Economically Disadvantaged',
+                'Average Hours': non_econ_avg,
+                'N': non_econ_n
+            })
+    
+    if not equity_data:
+        st.info("Insufficient data for equity comparison.")
+        return
+    
+    equity_df = pd.DataFrame(equity_data)
+    
+    fig = px.bar(
+        equity_df,
+        x='Group',
+        y='Average Hours',
+        color='Subgroup',
+        barmode='group',
+        labels={'Average Hours': 'Average Tutoring Hours', 'Group': 'Student Group'},
+        title='Average Dosage by Student Subgroup',
+        text='N'
+    )
+    
+    fig.update_traces(texttemplate='n=%{text}', textposition='outside')
+    fig.update_layout(height=400)
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def plot_outcome_distributions(df: pd.DataFrame, subject: str):
+    """Plot distribution of outcomes for ELA or Math."""
+    va_col = f'{subject.lower()}_value_added'
+    raw_col = f'{subject.lower()}_raw_gain'
+    
+    if va_col not in df.columns or raw_col not in df.columns:
+        return
+    
+    va_data = df[va_col].dropna()
+    raw_data = df[raw_col].dropna()
+    
+    if len(va_data) == 0 and len(raw_data) == 0:
+        return
+    
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(f'{subject.upper()} Value-Added Distribution', f'{subject.upper()} Raw Gain Distribution'),
+        horizontal_spacing=0.15
+    )
+    
+    if len(va_data) > 0:
+        fig.add_trace(
+            go.Histogram(x=va_data, name='Value-Added', nbinsx=20, marker_color='#1f77b4'),
+            row=1, col=1
+        )
+        fig.add_vline(x=0, line_dash="dash", line_color="red", row=1, col=1)
+        fig.add_vline(x=va_data.mean(), line_dash="dot", line_color="green", row=1, col=1)
+    
+    if len(raw_data) > 0:
+        fig.add_trace(
+            go.Histogram(x=raw_data, name='Raw Gain', nbinsx=20, marker_color='#ff7f0e'),
+            row=1, col=2
+        )
+        fig.add_vline(x=0, line_dash="dash", line_color="red", row=1, col=2)
+        fig.add_vline(x=raw_data.mean(), line_dash="dot", line_color="green", row=1, col=2)
+    
+    fig.update_layout(height=400, showlegend=False)
+    fig.update_xaxes(title_text="Points", row=1, col=1)
+    fig.update_xaxes(title_text="Points", row=1, col=2)
+    fig.update_yaxes(title_text="Number of Students", row=1, col=1)
+    fig.update_yaxes(title_text="Number of Students", row=1, col=2)
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+
+# ============================================================================
+# UI HELPER FUNCTIONS
+# ============================================================================
+
+def show_data_quality_warning():
+    """Display a warning banner if data has validation issues."""
+    has_warnings = (
+        st.session_state.get('session_validation_warnings', False) or
+        st.session_state.get('student_validation_warnings', False)
+    )
+    
+    if has_warnings:
+        st.warning("⚠️ **Data Quality Notice:** Your data loaded with validation warnings. Some results may be affected. Review validation messages in the Data Overview tab for details.")
+
+
+# ============================================================================
+# MAIN APPLICATION
+# ============================================================================
+
+def main():
+    # Header
+    st.markdown('<div class="main-header">📊 DATAS Analysis Toolkit</div>', unsafe_allow_html=True)
+    st.markdown("---")
+    
+    # Initialize session state
+    if 'session_data' not in st.session_state:
+        st.session_state['session_data'] = None
+    if 'student_data' not in st.session_state:
+        st.session_state['student_data'] = None
+    if 'full_dosage_threshold' not in st.session_state:
+        st.session_state['full_dosage_threshold'] = 60.0
+    if 'total_cost' not in st.session_state:
+        st.session_state['total_cost'] = 0.0
+    
+    # Sidebar for parameters
+    with st.sidebar:
+        st.header("⚙️ Program Parameters")
+        st.session_state['full_dosage_threshold'] = st.number_input(
+            "Target Dosage (hours)",
+            min_value=0.0,
+            value=st.session_state['full_dosage_threshold'],
+            step=1.0,
+            help="The target number of tutoring hours per student"
+        )
+        st.session_state['total_cost'] = st.number_input(
+            "Total Program Cost ($)",
+            min_value=0.0,
+            value=st.session_state['total_cost'],
+            step=1000.0,
+            format="%.2f",
+            help="Total program cost for cost-effectiveness calculations"
+        )
+        st.markdown("---")
+        
+        # Data status
+        st.header("📁 Data Status")
+        session_data = st.session_state.get('session_data')
+        student_data = st.session_state.get('student_data')
+        
+        # Check if data is loaded
+        data_loaded = session_data is not None and student_data is not None
+        
+        if data_loaded:
+            # Check for validation warnings
+            has_warnings = (
+                st.session_state.get('session_validation_warnings', False) or
+                st.session_state.get('student_validation_warnings', False)
+            )
+            
+            if has_warnings:
+                st.warning("⚠ Data loaded (with warnings)")
+            else:
+                st.success("✓ Data loaded")
+            st.caption("See Data Overview tab for detailed statistics")
+        else:
+            st.warning("⚠ Data not loaded")
+            st.caption("Load data in the Data Overview tab")
+    
+    # Main tabs
+    tab_overview, tab_dosage, tab_equity, tab_outcomes, tab_cost = st.tabs([
+        "📋 Data Overview",
+        "📊 Dosage & Access",
+        "⚖️ Equity Analysis",
+        "📈 Outcomes",
+        "💰 Cost Analytics"
+    ])
+    
+    # ========================================================================
+    # DATA OVERVIEW TAB
+    # ========================================================================
+    with tab_overview:
+        st.header("Data Overview")
+        
+        # Always show data upload option, even if data is already loaded
+        with st.expander("📤 Upload or Replace Data", expanded=(st.session_state['session_data'] is None or st.session_state['student_data'] is None)):
+            if st.session_state['session_data'] is not None and st.session_state['student_data'] is not None:
+                st.info("💡 **Data already loaded.** Upload new files below to replace the current data.")
+                if st.button("🗑️ Clear Current Data", type="secondary"):
+                    st.session_state['session_data'] = None
+                    st.session_state['student_data'] = None
+                    st.success("Data cleared. Please upload new files.")
+                    try:
+                        st.rerun()
+                    except:
+                        st.info("Please refresh the page.")
+            
+            session_file = st.file_uploader("Upload Session Data (CSV)", type=['csv'], key='session_upload')
+            student_file = st.file_uploader("Upload Student Data (CSV)", type=['csv'], key='student_upload')
+            
+            if session_file and student_file:
+                try:
+                    # Load data
+                    session_df = pd.read_csv(session_file)
+                    student_df = pd.read_csv(student_file)
+                    
+                    # Validate data
+                    st.markdown("### 🔍 Validating Data...")
+                    
+                    session_errors = validate_data_comprehensive(session_df, 'session')
+                    student_errors = validate_data_comprehensive(student_df, 'student')
+                    
+                    # Display validation results (but don't block)
+                    session_has_issues = display_validation_errors(session_errors, 'Session')
+                    student_has_issues = display_validation_errors(student_errors, 'Student')
+                    
+                    # Always load data, even with errors
+                    st.session_state['session_data'] = session_df
+                    st.session_state['student_data'] = student_df
+                    st.session_state['session_validation_warnings'] = len(session_errors.get('warnings', [])) > 0 or len(session_errors.get('critical', [])) > 0
+                    st.session_state['student_validation_warnings'] = len(student_errors.get('warnings', [])) > 0 or len(student_errors.get('critical', [])) > 0
+                    
+                    if session_has_issues or student_has_issues:
+                        st.warning("⚠️ **Data loaded with validation issues.** Analysis will proceed, but some results may be affected. Please review the validation messages above.")
+                    else:
+                        st.success("✅ **Data loaded and validated successfully!**")
+                        st.balloons()
+                    
+                    try:
+                        st.rerun()
+                    except:
+                        st.info("Please refresh the page to see updated data.")
+                        
+                except pd.errors.EmptyDataError:
+                    st.error("❌ **Error:** One or both files are empty. Please check your CSV files.")
+                except pd.errors.ParserError as e:
+                    st.error(f"❌ **Error parsing CSV:** {str(e)}\n\nPlease check that your files are valid CSV format.")
+                except Exception as e:
+                    st.error(f"❌ **Error loading data:** {str(e)}\n\nPlease check your file format and try again.")
+        
+        if st.session_state['session_data'] is None or st.session_state['student_data'] is None:
+            st.info("""
+            **Data Loading Instructions:**
+            
+            Please upload your session and student data files using the uploader above.
+            
+            **Required Files:**
+            - **Session Data (CSV):** Contains tutoring session records with columns: student_id, session_topic, session_date, session_duration, tutor_id
+            - **Student Data (CSV):** Contains student information with columns matching the DATAS standard
+            
+            Once uploaded, the data will be available for analysis across all tabs.
+            """)
+        else:
+            show_data_quality_warning()
+            
+            # Prepare data
+            try:
+                prepared_df = prepare_data(
+                    st.session_state['session_data'],
+                    st.session_state['student_data']
+                )
+            except Exception as e:
+                st.error(f"❌ **Error preparing data for analysis:** {str(e)}")
+                st.info("This error may be due to data quality issues. Please review your data files and try again.")
+                st.stop()
+            
+            # Summary statistics
+            st.markdown("### Program Overview")
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.metric("Total Students", f"{len(prepared_df):,}")
+            
+            with col2:
+                total_hours = prepared_df['total_hours'].sum()
+                st.metric("Total Tutoring Hours", f"{total_hours:,.0f}")
+            
+            with col3:
+                avg_hours = prepared_df['total_hours'].mean()
+                st.metric("Average Hours/Student", f"{avg_hours:.1f}")
+            
+            with col4:
+                schools = prepared_df['school_name'].nunique() if 'school_name' in prepared_df.columns else 0
+                st.metric("Schools", f"{schools}")
+            
+            st.markdown("---")
+            
+            # Session Records Statistics
+            st.markdown("### Session Records")
+            try:
+                session_df = st.session_state['session_data']
+                session_col1, session_col2, session_col3, session_col4 = st.columns(4)
+                
+                with session_col1:
+                    st.metric("Total Sessions", f"{len(session_df):,}")
+                
+                with session_col2:
+                    if 'session_topic' in session_df.columns:
+                        try:
+                            math_sessions = len(session_df[session_df['session_topic'].astype(str).str.lower() == 'math'])
+                            ela_sessions = len(session_df[session_df['session_topic'].astype(str).str.lower() == 'ela'])
+                            st.metric("Math Sessions", f"{math_sessions:,}")
+                        except:
+                            st.metric("Math Sessions", "N/A")
+                    else:
+                        st.metric("Math Sessions", "N/A")
+                
+                with session_col3:
+                    if 'session_topic' in session_df.columns:
+                        try:
+                            ela_sessions = len(session_df[session_df['session_topic'].astype(str).str.lower() == 'ela'])
+                            st.metric("ELA Sessions", f"{ela_sessions:,}")
+                        except:
+                            st.metric("ELA Sessions", "N/A")
+                    else:
+                        st.metric("ELA Sessions", "N/A")
+                
+                with session_col4:
+                    if 'tutor_id' in session_df.columns:
+                        try:
+                            unique_tutors = session_df['tutor_id'].nunique()
+                            st.metric("Unique Tutors", f"{unique_tutors:,}")
+                        except:
+                            st.metric("Unique Tutors", "N/A")
+                    else:
+                        st.metric("Unique Tutors", "N/A")
+                
+                if 'session_date' in session_df.columns:
+                    try:
+                        session_dates = pd.to_datetime(session_df['session_date'], errors='coerce')
+                        valid_dates = session_dates.dropna()
+                        if len(valid_dates) > 0:
+                            date_range = f"{valid_dates.min().strftime('%Y-%m-%d')} to {valid_dates.max().strftime('%Y-%m-%d')}"
+                            st.caption(f"**Date Range:** {date_range}")
+                    except:
+                        pass
+            except Exception:
+                st.warning("Session statistics unavailable")
+            
+            st.markdown("---")
+            
+            # Student Records Statistics
+            st.markdown("### Student Records")
+            try:
+                student_df = st.session_state['student_data']
+                student_col1, student_col2, student_col3, student_col4 = st.columns(4)
+                
+                with student_col1:
+                    st.metric("Total Students", f"{len(student_df):,}")
+                
+                with student_col2:
+                    if 'student_id' in session_df.columns and 'student_id' in student_df.columns:
+                        try:
+                            tutored_students = session_df['student_id'].nunique()
+                            st.metric("Students Tutored", f"{tutored_students:,}")
+                        except:
+                            st.metric("Students Tutored", "N/A")
+                    else:
+                        st.metric("Students Tutored", "N/A")
+                
+                with student_col3:
+                    if 'school_name' in student_df.columns:
+                        try:
+                            schools = student_df['school_name'].nunique()
+                            st.metric("Schools", f"{schools:,}")
+                        except:
+                            st.metric("Schools", "N/A")
+                    else:
+                        st.metric("Schools", "N/A")
+                
+                with student_col4:
+                    if 'district_name' in student_df.columns:
+                        try:
+                            districts = student_df['district_name'].nunique()
+                            st.metric("Districts", f"{districts:,}")
+                        except:
+                            if 'district_id' in student_df.columns:
+                                try:
+                                    districts = student_df['district_id'].nunique()
+                                    st.metric("Districts", f"{districts:,}")
+                                except:
+                                    st.metric("Districts", "N/A")
+                            else:
+                                st.metric("Districts", "N/A")
+                    elif 'district_id' in student_df.columns:
+                        try:
+                            districts = student_df['district_id'].nunique()
+                            st.metric("Districts", f"{districts:,}")
+                        except:
+                            st.metric("Districts", "N/A")
+                    else:
+                        st.metric("Districts", "N/A")
+                
+                if 'current_grade_level' in student_df.columns:
+                    try:
+                        grades = sorted(student_df['current_grade_level'].dropna().unique().tolist())
+                        st.caption(f"**Grade Levels:** {len(grades)}")
+                    except:
+                        pass
+            except Exception:
+                st.warning("Student statistics unavailable")
+            
+            st.markdown("---")
+            
+            # Data preview
+            with st.expander("📊 Data Preview", expanded=False):
+                st.subheader("Student Data Sample")
+                st.dataframe(prepared_df.head(10), use_container_width=True)
+                
+                st.subheader("Data Summary")
+                st.dataframe(prepared_df.describe(), use_container_width=True)
+    
+    # ========================================================================
+    # DOSAGE & ACCESS TAB
+    # ========================================================================
+    with tab_dosage:
+        if st.session_state['session_data'] is None or st.session_state['student_data'] is None:
+            st.warning("Please load data in the Data Overview tab first.")
+        else:
+            show_data_quality_warning()
+            st.header("Dosage & Access Analysis")
+            st.caption("Understanding how much tutoring students are receiving")
+            
+            # Prepare data
+            prepared_df = prepare_data(
+                st.session_state['session_data'],
+                st.session_state['student_data']
+            )
+            
+            # Filters
+            with st.expander("🔍 Filters", expanded=False):
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    school_options = ['All'] + sorted(prepared_df['school_name'].dropna().unique().tolist()) if 'school_name' in prepared_df.columns else ['All']
+                    selected_school = st.selectbox("School", school_options, key='dosage_school')
+                    
+                    grade_options = sorted(prepared_df['current_grade_level'].dropna().unique().tolist())
+                    selected_grades = st.multiselect("Grade Levels", grade_options, default=grade_options, key='dosage_grades')
+                
+                with col2:
+                    gender_options = prepared_df['gender'].dropna().unique().tolist() if 'gender' in prepared_df.columns else []
+                    selected_gender = st.multiselect("Gender", gender_options, default=gender_options, key='dosage_gender')
+                    
+                    ethnicity_options = prepared_df['ethnicity'].dropna().unique().tolist() if 'ethnicity' in prepared_df.columns else []
+                    selected_ethnicity = st.multiselect("Ethnicity", ethnicity_options, default=ethnicity_options, key='dosage_ethnicity')
+            
+            # Apply filters
+            filters = {
+                'school': selected_school,
+                'grades': selected_grades,
+                'gender': selected_gender,
+                'ethnicity': selected_ethnicity
+            }
+            
+            filtered_df = apply_filters(prepared_df, filters)
+            
+            # Show filtered count
+            st.info(f"📊 Analyzing **{len(filtered_df):,} students** (after filters)")
+            
+            if len(filtered_df) == 0:
+                st.warning("No students match the selected filters.")
+            else:
+                # Calculate metrics
+                dosage_metrics = calculate_dosage_metrics(
+                    filtered_df,
+                    st.session_state['full_dosage_threshold']
+                )
+                
+                # Visualization at the top
+                st.markdown("### Distribution of Tutoring Hours")
+                st.caption("**What to look for:** A right-skewed distribution suggests most students receive below-target dosage. Look for the vertical line marking your target.")
+                plot_dosage_distribution(filtered_df, st.session_state['full_dosage_threshold'])
+                
+                st.markdown("---")
+                
+                # School and Provider Distribution Table
+                st.markdown("### Dosage Distribution by School and Provider")
+                try:
+                    # Merge session data to get provider info
+                    session_df = st.session_state['session_data'].copy()
+                    session_df['student_id'] = session_df['student_id'].astype(str).str.strip()
+                    session_df['session_duration_hours'] = pd.to_numeric(session_df.get('session_duration', 0), errors='coerce') / 60
+                    
+                    # Calculate hours per student
+                    hours_per_student = session_df.groupby('student_id')['session_duration_hours'].sum().reset_index()
+                    hours_per_student.columns = ['student_id', 'total_hours']
+                    
+                    # Merge with student data
+                    student_with_hours = filtered_df.merge(hours_per_student, on='student_id', how='left')
+                    student_with_hours['total_hours'] = student_with_hours['total_hours'].fillna(0)
+                    
+                    # Get provider from session data if available
+                    if 'tutor_id' in session_df.columns:
+                        # Use tutor_id as provider proxy
+                        provider_col = 'tutor_id'
+                    else:
+                        provider_col = None
+                    
+                    # Create distribution table by school
+                    if 'school_name' in student_with_hours.columns:
+                        school_dist = []
+                        for school in student_with_hours['school_name'].dropna().unique():
+                            school_data = student_with_hours[student_with_hours['school_name'] == school]
+                            total = len(school_data)
+                            if total > 0:
+                                below_25 = (school_data['total_hours'] < st.session_state['full_dosage_threshold'] * 0.25).sum() / total * 100
+                                pct_25_50 = ((school_data['total_hours'] >= st.session_state['full_dosage_threshold'] * 0.25) & 
+                                            (school_data['total_hours'] < st.session_state['full_dosage_threshold'] * 0.5)).sum() / total * 100
+                                pct_50_99 = ((school_data['total_hours'] >= st.session_state['full_dosage_threshold'] * 0.5) & 
+                                            (school_data['total_hours'] < st.session_state['full_dosage_threshold'])).sum() / total * 100
+                                full_dosage = (school_data['total_hours'] >= st.session_state['full_dosage_threshold']).sum() / total * 100
+                                
+                                school_dist.append({
+                                    'School': school,
+                                    '< 25%': f"{below_25:.1f}%",
+                                    '25-50%': f"{pct_25_50:.1f}%",
+                                    '50-99%': f"{pct_50_99:.1f}%",
+                                    '100%+': f"{full_dosage:.1f}%",
+                                    'Total Students': total
+                                })
+                        
+                        if school_dist:
+                            school_df = pd.DataFrame(school_dist)
+                            st.dataframe(school_df, use_container_width=True, hide_index=True)
+                    
+                    # Provider distribution if available
+                    if provider_col and provider_col in session_df.columns:
+                        provider_dist = []
+                        # Get provider for each student
+                        student_provider = session_df.groupby('student_id')[provider_col].first().reset_index()
+                        student_with_provider = student_with_hours.merge(student_provider, on='student_id', how='left')
+                        
+                        for provider in student_with_provider[provider_col].dropna().unique():
+                            provider_data = student_with_provider[student_with_provider[provider_col] == provider]
+                            total = len(provider_data)
+                            if total > 0:
+                                below_25 = (provider_data['total_hours'] < st.session_state['full_dosage_threshold'] * 0.25).sum() / total * 100
+                                pct_25_50 = ((provider_data['total_hours'] >= st.session_state['full_dosage_threshold'] * 0.25) & 
+                                            (provider_data['total_hours'] < st.session_state['full_dosage_threshold'] * 0.5)).sum() / total * 100
+                                pct_50_99 = ((provider_data['total_hours'] >= st.session_state['full_dosage_threshold'] * 0.5) & 
+                                            (provider_data['total_hours'] < st.session_state['full_dosage_threshold'])).sum() / total * 100
+                                full_dosage = (provider_data['total_hours'] >= st.session_state['full_dosage_threshold']).sum() / total * 100
+                                
+                                provider_dist.append({
+                                    'Provider': str(provider),
+                                    '< 25%': f"{below_25:.1f}%",
+                                    '25-50%': f"{pct_25_50:.1f}%",
+                                    '50-99%': f"{pct_50_99:.1f}%",
+                                    '100%+': f"{full_dosage:.1f}%",
+                                    'Total Students': total
+                                })
+                        
+                        if provider_dist:
+                            st.markdown("#### By Provider")
+                            provider_df = pd.DataFrame(provider_dist)
+                            st.dataframe(provider_df, use_container_width=True, hide_index=True)
+                except Exception as e:
+                    st.info("School and provider distribution table unavailable. Check that required columns are present.")
+                
+                st.markdown("---")
+                
+                # Time-based chart (by time of day)
+                st.markdown("### Implementation Fidelity by Time of Day")
+                try:
+                    session_df = st.session_state['session_data'].copy()
+                    if 'session_date' in session_df.columns and 'session_duration' in session_df.columns:
+                        # Try to extract time if available, otherwise use session_date as proxy
+                        session_df['session_date'] = pd.to_datetime(session_df['session_date'], errors='coerce')
+                        session_df = session_df.dropna(subset=['session_date'])
+                        session_df['hour'] = session_df['session_date'].dt.hour
+                        session_df['session_duration_hours'] = pd.to_numeric(session_df['session_duration'], errors='coerce') / 60
+                        
+                        # Group by hour and calculate total tutoring hours and session count
+                        hourly_data = session_df.groupby('hour').agg({
+                            'session_duration_hours': 'sum',
+                            'student_id': 'count'
+                        }).reset_index()
+                        hourly_data.columns = ['Hour of Day', 'Total Hours', 'Session Count']
+                        
+                        if len(hourly_data) > 0:
+                            fig = px.bar(
+                                hourly_data,
+                                x='Hour of Day',
+                                y='Total Hours',
+                                title='Total Tutoring Hours by Hour of Day',
+                                labels={'Total Hours': 'Total Tutoring Hours', 'Hour of Day': 'Hour of Day (0-23)'},
+                                text='Session Count'
+                            )
+                            fig.update_traces(texttemplate='%{text} sessions', textposition='outside')
+                            fig.update_layout(height=400)
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info("Time-based data not available. Session dates may not include time information.")
+                    else:
+                        st.info("Time-based analysis requires session_date column.")
+                except Exception:
+                    st.info("Time-based chart unavailable.")
+                
+                st.markdown("---")
+                
+                # Date-based chart (implementation fidelity over time)
+                st.markdown("### Implementation Fidelity Over Time")
+                try:
+                    session_df = st.session_state['session_data'].copy()
+                    if 'session_date' in session_df.columns and 'session_duration' in session_df.columns:
+                        session_df['session_date'] = pd.to_datetime(session_df['session_date'], errors='coerce')
+                        session_df = session_df.dropna(subset=['session_date'])
+                        session_df['session_duration_hours'] = pd.to_numeric(session_df['session_duration'], errors='coerce') / 60
+                        session_df['date'] = session_df['session_date'].dt.date
+                        
+                        # Group by date and calculate metrics
+                        daily_data = session_df.groupby('date').agg({
+                            'session_duration_hours': ['mean', 'sum', 'count'],
+                            'student_id': 'nunique'
+                        }).reset_index()
+                        daily_data.columns = ['Date', 'Avg Duration', 'Total Hours', 'Session Count', 'Unique Students']
+                        
+                        if len(daily_data) > 0:
+                            fig = px.line(
+                                daily_data,
+                                x='Date',
+                                y='Avg Duration',
+                                title='Average Session Duration Over Time',
+                                labels={'Avg Duration': 'Average Duration (hours)', 'Date': 'Date'},
+                                markers=True
+                            )
+                            fig.update_layout(height=400)
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info("Date-based data not available.")
+                    else:
+                        st.info("Date-based analysis requires session_date column.")
+                except Exception:
+                    st.info("Date-based chart unavailable.")
+    
+    # ========================================================================
+    # EQUITY ANALYSIS TAB
+    # ========================================================================
+    with tab_equity:
+        if st.session_state['session_data'] is None or st.session_state['student_data'] is None:
+            st.warning("Please load data in the Data Overview tab first.")
+        else:
+            show_data_quality_warning()
+            st.header("Equity Analysis")
+            st.caption("Examining dosage gaps across student subgroups")
+            
+            # Prepare data
+            prepared_df = prepare_data(
+                st.session_state['session_data'],
+                st.session_state['student_data']
+            )
+            
+            # Filters
+            with st.expander("🔍 Filters", expanded=False):
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    school_options = ['All'] + sorted(prepared_df['school_name'].dropna().unique().tolist()) if 'school_name' in prepared_df.columns else ['All']
+                    equity_school = st.selectbox("School", school_options, key='equity_school')
+                    
+                    grade_options = sorted(prepared_df['current_grade_level'].dropna().unique().tolist())
+                    equity_grades = st.multiselect("Grade Levels", grade_options, default=grade_options, key='equity_grades')
+                
+                with col2:
+                    ell_filter = st.selectbox("ELL Status", ['All', 'ELL Only', 'Non-ELL Only'], key='ell_filter')
+                    iep_filter = st.selectbox("IEP Status", ['All', 'IEP Only', 'Non-IEP Only'], key='iep_filter')
+                    econ_filter = st.selectbox("Economic Status", ['All', 'Disadvantaged Only', 'Not Disadvantaged'], key='econ_filter')
+            
+            # Apply filters
+            equity_df = prepared_df.copy()
+            if equity_school != 'All':
+                equity_df = equity_df[equity_df['school_name'] == equity_school]
+            
+            equity_df = equity_df[equity_df['current_grade_level'].isin(equity_grades)]
+            
+            if ell_filter == 'ELL Only':
+                equity_df = equity_df[equity_df.get('ell', pd.Series([False] * len(equity_df))) == True]
+            elif ell_filter == 'Non-ELL Only':
+                equity_df = equity_df[equity_df.get('ell', pd.Series([False] * len(equity_df))) == False]
+            
+            if iep_filter == 'IEP Only':
+                equity_df = equity_df[equity_df.get('iep', pd.Series([False] * len(equity_df))) == True]
+            elif iep_filter == 'Non-IEP Only':
+                equity_df = equity_df[equity_df.get('iep', pd.Series([False] * len(equity_df))) == False]
+            
+            if econ_filter == 'Disadvantaged Only':
+                equity_df = equity_df[equity_df.get('economic_disadvantage', pd.Series([False] * len(equity_df))) == True]
+            elif econ_filter == 'Not Disadvantaged':
+                equity_df = equity_df[equity_df.get('economic_disadvantage', pd.Series([False] * len(equity_df))) == False]
+            
+            st.info(f"📊 Analyzing **{len(equity_df):,} students**")
+            
+            if len(equity_df) == 0:
+                st.warning("No students match the selected filters.")
+            else:
+                # Calculate equity metrics
+                equity_metrics = calculate_equity_metrics(equity_df)
+                
+                # Equity gaps
+                st.markdown("### Equity Gaps in Dosage")
+                st.caption("**What to look for:** Negative gaps indicate disadvantaged groups receive fewer hours. Positive gaps indicate they receive more.")
+                
+                gap_col1, gap_col2, gap_col3 = st.columns(3)
+                
+                if 'ell_gap' in equity_metrics:
+                    with gap_col1:
+                        gap = equity_metrics['ell_gap']
+                        color = "normal" if gap <= 0 else "inverse"
+                        ell_mean = equity_metrics.get('ell_ell_mean', 0)
+                        non_ell_mean = equity_metrics.get('ell_non_ell_mean', 0)
+                        st.metric(
+                            "ELL Gap",
+                            f"{gap:+.1f} hours",
+                            help=f"Formula: Gap = Non-ELL Mean - ELL Mean\n\nELL students average {ell_mean:.1f} hrs vs {non_ell_mean:.1f} hrs for non-ELL. Negative gap indicates ELL students receive fewer hours."
+                        )
+                        if equity_metrics.get('ell_ell_n', 0) < 30 or equity_metrics.get('ell_non_ell_n', 0) < 30:
+                            st.caption("⚠️ Small sample size")
+                
+                if 'iep_gap' in equity_metrics:
+                    with gap_col2:
+                        gap = equity_metrics['iep_gap']
+                        color = "normal" if gap <= 0 else "inverse"
+                        iep_mean = equity_metrics.get('iep_iep_mean', 0)
+                        non_iep_mean = equity_metrics.get('iep_non_iep_mean', 0)
+                        st.metric(
+                            "IEP Gap",
+                            f"{gap:+.1f} hours",
+                            help=f"Formula: Gap = Non-IEP Mean - IEP Mean\n\nIEP students average {iep_mean:.1f} hrs vs {non_iep_mean:.1f} hrs for non-IEP. Negative gap indicates IEP students receive fewer hours."
+                        )
+                        if equity_metrics.get('iep_iep_n', 0) < 30 or equity_metrics.get('iep_non_iep_n', 0) < 30:
+                            st.caption("⚠️ Small sample size")
+                
+                if 'econ_gap' in equity_metrics:
+                    with gap_col3:
+                        gap = equity_metrics['econ_gap']
+                        color = "normal" if gap <= 0 else "inverse"
+                        econ_disadv_mean = equity_metrics.get('econ_disadv_mean', 0)
+                        econ_adv_mean = equity_metrics.get('econ_adv_mean', 0)
+                        st.metric(
+                            "Economic Gap",
+                            f"{gap:+.1f} hours",
+                            help=f"Formula: Gap = Not Disadvantaged Mean - Disadvantaged Mean\n\nEconomically disadvantaged students average {econ_disadv_mean:.1f} hrs vs {econ_adv_mean:.1f} hrs for others. Negative gap indicates disadvantaged students receive fewer hours."
+                        )
+                        if equity_metrics.get('econ_disadv_n', 0) < 30 or equity_metrics.get('econ_adv_n', 0) < 30:
+                            st.caption("⚠️ Small sample size")
+                
+                st.markdown("---")
+                
+                # High-need students reaching full dosage
+                if 'high_need_full_dosage_pct' in equity_metrics:
+                    st.markdown("### High-Need Students Reaching Full Dosage")
+                    pct = equity_metrics['high_need_full_dosage_pct']
+                    n = equity_metrics.get('high_need_n', 0)
+                    
+                    col1, col2 = st.columns([2, 1])
+                    with col1:
+                        st.metric(
+                            "High-Need Students at Full Dosage",
+                            f"{pct:.1f}%",
+                            delta=f"{int(pct * n / 100)} of {n} high-need students"
+                        )
+                    with col2:
+                        if n < 30:
+                            st.warning("⚠️ Small sample size")
+                
+                st.markdown("---")
+                
+                # Ethnicity analysis
+                if 'ethnicity' in equity_df.columns:
+                    st.markdown("### Dosage by Ethnicity")
+                    try:
+                        ethnicity_data = []
+                        for ethnicity in equity_df['ethnicity'].dropna().unique():
+                            eth_data = equity_df[equity_df['ethnicity'] == ethnicity]
+                            if len(eth_data) > 0:
+                                avg_hours = eth_data['total_hours'].mean()
+                                median_hours = eth_data['total_hours'].median()
+                                full_dosage_pct = (eth_data['total_hours'] >= st.session_state['full_dosage_threshold']).sum() / len(eth_data) * 100
+                                ethnicity_data.append({
+                                    'Ethnicity': ethnicity,
+                                    'Avg Hours': f"{avg_hours:.1f}",
+                                    'Median Hours': f"{median_hours:.1f}",
+                                    '% at Full Dosage': f"{full_dosage_pct:.1f}%",
+                                    'N': len(eth_data)
+                                })
+                        
+                        if ethnicity_data:
+                            ethnicity_df = pd.DataFrame(ethnicity_data)
+                            st.dataframe(ethnicity_df, use_container_width=True, hide_index=True)
+                            
+                            # Visualization
+                            fig = px.bar(
+                                equity_df,
+                                x='ethnicity',
+                                y='total_hours',
+                                title='Average Dosage by Ethnicity',
+                                labels={'total_hours': 'Average Tutoring Hours', 'ethnicity': 'Ethnicity'},
+                                color='ethnicity'
+                            )
+                            fig.add_hline(
+                                y=st.session_state['full_dosage_threshold'],
+                                line_dash="dash",
+                                line_color="orange",
+                                annotation_text="Target"
+                            )
+                            fig.update_layout(height=400, showlegend=False)
+                            st.plotly_chart(fig, use_container_width=True)
+                    except Exception:
+                        st.info("Ethnicity analysis unavailable.")
+                
+                st.markdown("---")
+                
+                # Visualization
+                st.markdown("### Equity Comparison Chart")
+                plot_equity_comparison(equity_df)
+    
+    # ========================================================================
+    # OUTCOMES TAB
+    # ========================================================================
+    with tab_outcomes:
+        if st.session_state['session_data'] is None or st.session_state['student_data'] is None:
+            st.warning("Please load data in the Data Overview tab first.")
+        else:
+            show_data_quality_warning()
+            st.header("Outcomes Analysis")
+            st.caption("Examining student achievement gains")
+            
+            # Prepare data
+            prepared_df = prepare_data(
+                st.session_state['session_data'],
+                st.session_state['student_data']
+            )
+            
+            # Filters
+            with st.expander("🔍 Filters", expanded=False):
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    outcome_school = st.selectbox(
+                        "School",
+                        ['All'] + sorted(prepared_df['school_name'].dropna().unique().tolist()) if 'school_name' in prepared_df.columns else ['All'],
+                        key='outcome_school'
+                    )
+                    outcome_grades = st.multiselect(
+                        "Grade Levels",
+                        sorted(prepared_df['current_grade_level'].dropna().unique().tolist()),
+                        default=sorted(prepared_df['current_grade_level'].dropna().unique().tolist()),
+                        key='outcome_grades'
+                    )
+                
+                with col2:
+                    outcome_ell = st.selectbox("ELL Status", ['All', 'ELL Only', 'Non-ELL Only'], key='outcome_ell')
+                    outcome_iep = st.selectbox("IEP Status", ['All', 'IEP Only', 'Non-IEP Only'], key='outcome_iep')
+            
+            # Apply filters
+            outcome_df = prepared_df.copy()
+            
+            if outcome_school != 'All':
+                outcome_df = outcome_df[outcome_df['school_name'] == outcome_school]
+            
+            outcome_df = outcome_df[outcome_df['current_grade_level'].isin(outcome_grades)]
+            
+            if outcome_ell == 'ELL Only':
+                outcome_df = outcome_df[outcome_df.get('ell', pd.Series([False] * len(outcome_df))) == True]
+            elif outcome_ell == 'Non-ELL Only':
+                outcome_df = outcome_df[outcome_df.get('ell', pd.Series([False] * len(outcome_df))) == False]
+            
+            if outcome_iep == 'IEP Only':
+                outcome_df = outcome_df[outcome_df.get('iep', pd.Series([False] * len(outcome_df))) == True]
+            elif outcome_iep == 'Non-IEP Only':
+                outcome_df = outcome_df[outcome_df.get('iep', pd.Series([False] * len(outcome_df))) == False]
+            
+            st.info(f"📊 Analyzing **{len(outcome_df):,} students**")
+            
+            if len(outcome_df) == 0:
+                st.warning("No students match the selected filters.")
+            else:
+                # Calculate outcome metrics
+                outcome_metrics = calculate_outcome_metrics(outcome_df)
+                
+                # Overall Outcomes Summary
+                st.markdown("### Overall Outcomes Summary")
+                overall_col1, overall_col2, overall_col3 = st.columns(3)
+                
+                with overall_col1:
+                    avg_va = (outcome_metrics.get('ela_va_mean', 0) + outcome_metrics.get('math_va_mean', 0)) / 2
+                    st.metric(
+                        "Average Value-Added",
+                        f"{avg_va:+.2f} points",
+                        help="Average value-added across ELA and Math"
+                    )
+                
+                with overall_col2:
+                    ela_es = outcome_metrics.get('ela_va_effect_size') or 0
+                    math_es = outcome_metrics.get('math_va_effect_size') or 0
+                    if ela_es > 0 or math_es > 0:
+                        avg_effect_size = (ela_es + math_es) / 2
+                        st.metric(
+                            "Average Effect Size",
+                            f"{avg_effect_size:+.3f} SD",
+                            help="Average standardized effect size across ELA and Math"
+                        )
+                    else:
+                        st.metric("Average Effect Size", "N/A")
+                
+                with overall_col3:
+                    ela_weeks = outcome_metrics.get('ela_va_weeks_learning') or 0
+                    math_weeks = outcome_metrics.get('math_va_weeks_learning') or 0
+                    if ela_weeks > 0 or math_weeks > 0:
+                        avg_weeks = (ela_weeks + math_weeks) / 2
+                        st.metric(
+                            "Estimated Additional Weeks",
+                            f"{avg_weeks:.1f} weeks",
+                            help="Average estimated additional weeks of learning"
+                        )
+                    else:
+                        st.metric("Estimated Additional Weeks", "N/A")
+                
+                st.markdown("---")
+                
+                # ELA Panel
+                st.markdown("### 📚 English Language Arts (ELA)")
+                
+                # Value-added metrics
+                st.markdown("#### Value-Added Analysis")
+                ela_va_col1, ela_va_col2, ela_va_col3 = st.columns(3)
+                
+                with ela_va_col1:
+                    va_mean = outcome_metrics.get('ela_va_mean', 0)
+                    st.metric(
+                        "Average Value-Added",
+                        f"{va_mean:+.2f} points",
+                        help="Formula: VA = (Current - Prior) - (Prior - Two Years Ago)\n\nAverage improvement beyond typical yearly change. Positive values indicate growth exceeding historical patterns."
+                    )
+                    if outcome_metrics.get('ela_va_significant', False):
+                        st.caption("✓ Statistically significant (p < 0.05)")
+                    elif outcome_metrics.get('ela_va_pvalue', 1) < 0.10:
+                        st.caption("~ Marginally significant (p < 0.10)")
+                
+                with ela_va_col2:
+                    va_effect_size = outcome_metrics.get('ela_va_effect_size')
+                    if va_effect_size is not None:
+                        st.metric(
+                            "Tutoring Effect (Standardized)",
+                            f"{va_effect_size:+.3f} SD",
+                            help="Formula: Effect Size = Mean Value-Added / Standard Deviation\n\nStandardized effect size (Cohen's d) showing the magnitude of improvement in standard deviations. Values > 0.2 are considered meaningful."
+                        )
+                    else:
+                        st.metric(
+                            "Tutoring Effect (Standardized)",
+                            "N/A"
+                        )
+                
+                with ela_va_col3:
+                    va_weeks = outcome_metrics.get('ela_va_weeks_learning')
+                    if va_weeks is not None:
+                        st.metric(
+                            "Estimated Additional Weeks of Learning",
+                            f"{va_weeks:.1f} weeks",
+                            help="Formula: Weeks = Effect Size × 4.3\n\nEstimated additional months/weeks of learning based on standardized effect size. Assumes ~0.1 SD per month of learning."
+                        )
+                    else:
+                        st.metric(
+                            "Estimated Additional Weeks of Learning",
+                            "N/A"
+                        )
+                
+                # Raw gain metrics
+                st.markdown("#### Raw Score Improvement")
+                ela_raw_col1, ela_raw_col2 = st.columns(2)
+                
+                with ela_raw_col1:
+                    raw_mean = outcome_metrics.get('ela_raw_mean', 0)
+                    st.metric(
+                        "Average Raw Gain",
+                        f"{raw_mean:+.2f} points",
+                        help="Formula: Raw Gain = Current Year Score - Two Years Ago Score\n\nAverage raw score improvement from two years ago to current year."
+                    )
+                
+                with ela_raw_col2:
+                    raw_positive = outcome_metrics.get('ela_raw_positive_pct', 0)
+                    st.metric(
+                        "% with Positive Gain",
+                        f"{raw_positive:.1f}%",
+                        help="Percentage of students who showed improvement from two years ago"
+                    )
+                
+                # Interpretation
+                if va_mean < 1:
+                    st.warning("⚠️ **Note:** Average value-added is less than 1 point. This suggests limited improvement beyond typical growth patterns.")
+                elif va_mean >= 1:
+                    st.success("✓ **Directionally positive:** Average value-added indicates improvement beyond typical growth.")
+                
+                # ELA distributions
+                plot_outcome_distributions(outcome_df, 'ELA')
+                
+                st.markdown("---")
+                
+                # Math Panel
+                st.markdown("### 🔢 Mathematics")
+                
+                # Value-added metrics
+                st.markdown("#### Value-Added Analysis")
+                math_va_col1, math_va_col2, math_va_col3 = st.columns(3)
+                
+                with math_va_col1:
+                    va_mean = outcome_metrics.get('math_va_mean', 0)
+                    st.metric(
+                        "Average Value-Added",
+                        f"{va_mean:+.2f} points",
+                        help="Formula: VA = (Current - Prior) - (Prior - Two Years Ago)\n\nAverage improvement beyond typical yearly change. Positive values indicate growth exceeding historical patterns."
+                    )
+                    if outcome_metrics.get('math_va_significant', False):
+                        st.caption("✓ Statistically significant (p < 0.05)")
+                    elif outcome_metrics.get('math_va_pvalue', 1) < 0.10:
+                        st.caption("~ Marginally significant (p < 0.10)")
+                
+                with math_va_col2:
+                    va_effect_size = outcome_metrics.get('math_va_effect_size')
+                    if va_effect_size is not None:
+                        st.metric(
+                            "Tutoring Effect (Standardized)",
+                            f"{va_effect_size:+.3f} SD",
+                            help="Formula: Effect Size = Mean Value-Added / Standard Deviation\n\nStandardized effect size (Cohen's d) showing the magnitude of improvement in standard deviations. Values > 0.2 are considered meaningful."
+                        )
+                    else:
+                        st.metric(
+                            "Tutoring Effect (Standardized)",
+                            "N/A"
+                        )
+                
+                with math_va_col3:
+                    va_weeks = outcome_metrics.get('math_va_weeks_learning')
+                    if va_weeks is not None:
+                        st.metric(
+                            "Estimated Additional Weeks of Learning",
+                            f"{va_weeks:.1f} weeks",
+                            help="Formula: Weeks = Effect Size × 4.3\n\nEstimated additional months/weeks of learning based on standardized effect size. Assumes ~0.1 SD per month of learning."
+                        )
+                    else:
+                        st.metric(
+                            "Estimated Additional Weeks of Learning",
+                            "N/A"
+                        )
+                
+                # Raw gain metrics
+                st.markdown("#### Raw Score Improvement")
+                math_raw_col1, math_raw_col2 = st.columns(2)
+                
+                with math_raw_col1:
+                    raw_mean = outcome_metrics.get('math_raw_mean', 0)
+                    st.metric(
+                        "Average Raw Gain",
+                        f"{raw_mean:+.2f} points",
+                        help="Formula: Raw Gain = Current Year Score - Two Years Ago Score\n\nAverage raw score improvement from two years ago to current year."
+                    )
+                
+                with math_raw_col2:
+                    raw_positive = outcome_metrics.get('math_raw_positive_pct', 0)
+                    st.metric(
+                        "% with Positive Gain",
+                        f"{raw_positive:.1f}%",
+                        help="Percentage of students who showed improvement from two years ago"
+                    )
+                
+                # Interpretation
+                if va_mean < 1:
+                    st.warning("⚠️ **Note:** Average value-added is less than 1 point. This suggests limited improvement beyond typical growth patterns.")
+                elif va_mean >= 1:
+                    st.success("✓ **Directionally positive:** Average value-added indicates improvement beyond typical growth.")
+                
+                # Math distributions
+                plot_outcome_distributions(outcome_df, 'Math')
+                
+                # Important note
+                st.markdown("---")
+                st.info("""
+                **Important:** These results are descriptive and do not establish causality. 
+                Value-added calculations compare current growth to historical growth patterns, 
+                but many factors beyond tutoring may influence outcomes.
+                """)
+    
+    # ========================================================================
+    # COST ANALYTICS TAB
+    # ========================================================================
+    with tab_cost:
+        if st.session_state['session_data'] is None or st.session_state['student_data'] is None:
+            st.warning("Please load data in the Data Overview tab first.")
+        else:
+            show_data_quality_warning()
+            st.header("Cost Analytics")
+            st.caption("Understanding program costs relative to outcomes")
+            
+            if st.session_state['total_cost'] == 0:
+                st.warning("⚠️ Total program cost is set to $0. Please set the cost in the sidebar to view cost-effectiveness metrics.")
+            
+            # Prepare data
+            prepared_df = prepare_data(
+                st.session_state['session_data'],
+                st.session_state['student_data']
+            )
+            
+            # Filters
+            with st.expander("🔍 Filters", expanded=False):
+                cost_school = st.selectbox(
+                    "School",
+                    ['All'] + sorted(prepared_df['school_name'].dropna().unique().tolist()) if 'school_name' in prepared_df.columns else ['All'],
+                    key='cost_school'
+                )
+                cost_grades = st.multiselect(
+                    "Grade Levels",
+                    sorted(prepared_df['current_grade_level'].dropna().unique().tolist()),
+                    default=sorted(prepared_df['current_grade_level'].dropna().unique().tolist()),
+                    key='cost_grades'
+                )
+            
+            # Apply filters
+            cost_df = prepared_df.copy()
+            
+            if cost_school != 'All':
+                cost_df = cost_df[cost_df['school_name'] == cost_school]
+            
+            cost_df = cost_df[cost_df['current_grade_level'].isin(cost_grades)]
+            
+            st.info(f"📊 Analyzing **{len(cost_df):,} students**")
+            
+            if len(cost_df) == 0:
+                st.warning("No students match the selected filters.")
+            else:
+                # Calculate cost metrics
+                cost_metrics = calculate_cost_metrics(
+                    cost_df,
+                    st.session_state['total_cost'],
+                    st.session_state['full_dosage_threshold']
+                )
+                
+                # Basic cost metrics
+                st.markdown("### Basic Cost Metrics")
+                cost_col1, cost_col2 = st.columns(2)
+                
+                with cost_col1:
+                    st.metric(
+                        "Cost per Student",
+                        f"${cost_metrics.get('cost_per_student', 0):,.2f}",
+                        help="Formula: Total Cost / Number of Students\n\nThis metric represents the average cost allocated for each student in the program."
+                    )
+                
+                with cost_col2:
+                    st.metric(
+                        "Cost per Tutoring Hour",
+                        f"${cost_metrics.get('cost_per_hour', 0):,.2f}",
+                        help="Formula: Total Cost / Total Tutoring Hours Delivered\n\nThis metric shows the cost per hour of tutoring delivered across all students."
+                    )
+                
+                st.markdown("---")
+                
+                # Cost per outcome
+                st.markdown("### Cost per Outcome")
+                st.caption("**What to look for:** Lower values indicate better cost-effectiveness. Compare to benchmarks if available.")
+                
+                outcome_col1, outcome_col2 = st.columns(2)
+                
+                with outcome_col1:
+                    cost_per_va = cost_metrics.get('cost_per_va_point')
+                    if cost_per_va is not None:
+                        st.metric(
+                            "Cost per Value-Added Point",
+                            f"${cost_per_va:,.2f}",
+                            help="Formula: Total Cost / Sum of All Value-Added Points\n\nValue-Added = (Current - Prior) - (Prior - Two Years Ago)\n\nThis metric shows the cost for each point of value-added improvement across all students."
+                        )
+                    else:
+                        st.metric(
+                            "Cost per Value-Added Point",
+                            "N/A",
+                            help="Cannot calculate: total value-added points is not positive"
+                        )
+                
+                with outcome_col2:
+                    cost_per_raw = cost_metrics.get('cost_per_raw_point')
+                    if cost_per_raw is not None:
+                        st.metric(
+                            "Cost per Raw Point Gained",
+                            f"${cost_per_raw:,.2f}",
+                            help="Formula: Total Cost / Sum of All Raw Gain Points\n\nRaw Gain = Current Year Score - Two Years Ago Score\n\nThis metric shows the cost for each point of raw score improvement across all students."
+                        )
+                    else:
+                        st.metric(
+                            "Cost per Raw Point Gained",
+                            "N/A",
+                            help="Cannot calculate: total raw gain points is not positive"
+                        )
+
+
+if __name__ == "__main__":
+    main()
+
