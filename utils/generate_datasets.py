@@ -568,21 +568,42 @@ def generate_student_data(config):
     # Define other categorical options
     boolean_values = ['TRUE', 'FALSE']
     performance_levels = ['Below Basic', 'Basic', 'Proficient', 'Advanced', 'Distinguished', 'Exceeds']
-    district_names = [
-        'Denver Public Schools', 'Aurora Public Schools', 'Jefferson County Schools',
-        'Cherry Creek School District', 'Douglas County School District'
+    
+    # District definitions (linked ID and name)
+    district_definitions = [
+        ('0100001', 'Denver Public Schools'),
+        ('0200001', 'Aurora Public Schools'),
+        ('0400001', 'Jefferson County Schools'),
+        ('0500001', 'Cherry Creek School District'),
+        ('0600001', 'Douglas County School District'),
     ]
-    school_names = [
+    
+    # School name pool
+    school_name_pool = [
         'Washington Elementary', 'Lincoln Middle School', 'Roosevelt High School',
         'Kennedy Academy', 'Jefferson STEM School', 'Madison Preparatory',
         'Franklin Learning Center', 'Adams Elementary', 'Monroe Middle School',
-        'Hamilton High School'
+        'Hamilton High School', 'Central High School', 'Westside Elementary',
+        'Eastview Academy', 'Northgate Middle School', 'Southpark Elementary'
     ]
-    leaids = ['0100001', '0200001', '0400001', '0500001', '0600001', 
-              '0800001', '0900001', '1000001', '1100001', '1200001']
     
-    # Pre-generate school IDs
-    school_ids = [''.join(random.choices(string.digits, k=6)) for _ in range(num_schools)]
+    # Create district lookup
+    district_lookup = {did: dname for did, dname in district_definitions}
+    
+    # Pre-generate schools with linked IDs, names, and districts
+    # Each school belongs to exactly one district
+    school_definitions = {}  # school_id -> {'name': ..., 'district_id': ...}
+    for i in range(num_schools):
+        school_id = ''.join(random.choices(string.digits, k=6))
+        school_name = school_name_pool[i % len(school_name_pool)]
+        district_id, district_name = random.choice(district_definitions)
+        school_definitions[school_id] = {
+            'name': school_name,
+            'district_id': district_id,
+            'district_name': district_name
+        }
+    
+    school_ids = list(school_definitions.keys())
     
     used_student_ids = set()
     students = []
@@ -604,25 +625,17 @@ def generate_student_data(config):
         for flag_name, base_rate in demo_rates.items():
             student_flags[flag_name] = 'TRUE' if random.random() < base_rate else 'FALSE'
         
-        # Calculate enrollment probability based on subgroup membership
-        enrollment_prob = calculate_enrollment_probability(
-            base_treatment_prop, student_flags, subgroup_effects
-        )
-        is_treated = random.random() < enrollment_prob
-        
-        # Generate baseline scores with ELA-Math correlation
+        # Generate baseline scores FIRST (needed for enrollment decision)
         baseline_mean = config["baseline_score_mean"]
         baseline_std = config["baseline_score_std"]
         score_min = config["score_min"]
         score_max = config["score_max"]
         
         # Generate correlated ELA and Math abilities
-        # Using bivariate normal with correlation
         shared_ability = np.random.normal(0, 1)
         ela_specific = np.random.normal(0, 1)
         math_specific = np.random.normal(0, 1)
         
-        # Combine: r * shared + sqrt(1-r^2) * specific
         ela_ability = baseline_mean + baseline_std * (
             np.sqrt(ela_math_corr) * shared_ability + 
             np.sqrt(1 - ela_math_corr) * ela_specific
@@ -636,6 +649,30 @@ def generate_student_data(config):
         ela_one_year = np.clip(ela_ability + np.random.normal(5, 10), score_min, score_max)
         math_two_years = np.clip(math_ability + np.random.normal(0, 10), score_min, score_max)
         math_one_year = np.clip(math_ability + np.random.normal(5, 10), score_min, score_max)
+        
+        # Calculate average prior year score for enrollment decision
+        avg_prior_score = (ela_one_year + math_one_year) / 2
+        
+        # Calculate enrollment probability based on subgroup membership
+        enrollment_prob = calculate_enrollment_probability(
+            base_treatment_prop, student_flags, subgroup_effects
+        )
+        
+        # Apply steep inverse relationship with test scores
+        # Lower scores = much higher probability of tutoring
+        # Normalize score to 0-1 range (0 = lowest, 1 = highest)
+        normalized_score = (avg_prior_score - score_min) / (score_max - score_min)
+        
+        # Steep inverse: use exponential decay from high scores
+        # score_modifier ranges from ~2.5 (for lowest scores) to ~0.1 (for highest scores)
+        # This creates strong targeting of low-performing students
+        score_modifier = np.exp(-3.0 * normalized_score) * 2.5
+        
+        # Apply score modifier to enrollment probability
+        enrollment_prob = enrollment_prob * score_modifier
+        enrollment_prob = min(enrollment_prob, 0.95)  # Cap at 95%
+        
+        is_treated = random.random() < enrollment_prob
         
         # Current year scores with treatment effect
         natural_growth_ela = np.random.normal(
@@ -713,13 +750,16 @@ def generate_student_data(config):
         # Select ethnicity based on weights
         ethnicity = weighted_choice(ethnicity_weights)
         
+        # Get school and district info from lookup
+        school_info = school_definitions[school_id]
+        
         # Build student record
         student = {
             "student_id": student_id,
-            "district_id": random.choice(leaids),
-            "district_name": random.choice(district_names),
+            "district_id": school_info['district_id'],
+            "district_name": school_info['district_name'],
             "school_id": school_id,
-            "school_name": random.choice(school_names),
+            "school_name": school_info['name'],
             "current_grade_level": grade_level,
             "gender": random.choice(boolean_values),
             "ethnicity": ethnicity,
@@ -948,6 +988,22 @@ def print_summary(students_df, sessions_df, treatment_info, config):
                     rate = 100 * len(flag_treated) / len(flag_students)
                     expected_mult = subgroup_effects.get(flag, {}).get('enrollment_multiplier', 1.0)
                     print(f"   {flag:25s}: {rate:5.1f}% tutored (multiplier: {expected_mult:.2f})")
+    
+    # Enrollment by performance level (score-based targeting)
+    print(f"\n[ENROLLMENT BY PRIOR PERFORMANCE] (score-based targeting)")
+    students_df['avg_prior_score'] = (students_df['ela_state_score_one_year_ago'] + 
+                                       students_df['math_state_score_one_year_ago']) / 2
+    score_min = config.get("score_min", 650)
+    score_max = config.get("score_max", 800)
+    bins = [0, 680, 710, 740, 770, 790, 1000]
+    labels = ['Below Basic', 'Basic', 'Proficient', 'Advanced', 'Distinguished', 'Exceeds']
+    students_df['perf_bin'] = pd.cut(students_df['avg_prior_score'], bins=bins, labels=labels)
+    for level in labels:
+        level_df = students_df[students_df['perf_bin'] == level]
+        if len(level_df) > 0:
+            level_treated = level_df[level_df['student_id'].isin(treated_ids)]
+            rate = 100 * len(level_treated) / len(level_df)
+            print(f"   {level:15s}: {rate:5.1f}% tutored (n={len(level_df)})")
     
     # Grade distribution
     print(f"\n[GRADE DISTRIBUTION]")

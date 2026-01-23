@@ -1782,15 +1782,18 @@ def main():
                             ethnicity_df = pd.DataFrame(ethnicity_data)
                             st.dataframe(ethnicity_df, use_container_width=True, hide_index=True)
                             
-                            # Visualization
+                            # Visualization - use aggregated data
+                            ethnicity_df['Avg Hours Numeric'] = pd.to_numeric(ethnicity_df['Avg Hours'], errors='coerce')
                             fig = px.bar(
-                                equity_df,
-                                x='ethnicity',
-                                y='total_hours',
+                                ethnicity_df,
+                                x='Ethnicity',
+                                y='Avg Hours Numeric',
                                 title='Average Dosage by Ethnicity',
-                                labels={'total_hours': 'Average Tutoring Hours', 'ethnicity': 'Ethnicity'},
-                                color='ethnicity'
+                                labels={'Avg Hours Numeric': 'Average Tutoring Hours', 'Ethnicity': 'Ethnicity'},
+                                color='Ethnicity',
+                                text='N'
                             )
+                            fig.update_traces(texttemplate='n=%{text}', textposition='outside')
                             fig.add_hline(
                                 y=st.session_state['full_dosage_threshold'],
                                 line_dash="dash",
@@ -1807,6 +1810,249 @@ def main():
                 # Visualization
                 st.markdown("### Equity Comparison Chart")
                 plot_equity_comparison(equity_df)
+                
+                st.markdown("---")
+                
+                # Tutoring Participation by Proficiency Level
+                st.markdown("### Tutoring Participation by Proficiency Level")
+                st.caption("**What to look for:** Higher participation rates for low-proficiency students indicate equitable targeting. Lower rates suggest high-proficiency students may be receiving more tutoring.")
+                
+                # Get session data to determine who received tutoring
+                try:
+                    session_df = st.session_state['session_data'].copy()
+                    session_df['student_id'] = session_df['student_id'].astype(str).str.strip()
+                    tutored_student_ids = set(session_df['student_id'].unique())
+                    
+                    # Add tutoring flag to equity_df
+                    equity_df['received_tutoring'] = equity_df['student_id'].astype(str).isin(tutored_student_ids)
+                    
+                    # Analysis by Performance Level (current year only) - styled like equity comparison
+                    perf_col = 'performance_level_current_year'
+                    if perf_col in equity_df.columns:
+                        try:
+                            st.markdown(f"#### By {perf_col.replace('_', ' ').title()}")
+                            
+                            proficiency_data = []
+                            for perf_level in equity_df[perf_col].dropna().unique():
+                                perf_data = equity_df[equity_df[perf_col] == perf_level]
+                                total = len(perf_data)
+                                tutored = perf_data['received_tutoring'].sum()
+                                untutored = total - tutored
+                                
+                                proficiency_data.append({
+                                    'Proficiency Level': perf_level,
+                                    'Tutored': tutored,
+                                    'Untutored': untutored
+                                })
+                            
+                            if proficiency_data:
+                                # Define proficiency order (least to most proficient)
+                                proficiency_order = [
+                                    'below basic', 'basic', 'approaching', 'proficient', 'advanced', 'exceeds',
+                                    'level 1', 'level 2', 'level 3', 'level 4', 'level 5',
+                                    'novice', 'developing', 'proficient', 'distinguished',
+                                    'far below basic', 'below basic', 'basic', 'proficient', 'advanced'
+                                ]
+                                
+                                # Sort proficiency data by order
+                                def get_proficiency_index(level):
+                                    level_lower = str(level).lower()
+                                    for i, order_level in enumerate(proficiency_order):
+                                        if order_level in level_lower:
+                                            return i
+                                    return 999  # Unknown levels go to end
+                                
+                                proficiency_data.sort(key=lambda x: get_proficiency_index(x['Proficiency Level']))
+                                
+                                # Get ordered list of proficiency levels
+                                ordered_levels = [item['Proficiency Level'] for item in proficiency_data]
+                                
+                                # Create chart similar to equity comparison
+                                chart_data = []
+                                for item in proficiency_data:
+                                    chart_data.append({
+                                        'Proficiency Level': item['Proficiency Level'],
+                                        'Student Count': item['Tutored'],
+                                        'Status': 'Tutored'
+                                    })
+                                    chart_data.append({
+                                        'Proficiency Level': item['Proficiency Level'],
+                                        'Student Count': item['Untutored'],
+                                        'Status': 'Untutored'
+                                    })
+                                
+                                chart_df = pd.DataFrame(chart_data)
+                                
+                                fig = px.bar(
+                                    chart_df,
+                                    x='Proficiency Level',
+                                    y='Student Count',
+                                    color='Status',
+                                    barmode='group',
+                                    labels={'Student Count': 'Number of Students', 'Proficiency Level': 'Proficiency Level'},
+                                    title=f'Number of Tutored vs Untutored Students by {perf_col.replace("_", " ").title()}',
+                                    color_discrete_map={
+                                        'Tutored': '#36A2EB',
+                                        'Untutored': '#FF6384'
+                                    },
+                                    category_orders={'Proficiency Level': ordered_levels}
+                                )
+                                fig.update_layout(height=400)
+                                st.plotly_chart(fig, use_container_width=True)
+                        except Exception as e:
+                            st.info(f"Proficiency analysis by {perf_col} unavailable.")
+                    
+                    # Test Score Analysis - Line chart showing averaged likelihood by score
+                    st.markdown("#### Likelihood of Receiving Tutoring by Test Score")
+                    
+                    ela_likelihood = []
+                    math_likelihood = []
+                    
+                    # ELA Score Analysis
+                    if 'ela_state_score_current_year' in equity_df.columns:
+                        try:
+                            ela_scores = pd.to_numeric(equity_df['ela_state_score_current_year'], errors='coerce')
+                            equity_df['ela_score'] = ela_scores
+                            
+                            # Create bins for smoothing
+                            score_range = ela_scores.dropna()
+                            if len(score_range) > 0:
+                                min_score = score_range.min()
+                                max_score = score_range.max()
+                                
+                                # Create bins (20 bins across the range)
+                                bins = np.linspace(min_score, max_score, 21)
+                                equity_df['ela_score_bin'] = pd.cut(ela_scores, bins=bins, include_lowest=True)
+                                
+                                # Calculate likelihood for each bin
+                                for bin_val in equity_df['ela_score_bin'].dropna().unique():
+                                    bin_data = equity_df[equity_df['ela_score_bin'] == bin_val]
+                                    total = len(bin_data)
+                                    if total >= 5:  # Only include bins with at least 5 students
+                                        tutored = bin_data['received_tutoring'].sum()
+                                        pct_tutored = (tutored / total * 100) if total > 0 else 0
+                                        bin_mid = bin_val.mid
+                                        
+                                        ela_likelihood.append({
+                                            'Score': bin_mid,
+                                            'Likelihood (%)': pct_tutored,
+                                            'N': total
+                                        })
+                        except Exception:
+                            pass
+                    
+                    # Math Score Analysis
+                    if 'math_state_score_current_year' in equity_df.columns:
+                        try:
+                            math_scores = pd.to_numeric(equity_df['math_state_score_current_year'], errors='coerce')
+                            equity_df['math_score'] = math_scores
+                            
+                            # Create bins for smoothing
+                            score_range = math_scores.dropna()
+                            if len(score_range) > 0:
+                                min_score = score_range.min()
+                                max_score = score_range.max()
+                                
+                                # Create bins (20 bins across the range)
+                                bins = np.linspace(min_score, max_score, 21)
+                                equity_df['math_score_bin'] = pd.cut(math_scores, bins=bins, include_lowest=True)
+                                
+                                # Calculate likelihood for each bin
+                                for bin_val in equity_df['math_score_bin'].dropna().unique():
+                                    bin_data = equity_df[equity_df['math_score_bin'] == bin_val]
+                                    total = len(bin_data)
+                                    if total >= 5:  # Only include bins with at least 5 students
+                                        tutored = bin_data['received_tutoring'].sum()
+                                        pct_tutored = (tutored / total * 100) if total > 0 else 0
+                                        bin_mid = bin_val.mid
+                                        
+                                        math_likelihood.append({
+                                            'Score': bin_mid,
+                                            'Likelihood (%)': pct_tutored,
+                                            'N': total
+                                        })
+                        except Exception:
+                            pass
+                    
+                    # Combine ELA and Math into averaged line
+                    if ela_likelihood or math_likelihood:
+                        # Create a combined score range
+                        all_scores = []
+                        if ela_likelihood:
+                            all_scores.extend([item['Score'] for item in ela_likelihood])
+                        if math_likelihood:
+                            all_scores.extend([item['Score'] for item in math_likelihood])
+                        
+                        if all_scores:
+                            # Create unified bins across the full score range
+                            min_score = min(all_scores)
+                            max_score = max(all_scores)
+                            unified_bins = np.linspace(min_score, max_score, 21)
+                            
+                            # Map each subject's data to unified bins
+                            combined_likelihood = {}
+                            
+                            for subject_data, subject_name in [(ela_likelihood, 'ELA'), (math_likelihood, 'Math')]:
+                                if subject_data:
+                                    for item in subject_data:
+                                        score = item['Score']
+                                        # Find the closest unified bin
+                                        bin_idx = np.digitize(score, unified_bins) - 1
+                                        bin_idx = max(0, min(bin_idx, len(unified_bins) - 2))
+                                        bin_center = (unified_bins[bin_idx] + unified_bins[bin_idx + 1]) / 2
+                                        
+                                        if bin_center not in combined_likelihood:
+                                            combined_likelihood[bin_center] = {'likelihoods': [], 'counts': []}
+                                        
+                                        combined_likelihood[bin_center]['likelihoods'].append(item['Likelihood (%)'])
+                                        combined_likelihood[bin_center]['counts'].append(item['N'])
+                            
+                            # Calculate averaged likelihood for each bin
+                            averaged_data = []
+                            for score in sorted(combined_likelihood.keys()):
+                                data = combined_likelihood[score]
+                                if len(data['likelihoods']) > 0:
+                                    avg_likelihood = np.mean(data['likelihoods'])
+                                    total_n = sum(data['counts'])
+                                    averaged_data.append({
+                                        'Score': score,
+                                        'Likelihood (%)': avg_likelihood,
+                                        'N': total_n
+                                    })
+                            
+                            if averaged_data:
+                                avg_df = pd.DataFrame(averaged_data)
+                                avg_df = avg_df.sort_values('Score')
+                                
+                                fig = go.Figure()
+                                fig.add_trace(go.Scatter(
+                                    x=avg_df['Score'],
+                                    y=avg_df['Likelihood (%)'],
+                                    mode='lines+markers',
+                                    name='Average (ELA & Math)',
+                                    line=dict(width=2),
+                                    marker=dict(size=4),
+                                    text=avg_df['N'],
+                                    hovertemplate='<b>Average (ELA & Math)</b><br>Score: %{x}<br>Likelihood: %{y:.1f}%<br>N: %{text}<extra></extra>'
+                                ))
+                                
+                                fig.update_layout(
+                                    title='Likelihood of Receiving Tutoring by Most Recent Test Score (Averaged)',
+                                    xaxis_title='Test Score',
+                                    yaxis_title='Likelihood of Receiving Tutoring (%)',
+                                    height=400,
+                                    hovermode='x unified'
+                                )
+                                st.plotly_chart(fig, use_container_width=True)
+                            else:
+                                st.info("Test score analysis requires current year test score columns.")
+                        else:
+                            st.info("Test score analysis requires current year test score columns.")
+                    else:
+                        st.info("Test score analysis requires current year test score columns.")
+                        
+                except Exception as e:
+                    st.info(f"Proficiency analysis unavailable: {str(e)}")
     
     # ========================================================================
     # OUTCOMES TAB
