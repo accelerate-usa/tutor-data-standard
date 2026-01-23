@@ -1,4 +1,3 @@
-#%%
 """
 Combined Dataset Generator for Tutoring Research Data
 
@@ -9,8 +8,10 @@ This script generates two CSV files:
 Key features:
 - Students who received tutoring show configurable SD more learning than control
 - Dosage follows a right-skewed Gaussian (log-normal) distribution
+- Dose-response relationship (more hours = larger effect)
 - Subgroup-specific enrollment rates and treatment effects
 - Implementation fidelity variability by school or provider
+- Realistic demographic base rates and ethnicity distributions
 - Fully configurable parameters
 """
 
@@ -25,32 +26,122 @@ from datetime import datetime, timedelta
 # =============================================================================
 
 CONFIG = {
-    # Student counts
-    "num_students": 10000,              # Total number of students
+    # =========================================================================
+    # REPRODUCIBILITY
+    # =========================================================================
+    "random_seed": 42,                  # Set to None for random, or integer for reproducibility
+    
+    # =========================================================================
+    # STUDENT COUNTS
+    # =========================================================================
+    "num_students": 1000,               # Total number of students
     "treatment_proportion": 0.5,        # Base proportion receiving tutoring
     
-    # Dosage parameters (for tutored students)
-    "dosage_median_hours": 55,          # Median total hours of tutoring
-    "dosage_skew": 0.4,                 # Log-normal sigma (higher = more right skew)
-    "dosage_min_hours": 5,              # Minimum hours (floor)
-    "dosage_max_hours": 150,            # Maximum hours (ceiling)
+    # =========================================================================
+    # DOSAGE PARAMETERS (for tutored students)
+    # =========================================================================
+    "dosage_mean_hours": 45,            # Mean total hours of tutoring
+    "dosage_skew": 0.3,                 # Skew intensity (higher = more skewed)
+    "dosage_skew_direction": "left",    # "left" (tail low, mass high) or "right" (tail high, mass low)
+    "dosage_min_hours": 1,             # Minimum hours (floor)
+    "dosage_max_hours": 75,             # Maximum hours (ceiling)
     
-    # Session parameters
+    # =========================================================================
+    # DOSE-RESPONSE RELATIONSHIP
+    # =========================================================================
+    # Controls whether more tutoring hours leads to larger treatment effects
+    # Without this, all treated students get the same effect regardless of dosage
+    "dose_response": {
+        "enabled": True,                # If False, effect is constant regardless of dosage
+        "type": "logarithmic",          # "linear", "logarithmic", or "threshold"
+        "reference_hours": 55,          # Hours at which student gets full treatment_effect_sd
+        # For "threshold" type only:
+        "threshold_hours": 30,          # Minimum hours to see any effect
+    },
+    
+    # =========================================================================
+    # SESSION PARAMETERS
+    # =========================================================================
     "session_duration_mean": 60,        # Mean session duration in minutes
     "session_duration_std": 15,         # Std dev of session duration
+    "session_date_range_days": 180,     # Sessions occur in past N days
     
-    # Treatment effect
+    # Session ratio weights (probability of each ratio)
+    "session_ratio_weights": {
+        "1:1": 0.35,                    # 35% one-on-one
+        "1:2": 0.25,                    # 25% pairs
+        "1:3": 0.20,                    # 20% small group
+        "1:4": 0.12,                    # 12% medium group
+        "1:5": 0.08,                    # 8% larger group
+    },
+    
+    # Tutor assignment consistency (probability of same tutor across sessions)
+    "tutor_consistency": 0.8,           # 80% chance of same tutor
+    
+    # =========================================================================
+    # TREATMENT EFFECT
+    # =========================================================================
     "treatment_effect_sd": 0.25,        # Base treatment effect in standard deviations
     
-    # Baseline score parameters
+    # =========================================================================
+    # BASELINE SCORE PARAMETERS
+    # =========================================================================
     "baseline_score_mean": 725,         # Mean baseline test score
     "baseline_score_std": 30,           # Std dev of baseline test score
     "score_min": 650,                   # Minimum possible score
     "score_max": 800,                   # Maximum possible score
     
-    # Natural growth (for control group)
+    # ELA-Math correlation (how correlated student performance is across subjects)
+    # Real data typically shows r ≈ 0.7-0.8
+    "ela_math_correlation": 0.75,
+    
+    # =========================================================================
+    # NATURAL GROWTH (for control group)
+    # =========================================================================
     "natural_growth_mean": 10,          # Mean score growth without tutoring
     "natural_growth_std": 15,           # Std dev of natural growth
+    
+    # =========================================================================
+    # DEMOGRAPHIC BASE RATES
+    # =========================================================================
+    # Realistic base rates for each demographic flag (probability of TRUE)
+    "demographic_base_rates": {
+        "ell": 0.15,                    # 15% English Language Learners
+        "iep": 0.14,                    # 14% have IEP
+        "gifted_flag": 0.08,            # 8% gifted
+        "homeless_flag": 0.03,          # 3% homeless
+        "disability": 0.12,             # 12% disability
+        "economic_disadvantage": 0.45,  # 45% economically disadvantaged
+    },
+    
+    # =========================================================================
+    # ETHNICITY DISTRIBUTION
+    # =========================================================================
+    # Weights for ethnicity distribution (will be normalized to sum to 1)
+    "ethnicity_weights": {
+        "White": 0.45,
+        "Hispanic or Latino": 0.27,
+        "Black or African American": 0.14,
+        "Asian": 0.06,
+        "Two or More Races": 0.04,
+        "American Indian or Alaska Native": 0.01,
+        "Native Hawaiian or Pacific Islander": 0.01,
+        "Other": 0.01,
+        "Unknown": 0.005,
+        "Declined to State": 0.005,
+    },
+    
+    # =========================================================================
+    # GRADE DISTRIBUTION
+    # =========================================================================
+    # Weights for grade distribution (will be normalized)
+    # Format: { (min_grade, max_grade): weight }
+    "grade_distribution": {
+        (-1, 2): 0.25,                  # Pre-K to 2nd: 25%
+        (3, 5): 0.30,                   # 3rd-5th: 30%
+        (6, 8): 0.25,                   # 6th-8th: 25%
+        (9, 12): 0.20,                  # 9th-12th: 20%
+    },
     
     # =========================================================================
     # SUBGROUP-SPECIFIC EFFECTS
@@ -58,32 +149,39 @@ CONFIG = {
     # Each subgroup can have:
     #   - enrollment_multiplier: multiplier on base treatment_proportion (1.2 = 20% more likely)
     #   - effect_multiplier: multiplier on treatment effect (1.1 = 10% larger effect)
+    #   - dosage_multiplier: multiplier on dosage hours (1.15 = 15% more hours)
     # 
     # Set to 1.0 for no effect, or omit the subgroup entirely
     "subgroup_effects": {
         "ell": {
             "enrollment_multiplier": 1.2,   # ELL students 20% more likely to be tutored
             "effect_multiplier": 1.1,       # ELL students benefit 10% more
+            "dosage_multiplier": 1.15,      # ELL students get 15% more hours
         },
         "iep": {
             "enrollment_multiplier": 1.1,   # IEP students 10% more likely
             "effect_multiplier": 1.0,       # Same effect as general population
+            "dosage_multiplier": 1.2,       # IEP students get 20% more hours
         },
         "economic_disadvantage": {
             "enrollment_multiplier": 1.15,  # 15% more likely
             "effect_multiplier": 1.0,
+            "dosage_multiplier": 1.1,       # Econ disadv students get 10% more hours
         },
         "gifted_flag": {
             "enrollment_multiplier": 0.8,   # 20% less likely
             "effect_multiplier": 0.9,       # 10% smaller effect
+            "dosage_multiplier": 1.0,       # Same hours
         },
         "homeless_flag": {
             "enrollment_multiplier": 1.3,   # 30% more likely
             "effect_multiplier": 0.95,      # Slightly smaller effect
+            "dosage_multiplier": 1.0,       # Same hours
         },
         "disability": {
             "enrollment_multiplier": 1.1,
             "effect_multiplier": 1.0,
+            "dosage_multiplier": 1.0,       # Same hours
         },
     },
     
@@ -129,25 +227,36 @@ CONFIG = {
     # =========================================================================
     # SESSION TIME CONSTRAINTS
     # =========================================================================
-    # Sessions occur during school hours
+    # Sessions occur during school hours (weekends are automatically excluded)
     "session_hours": {
         "start_hour": 9,    # 9 AM
         "end_hour": 15,     # 3 PM (15:00)
     },
     
-    # Missing data
+    # =========================================================================
+    # MISSING DATA
+    # =========================================================================
     "add_missing_data": False,          # Whether to add missing values
     "missing_percentage_range": (5, 15),# Range of missing data percentage per column
     
-    # Output files
-    "student_data_file": "example_student_data.csv",
-    "session_data_file": "example_session_data.csv",
+    # =========================================================================
+    # OUTPUT FILES
+    # =========================================================================
+    "student_data_file": "example_student_dataset.csv",
+    "session_data_file": "example_session_dataset.csv",
 }
 
 
 # =============================================================================
 # HELPER FUNCTIONS
 # =============================================================================
+
+def set_random_seed(seed):
+    """Set random seed for reproducibility."""
+    if seed is not None:
+        random.seed(seed)
+        np.random.seed(seed)
+
 
 def generate_student_id(used_ids):
     """Generate a unique 10-digit student ID."""
@@ -163,64 +272,172 @@ def generate_tutor_id():
     return 'T' + ''.join(random.choices(string.digits, k=5))
 
 
-def generate_skewed_dosage(n, median_hours, sigma, min_hours, max_hours):
+def generate_skewed_dosage(n, mean_hours, sigma, min_hours, max_hours, skew_direction="left"):
     """
-    Generate right-skewed dosage distribution using log-normal.
+    Generate skewed dosage distribution.
+    
+    Parameters:
+    - n: number of samples
+    - mean_hours: target mean hours (approximate)
+    - sigma: controls variance (0.1 to 1.0, higher = more variance/spread)
+    - min_hours: minimum hours (floor)
+    - max_hours: maximum hours (ceiling)
+    - skew_direction: "left" (tail low, mass high) or "right" (tail high, mass low)
+    
+    Returns: numpy array of dosage values
     """
-    mu = np.log(median_hours)
-    dosage = np.random.lognormal(mean=mu, sigma=sigma, size=n)
+    range_hours = max_hours - min_hours
+    
+    if skew_direction == "left":
+        # Left-skewed using beta distribution (alpha > beta)
+        # For beta: mean = alpha / (alpha + beta)
+        # We want: mean_hours = min_hours + beta_mean * range_hours
+        
+        target_beta_mean = (mean_hours - min_hours) / range_hours
+        target_beta_mean = np.clip(target_beta_mean, 0.2, 0.9)
+        
+        # For left skew, we need alpha > beta, which requires target_beta_mean > 0.5
+        # If target_beta_mean < 0.5, we can't have true left skew - just use low variance
+        
+        # Concentration parameter (higher = less variance)
+        # sigma controls variance inversely
+        concentration = 3.0 + (1 - sigma) * 20  # sigma 0.3 -> concentration ~17
+        
+        # Calculate alpha and beta to achieve target mean exactly
+        # mean = alpha / (alpha + beta) = m
+        # So alpha = m * concentration, beta = (1-m) * concentration
+        alpha_param = target_beta_mean * concentration
+        beta_param = (1 - target_beta_mean) * concentration
+        
+        # Ensure valid parameters (alpha > 1, beta > 0.5 for smoothness)
+        alpha_param = max(1.5, alpha_param)
+        beta_param = max(0.8, beta_param)
+        
+        # Generate beta samples
+        samples = np.random.beta(alpha_param, beta_param, size=n)
+        
+        # Scale to [min_hours, max_hours]
+        dosage = min_hours + samples * range_hours
+        
+    else:  # right-skewed
+        # Use log-normal for right skew
+        # For log-normal: mean = exp(mu + sigma^2/2), so mu = ln(mean) - sigma^2/2
+        mu = np.log(mean_hours) - (sigma ** 2) / 2
+        dosage = np.random.lognormal(mean=mu, sigma=sigma, size=n)
+    
     dosage = np.clip(dosage, min_hours, max_hours)
     return dosage
 
 
-def random_date(start, end):
-    """Generate a random date between start and end."""
-    delta = end - start
-    random_days = random.randint(0, delta.days)
-    return start + timedelta(days=random_days)
+def calculate_dose_response_multiplier(dosage, config):
+    """
+    Calculate treatment effect multiplier based on dosage.
+    
+    Returns a multiplier (0 to ~1.5) that scales the treatment effect
+    based on how many hours of tutoring the student received.
+    """
+    dose_config = config.get("dose_response", {})
+    
+    if not dose_config.get("enabled", False):
+        return 1.0  # No dose-response, constant effect
+    
+    response_type = dose_config.get("type", "linear")
+    reference_hours = dose_config.get("reference_hours", 55)
+    
+    if response_type == "linear":
+        # Linear: effect proportional to hours
+        # At reference_hours, multiplier = 1.0
+        return dosage / reference_hours
+    
+    elif response_type == "logarithmic":
+        # Logarithmic: diminishing returns
+        # At reference_hours, multiplier = 1.0
+        if dosage <= 0:
+            return 0.0
+        return np.log1p(dosage) / np.log1p(reference_hours)
+    
+    elif response_type == "threshold":
+        # Threshold: no effect below threshold, then linear
+        threshold = dose_config.get("threshold_hours", 20)
+        if dosage < threshold:
+            return 0.0
+        effective_hours = dosage - threshold
+        effective_reference = reference_hours - threshold
+        return effective_hours / effective_reference if effective_reference > 0 else 1.0
+    
+    else:
+        return 1.0
 
 
-def random_datetime_school_hours(start_date, end_date, start_hour=9, end_hour=15):
+def random_weekday_datetime(start_date, end_date, start_hour=9, end_hour=15):
     """
     Generate a random datetime between start_date and end_date,
-    constrained to school hours (e.g., 9am-3pm).
+    constrained to school hours (e.g., 9am-3pm) on WEEKDAYS ONLY.
     
     Returns: datetime object
     """
-    # Pick a random date
-    delta = end_date - start_date
-    random_days = random.randint(0, delta.days)
-    session_date = start_date + timedelta(days=random_days)
+    max_attempts = 100
+    for _ in range(max_attempts):
+        # Pick a random date
+        delta = end_date - start_date
+        random_days = random.randint(0, max(0, delta.days))
+        session_date = start_date + timedelta(days=random_days)
+        
+        # Check if weekday (Monday=0, Sunday=6)
+        if session_date.weekday() < 5:  # Monday-Friday
+            # Pick a random time within school hours
+            hour = random.randint(start_hour, end_hour - 1)
+            minute = random.randint(0, 59)
+            return datetime.combine(session_date, datetime.min.time().replace(hour=hour, minute=minute))
     
-    # Pick a random time within school hours
-    # start_hour to end_hour, random minute
-    hour = random.randint(start_hour, end_hour - 1)  # -1 because session needs time to complete
+    # Fallback: just return a Monday
+    session_date = start_date
+    while session_date.weekday() >= 5:
+        session_date += timedelta(days=1)
+    hour = random.randint(start_hour, end_hour - 1)
     minute = random.randint(0, 59)
-    
     return datetime.combine(session_date, datetime.min.time().replace(hour=hour, minute=minute))
 
 
 def get_subject_for_grade(grade, subject_by_grade):
     """
     Select a session subject based on the student's grade level.
-    
-    Parameters:
-    - grade: student's current grade level (-1 to 12)
-    - subject_by_grade: dict mapping (min_grade, max_grade) to {"math": prob, "ela": prob}
-    
-    Returns: "math" or "ela"
     """
-    # Find the matching grade range
     for (min_grade, max_grade), probs in subject_by_grade.items():
         if min_grade <= grade <= max_grade:
-            # Weighted random choice
             if random.random() < probs.get("math", 0.5):
                 return "math"
             else:
                 return "ela"
-    
-    # Default to 50/50 if no range matches
     return random.choice(["math", "ela"])
+
+
+def weighted_choice(weights_dict):
+    """
+    Make a weighted random choice from a dictionary of {item: weight}.
+    """
+    items = list(weights_dict.keys())
+    weights = list(weights_dict.values())
+    total = sum(weights)
+    normalized = [w / total for w in weights]
+    return np.random.choice(items, p=normalized)
+
+
+def generate_grade_from_distribution(grade_distribution):
+    """
+    Generate a grade level based on the grade distribution config.
+    """
+    # First, select a grade range based on weights
+    ranges = list(grade_distribution.keys())
+    weights = list(grade_distribution.values())
+    total = sum(weights)
+    normalized = [w / total for w in weights]
+    
+    idx = np.random.choice(len(ranges), p=normalized)
+    min_grade, max_grade = ranges[idx]
+    
+    # Then pick a random grade within that range
+    return random.randint(min_grade, max_grade)
 
 
 def add_missing_data(df, missing_percentage_range=(10, 50), exclude_cols=None):
@@ -269,18 +486,30 @@ def calculate_effect_multiplier(student_flags, subgroup_effects):
     return multiplier
 
 
+def calculate_dosage_multiplier(student_flags, subgroup_effects):
+    """
+    Calculate dosage hours multiplier based on student characteristics.
+    
+    Uses multiplicative adjustment for students with multiple flags.
+    E.g., ELL + IEP student gets 1.15 * 1.2 = 1.38x hours
+    """
+    multiplier = 1.0
+    
+    for flag_name, effects in subgroup_effects.items():
+        if student_flags.get(flag_name) == 'TRUE':
+            multiplier *= effects.get('dosage_multiplier', 1.0)
+    
+    return multiplier
+
+
 def generate_school_fidelity_map(school_ids, between_variability):
     """
     Generate a fidelity score for each school.
-    
-    Returns dict mapping school_id to fidelity_score (0.5 to 1.5 range).
-    Higher variability = larger differences between schools.
     """
     fidelity_map = {}
     for school_id in school_ids:
-        # Fidelity centered at 1.0, with variability determining spread
         fidelity = np.random.normal(1.0, between_variability * 0.3)
-        fidelity = np.clip(fidelity, 0.5, 1.5)  # Keep within reasonable bounds
+        fidelity = np.clip(fidelity, 0.5, 1.5)
         fidelity_map[school_id] = fidelity
     return fidelity_map
 
@@ -305,13 +534,13 @@ def generate_student_data(config):
     """
     Generate student-level data with demographics and test scores.
     
-    Treatment assignment is based on:
-    - Base treatment proportion
-    - Subgroup-specific enrollment multipliers
-    
-    Treatment effect is modified by:
-    - Base treatment effect
-    - Subgroup-specific effect multipliers
+    Features:
+    - Realistic demographic base rates
+    - Configurable grade distribution
+    - Configurable ethnicity distribution
+    - ELA-Math correlation
+    - Dose-response relationship for treatment effects
+    - Subgroup-specific enrollment and effects
     
     Returns: tuple of (students_list, treatment_info, school_assignments)
     """
@@ -322,14 +551,22 @@ def generate_student_data(config):
     subgroup_effects = config.get("subgroup_effects", {})
     num_schools = config.get("num_schools", 10)
     
-    # Define categorical options
+    # Get demographic base rates
+    demo_rates = config.get("demographic_base_rates", {})
+    
+    # Get ethnicity weights
+    ethnicity_weights = config.get("ethnicity_weights", {})
+    if not ethnicity_weights:
+        ethnicity_weights = {"Unknown": 1.0}
+    
+    # Get grade distribution
+    grade_distribution = config.get("grade_distribution", {(-1, 12): 1.0})
+    
+    # Get ELA-Math correlation
+    ela_math_corr = config.get("ela_math_correlation", 0.75)
+    
+    # Define other categorical options
     boolean_values = ['TRUE', 'FALSE']
-    ethnicities = [
-        'White', 'Black or African American', 'Hispanic or Latino',
-        'Asian', 'American Indian or Alaska Native', 
-        'Native Hawaiian or Pacific Islander', 'Two or More Races',
-        'Other', 'Unknown', 'Declined to State'
-    ]
     performance_levels = ['Below Basic', 'Basic', 'Proficient', 'Advanced', 'Distinguished', 'Exceeds']
     district_names = [
         'Denver Public Schools', 'Aurora Public Schools', 'Jefferson County Schools',
@@ -350,7 +587,7 @@ def generate_student_data(config):
     used_student_ids = set()
     students = []
     treatment_info = {}
-    school_assignments = {}  # student_id -> school_id
+    school_assignments = {}
     
     for i in range(num_students):
         student_id = generate_student_id(used_student_ids)
@@ -359,15 +596,13 @@ def generate_student_data(config):
         school_id = random.choice(school_ids)
         school_assignments[student_id] = school_id
         
-        # Generate demographic flags FIRST (needed for enrollment decision)
-        student_flags = {
-            "ell": random.choice(boolean_values),
-            "iep": random.choice(boolean_values),
-            "gifted_flag": random.choice(boolean_values),
-            "homeless_flag": random.choice(boolean_values),
-            "disability": random.choice(boolean_values),
-            "economic_disadvantage": random.choice(boolean_values),
-        }
+        # Generate grade from distribution
+        grade_level = generate_grade_from_distribution(grade_distribution)
+        
+        # Generate demographic flags based on base rates
+        student_flags = {}
+        for flag_name, base_rate in demo_rates.items():
+            student_flags[flag_name] = 'TRUE' if random.random() < base_rate else 'FALSE'
         
         # Calculate enrollment probability based on subgroup membership
         enrollment_prob = calculate_enrollment_probability(
@@ -375,72 +610,90 @@ def generate_student_data(config):
         )
         is_treated = random.random() < enrollment_prob
         
-        # Generate baseline scores
+        # Generate baseline scores with ELA-Math correlation
         baseline_mean = config["baseline_score_mean"]
         baseline_std = config["baseline_score_std"]
         score_min = config["score_min"]
         score_max = config["score_max"]
         
-        student_ability = np.random.normal(baseline_mean, baseline_std)
+        # Generate correlated ELA and Math abilities
+        # Using bivariate normal with correlation
+        shared_ability = np.random.normal(0, 1)
+        ela_specific = np.random.normal(0, 1)
+        math_specific = np.random.normal(0, 1)
         
-        ela_two_years = np.clip(
-            student_ability + np.random.normal(0, 10), score_min, score_max)
-        ela_one_year = np.clip(
-            student_ability + np.random.normal(5, 10), score_min, score_max)
-        math_two_years = np.clip(
-            student_ability + np.random.normal(0, 10), score_min, score_max)
-        math_one_year = np.clip(
-            student_ability + np.random.normal(5, 10), score_min, score_max)
+        # Combine: r * shared + sqrt(1-r^2) * specific
+        ela_ability = baseline_mean + baseline_std * (
+            np.sqrt(ela_math_corr) * shared_ability + 
+            np.sqrt(1 - ela_math_corr) * ela_specific
+        )
+        math_ability = baseline_mean + baseline_std * (
+            np.sqrt(ela_math_corr) * shared_ability + 
+            np.sqrt(1 - ela_math_corr) * math_specific
+        )
+        
+        ela_two_years = np.clip(ela_ability + np.random.normal(0, 10), score_min, score_max)
+        ela_one_year = np.clip(ela_ability + np.random.normal(5, 10), score_min, score_max)
+        math_two_years = np.clip(math_ability + np.random.normal(0, 10), score_min, score_max)
+        math_one_year = np.clip(math_ability + np.random.normal(5, 10), score_min, score_max)
         
         # Current year scores with treatment effect
-        natural_growth = np.random.normal(
+        natural_growth_ela = np.random.normal(
+            config["natural_growth_mean"], config["natural_growth_std"])
+        natural_growth_math = np.random.normal(
             config["natural_growth_mean"], config["natural_growth_std"])
         
         if is_treated:
-            # Calculate subgroup-specific effect multiplier
-            effect_multiplier = calculate_effect_multiplier(student_flags, subgroup_effects)
-            adjusted_effect_sd = base_effect_sd * effect_multiplier
+            # Generate base dosage
+            base_dosage = generate_skewed_dosage(
+                1,
+                config["dosage_mean_hours"],
+                config["dosage_skew"],
+                config["dosage_min_hours"],
+                config["dosage_max_hours"],
+                config.get("dosage_skew_direction", "left")
+            )[0]
             
+            # Apply subgroup-specific dosage multiplier (ELL, IEP, etc. get more hours)
+            dosage_mult = calculate_dosage_multiplier(student_flags, subgroup_effects)
+            dosage = base_dosage * dosage_mult
+            dosage = min(dosage, config["dosage_max_hours"])  # Cap at max
+            
+            # Calculate subgroup-specific effect multiplier
+            subgroup_multiplier = calculate_effect_multiplier(student_flags, subgroup_effects)
+            
+            # Calculate dose-response multiplier
+            dose_multiplier = calculate_dose_response_multiplier(dosage, config)
+            
+            # Combined effect
+            adjusted_effect_sd = base_effect_sd * subgroup_multiplier * dose_multiplier
             growth_std = config["natural_growth_std"]
             treatment_boost = adjusted_effect_sd * growth_std
             
-            # Generate dosage (will be refined in session generation)
-            dosage = generate_skewed_dosage(
-                1,
-                config["dosage_median_hours"],
-                config["dosage_skew"],
-                config["dosage_min_hours"],
-                config["dosage_max_hours"]
-            )[0]
-            
             ela_current = np.clip(
-                ela_one_year + natural_growth + treatment_boost, score_min, score_max)
+                ela_one_year + natural_growth_ela + treatment_boost, score_min, score_max)
             math_current = np.clip(
-                math_one_year + natural_growth + treatment_boost, score_min, score_max)
-            
-            # Generate grade level here so we can include in treatment_info
-            grade_level = random.randint(-1, 12)
+                math_one_year + natural_growth_math + treatment_boost, score_min, score_max)
             
             treatment_info[student_id] = {
                 'is_treated': True, 
                 'dosage': dosage,
-                'effect_multiplier': effect_multiplier,
+                'subgroup_multiplier': subgroup_multiplier,
+                'dose_multiplier': dose_multiplier,
                 'flags': student_flags,
                 'grade': grade_level
             }
         else:
             ela_current = np.clip(
-                ela_one_year + natural_growth, score_min, score_max)
+                ela_one_year + natural_growth_ela, score_min, score_max)
             math_current = np.clip(
-                math_one_year + natural_growth, score_min, score_max)
-            
-            # Generate grade level here so we can include in treatment_info
-            grade_level = random.randint(-1, 12)
+                math_one_year + natural_growth_math, score_min, score_max)
             
             treatment_info[student_id] = {
                 'is_treated': False, 
                 'dosage': 0,
-                'effect_multiplier': 0,
+                'subgroup_multiplier': 0,
+                'dose_multiplier': 0,
                 'flags': student_flags,
                 'grade': grade_level
             }
@@ -457,6 +710,9 @@ def generate_student_data(config):
         perf_prior = score_to_level((ela_one_year + math_one_year) / 2)
         perf_current = score_to_level((ela_current + math_current) / 2)
         
+        # Select ethnicity based on weights
+        ethnicity = weighted_choice(ethnicity_weights)
+        
         # Build student record
         student = {
             "student_id": student_id,
@@ -466,13 +722,13 @@ def generate_student_data(config):
             "school_name": random.choice(school_names),
             "current_grade_level": grade_level,
             "gender": random.choice(boolean_values),
-            "ethnicity": random.choice(ethnicities),
-            "ell": student_flags["ell"],
-            "iep": student_flags["iep"],
-            "gifted_flag": student_flags["gifted_flag"],
-            "homeless_flag": student_flags["homeless_flag"],
-            "disability": student_flags["disability"],
-            "economic_disadvantage": student_flags["economic_disadvantage"],
+            "ethnicity": ethnicity,
+            "ell": student_flags.get("ell", "FALSE"),
+            "iep": student_flags.get("iep", "FALSE"),
+            "gifted_flag": student_flags.get("gifted_flag", "FALSE"),
+            "homeless_flag": student_flags.get("homeless_flag", "FALSE"),
+            "disability": student_flags.get("disability", "FALSE"),
+            "economic_disadvantage": student_flags.get("economic_disadvantage", "FALSE"),
             "ela_state_score_two_years_ago": int(ela_two_years),
             "ela_state_score_one_year_ago": int(ela_one_year),
             "ela_state_score_current_year": int(ela_current),
@@ -494,7 +750,8 @@ def generate_session_data(treatment_info, school_assignments, config):
     Features:
     - Implementation fidelity affects session consistency and dosage completion
     - Subject distribution varies by grade level
-    - Session times constrained to school hours
+    - Session times constrained to school hours on weekdays only
+    - Configurable session ratios and tutor consistency
     """
     
     session_duration_mean = config["session_duration_mean"]
@@ -511,16 +768,21 @@ def generate_session_data(treatment_info, school_assignments, config):
     start_hour = session_hours.get("start_hour", 9)
     end_hour = session_hours.get("end_hour", 15)
     
-    ratios = ['1:1', '1:2', '1:3', '2:1', '1:4', '1:5']
+    # Session ratio weights
+    ratio_weights = config.get("session_ratio_weights", {"1:1": 1.0})
     
-    # Date range for sessions (past 180 days, excluding weekends for realism)
-    start_date = datetime.now().date() - timedelta(days=180)
+    # Tutor consistency
+    tutor_consistency = config.get("tutor_consistency", 0.8)
+    
+    # Date range for sessions
+    date_range_days = config.get("session_date_range_days", 180)
+    start_date = datetime.now().date() - timedelta(days=date_range_days)
     end_date = datetime.now().date()
     
     sessions_data = []
     
     # Generate tutor pool
-    num_tutors = config.get("num_providers", 5) * 10  # 10 tutors per provider
+    num_tutors = config.get("num_providers", 5) * 10
     tutor_pool = [generate_tutor_id() for _ in range(num_tutors)]
     
     # Generate fidelity maps
@@ -537,26 +799,23 @@ def generate_session_data(treatment_info, school_assignments, config):
             continue
         
         total_hours = info['dosage']
-        student_grade = info.get('grade', 5)  # Default to 5th grade
+        student_grade = info.get('grade', 5)
         school_id = school_assignments.get(student_id)
         
         # Get fidelity score for this student's context
         if vary_by == "school" and school_id:
             fidelity = fidelity_map.get(school_id, 1.0)
         elif vary_by == "provider":
-            # Will apply per-tutor fidelity below
             fidelity = 1.0
         else:
             fidelity = 1.0
         
-        # Fidelity affects dosage completion (high fidelity = hit target hours)
-        # and session consistency (high fidelity = less duration variance)
-        dosage_completion_rate = 0.7 + (fidelity - 0.5) * 0.6  # Range: 0.4 to 1.3
+        # Fidelity affects dosage completion and session consistency
+        dosage_completion_rate = 0.7 + (fidelity - 0.5) * 0.6
         dosage_completion_rate = np.clip(dosage_completion_rate, 0.5, 1.2)
         actual_hours = total_hours * dosage_completion_rate
         
-        # Session duration variance scales inversely with fidelity
-        duration_std_multiplier = 2.0 - fidelity  # High fidelity = lower multiplier
+        duration_std_multiplier = 2.0 - fidelity
         adjusted_duration_std = session_duration_std * duration_std_multiplier
         
         # Calculate number of sessions
@@ -572,8 +831,11 @@ def generate_session_data(treatment_info, school_assignments, config):
             if remaining_hours <= 0:
                 break
             
-            # Select tutor (80% primary, 20% other)
-            tutor_id = primary_tutor if random.random() < 0.8 else random.choice(tutor_pool)
+            # Select tutor based on consistency setting
+            if random.random() < tutor_consistency:
+                tutor_id = primary_tutor
+            else:
+                tutor_id = random.choice(tutor_pool)
             
             # Apply tutor-level fidelity if vary_by == "provider"
             if vary_by == "provider":
@@ -587,20 +849,23 @@ def generate_session_data(treatment_info, school_assignments, config):
             duration = min(duration, int(remaining_hours * 60))
             remaining_hours -= duration / 60
             
-            # Generate session datetime (constrained to school hours)
-            session_datetime = random_datetime_school_hours(
+            # Generate session datetime (weekdays only, school hours)
+            session_datetime = random_weekday_datetime(
                 start_date, end_date, start_hour, end_hour
             )
             
             # Select subject based on grade
             subject = get_subject_for_grade(student_grade, subject_by_grade)
             
+            # Select ratio based on weights
+            session_ratio = weighted_choice(ratio_weights)
+            
             sessions_data.append({
                 'student_id': student_id,
                 'session_topic': subject,
                 'session_date': session_datetime.strftime('%Y-%m-%d %H:%M:%S'),
                 'session_duration': duration,
-                'session_ratio': random.choice(ratios),
+                'session_ratio': session_ratio,
                 'tutor_id': tutor_id
             })
     
@@ -644,6 +909,11 @@ def print_summary(students_df, sessions_df, treatment_info, config):
     print("GENERATED DATA SUMMARY")
     print("="*70)
     
+    # Random seed
+    seed = config.get("random_seed")
+    print(f"\n[REPRODUCIBILITY]")
+    print(f"   Random seed: {seed if seed is not None else 'None (random)'}")
+    
     # Get treated/control
     treated_ids = [sid for sid, info in treatment_info.items() if info['is_treated']]
     control_ids = [sid for sid, info in treatment_info.items() if not info['is_treated']]
@@ -655,6 +925,16 @@ def print_summary(students_df, sessions_df, treatment_info, config):
     print(f"   Total students:    {len(students_df):,}")
     print(f"   Treated (tutored): {len(treated):,} ({100*len(treated)/len(students_df):.1f}%)")
     print(f"   Control:           {len(control):,} ({100*len(control)/len(students_df):.1f}%)")
+    
+    # Demographic base rates
+    demo_rates = config.get("demographic_base_rates", {})
+    if demo_rates:
+        print(f"\n[DEMOGRAPHIC BASE RATES]")
+        for flag in ['ell', 'iep', 'economic_disadvantage', 'gifted_flag', 'homeless_flag', 'disability']:
+            if flag in students_df.columns:
+                actual_rate = 100 * (students_df[flag] == 'TRUE').mean()
+                expected_rate = 100 * demo_rates.get(flag, 0.5)
+                print(f"   {flag:25s}: {actual_rate:5.1f}% (target: {expected_rate:.1f}%)")
     
     # Subgroup enrollment rates
     subgroup_effects = config.get("subgroup_effects", {})
@@ -669,6 +949,17 @@ def print_summary(students_df, sessions_df, treatment_info, config):
                     expected_mult = subgroup_effects.get(flag, {}).get('enrollment_multiplier', 1.0)
                     print(f"   {flag:25s}: {rate:5.1f}% tutored (multiplier: {expected_mult:.2f})")
     
+    # Grade distribution
+    print(f"\n[GRADE DISTRIBUTION]")
+    grade_dist = config.get("grade_distribution", {})
+    for (min_g, max_g), target_weight in grade_dist.items():
+        actual = students_df[(students_df['current_grade_level'] >= min_g) & 
+                            (students_df['current_grade_level'] <= max_g)]
+        actual_pct = 100 * len(actual) / len(students_df)
+        target_pct = 100 * target_weight / sum(grade_dist.values())
+        grade_label = f"Grades {min_g}-{max_g}" if min_g >= 0 else f"Pre-K-{max_g}"
+        print(f"   {grade_label:15s}: {actual_pct:5.1f}% (target: {target_pct:.1f}%)")
+    
     # Dosage summary
     dosages = [info['dosage'] for info in treatment_info.values() if info['is_treated']]
     dosage_series = pd.Series(dosages)
@@ -679,6 +970,29 @@ def print_summary(students_df, sessions_df, treatment_info, config):
     print(f"   Std dev:       {dosage_series.std():.1f}")
     print(f"   Min:           {dosage_series.min():.1f}")
     print(f"   Max:           {dosage_series.max():.1f}")
+    
+    # Dosage by subgroup
+    print(f"\n[DOSAGE BY SUBGROUP]")
+    for flag in ['ell', 'iep', 'economic_disadvantage']:
+        flag_dosages = [info['dosage'] for sid, info in treatment_info.items() 
+                       if info['is_treated'] and info['flags'].get(flag) == 'TRUE']
+        non_flag_dosages = [info['dosage'] for sid, info in treatment_info.items() 
+                          if info['is_treated'] and info['flags'].get(flag) != 'TRUE']
+        if flag_dosages and non_flag_dosages:
+            flag_mean = np.mean(flag_dosages)
+            non_flag_mean = np.mean(non_flag_dosages)
+            mult = subgroup_effects.get(flag, {}).get('dosage_multiplier', 1.0)
+            print(f"   {flag:25s}: {flag_mean:5.1f} hrs (others: {non_flag_mean:.1f}, target mult: {mult:.2f})")
+    
+    # Dose-response info
+    dose_config = config.get("dose_response", {})
+    if dose_config.get("enabled", False):
+        print(f"\n[DOSE-RESPONSE]")
+        print(f"   Enabled:         Yes")
+        print(f"   Type:            {dose_config.get('type', 'linear')}")
+        print(f"   Reference hours: {dose_config.get('reference_hours', 55)}")
+        dose_mults = [info['dose_multiplier'] for info in treatment_info.values() if info['is_treated']]
+        print(f"   Dose multiplier range: {min(dose_mults):.2f} - {max(dose_mults):.2f}")
     
     # Learning outcomes
     print(f"\n[LEARNING OUTCOMES] (ELA score change from prior year)")
@@ -693,30 +1007,33 @@ def print_summary(students_df, sessions_df, treatment_info, config):
     print(f"   Effect size (Cohen's d): {effect_size:.3f}")
     print(f"   Target effect size:      {config['treatment_effect_sd']:.3f}")
     
-    # Subgroup effect sizes
-    if subgroup_effects:
-        print(f"\n[SUBGROUP EFFECT SIZES] (ELA growth, treated vs control)")
-        for flag in ['ell', 'iep', 'economic_disadvantage']:
-            if flag in students_df.columns:
-                flag_treated = treated[treated[flag] == 'TRUE']
-                flag_control = control[control[flag] == 'TRUE']
-                if len(flag_treated) > 50 and len(flag_control) > 50:
-                    t_growth = flag_treated['ela_state_score_current_year'] - flag_treated['ela_state_score_one_year_ago']
-                    c_growth = flag_control['ela_state_score_current_year'] - flag_control['ela_state_score_one_year_ago']
-                    p_std = np.sqrt((t_growth.std()**2 + c_growth.std()**2) / 2)
-                    if p_std > 0:
-                        es = (t_growth.mean() - c_growth.mean()) / p_std
-                        expected_mult = subgroup_effects.get(flag, {}).get('effect_multiplier', 1.0)
-                        print(f"   {flag:25s}: d = {es:.3f} (effect mult: {expected_mult:.2f})")
+    # ELA-Math correlation
+    print(f"\n[ELA-MATH CORRELATION]")
+    ela_scores = students_df['ela_state_score_one_year_ago']
+    math_scores = students_df['math_state_score_one_year_ago']
+    actual_corr = ela_scores.corr(math_scores)
+    target_corr = config.get("ela_math_correlation", 0.75)
+    print(f"   Actual:  {actual_corr:.3f}")
+    print(f"   Target:  {target_corr:.3f}")
     
-    # Session/fidelity summary
+    # Session summary
     print(f"\n[SESSIONS]")
     print(f"   Total sessions: {len(sessions_df):,}")
-    print(f"   Avg per student: {len(sessions_df)/len(treated):.1f}")
+    if len(treated) > 0:
+        print(f"   Avg per student: {len(sessions_df)/len(treated):.1f}")
+    
+    # Session ratio distribution
+    print(f"\n[SESSION RATIOS]")
+    ratio_counts = sessions_df['session_ratio'].value_counts(normalize=True) * 100
+    ratio_weights = config.get("session_ratio_weights", {})
+    total_weight = sum(ratio_weights.values())
+    for ratio in sorted(ratio_counts.index):
+        actual = ratio_counts[ratio]
+        target = 100 * ratio_weights.get(ratio, 0) / total_weight if total_weight > 0 else 0
+        print(f"   {ratio:6s}: {actual:5.1f}% (target: {target:.1f}%)")
     
     # Subject distribution by grade
     print(f"\n[SUBJECT DISTRIBUTION BY GRADE]")
-    # Merge session data with student grades
     student_grades = {sid: info['grade'] for sid, info in treatment_info.items()}
     sessions_with_grade = sessions_df.copy()
     sessions_with_grade['grade'] = sessions_with_grade['student_id'].map(student_grades)
@@ -737,11 +1054,14 @@ def print_summary(students_df, sessions_df, treatment_info, config):
     try:
         session_times = pd.to_datetime(sessions_df['session_date'])
         hours = session_times.dt.hour
+        weekdays = session_times.dt.dayofweek
         print(f"   Hour range: {hours.min()}:00 - {hours.max()}:59")
         print(f"   Most common hour: {hours.mode().iloc[0]}:00")
+        print(f"   Weekend sessions: {(weekdays >= 5).sum()} (should be 0)")
     except:
         print("   (datetime parsing not available)")
     
+    # Fidelity summary
     fidelity_config = config.get("implementation_fidelity", {})
     vary_by = fidelity_config.get("vary_by", "none")
     between_var = fidelity_config.get("between_variability", 0.0)
@@ -763,6 +1083,9 @@ def print_summary(students_df, sessions_df, treatment_info, config):
 if __name__ == "__main__":
     print("Tutoring Data Generator")
     print("-"*40)
+    
+    # Set random seed for reproducibility
+    set_random_seed(CONFIG.get("random_seed"))
     
     print("\nGenerating student data...")
     students, treatment_info, school_assignments = generate_student_data(CONFIG)
@@ -786,5 +1109,3 @@ if __name__ == "__main__":
     )
     
     print_summary(students_df, sessions_df, treatment_info, CONFIG)
-
-# %%
