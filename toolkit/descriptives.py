@@ -343,7 +343,53 @@ def _validate_student_data(df: pd.DataFrame, errors: Dict[str, List[str]]) -> Di
     return errors
 
 
-def display_validation_errors(errors: Dict[str, List[str]], data_type: str) -> bool:
+def extract_erroneous_rows(errors: Dict[str, List[str]], df: pd.DataFrame, data_type: str) -> pd.DataFrame:
+    """
+    Extract rows with errors from the dataframe based on error messages.
+    Returns a dataframe with erroneous rows plus an error description column.
+    """
+    import re
+    
+    # Parse error messages to extract row numbers
+    problematic_rows = {}  # {row_index: [error_descriptions]}
+    
+    # Check all error categories
+    for error_category in ['critical', 'warnings', 'info']:
+        for error_msg in errors.get(error_category, []):
+            # Look for "Row X:" pattern
+            match = re.search(r'Row (\d+):\s*(.+)', error_msg)
+            if match:
+                row_num = int(match.group(1))
+                error_desc = match.group(2).strip()
+                # Convert row number to DataFrame index (row_num - 2 because header is row 1)
+                df_idx = row_num - 2
+                
+                if 0 <= df_idx < len(df):
+                    if df_idx not in problematic_rows:
+                        problematic_rows[df_idx] = []
+                    problematic_rows[df_idx].append(error_desc)
+    
+    if not problematic_rows:
+        return pd.DataFrame()
+    
+    # Extract problematic rows
+    error_indices = sorted(problematic_rows.keys())
+    error_df = df.iloc[error_indices].copy()
+    
+    # Add error description column
+    error_df['Error_Description'] = ['; '.join(problematic_rows[idx]) for idx in error_indices]
+    
+    # Add original row number column (for reference)
+    error_df['Original_Row_Number'] = [idx + 2 for idx in error_indices]
+    
+    # Reorder columns to put error info first
+    cols = ['Original_Row_Number', 'Error_Description'] + [c for c in error_df.columns if c not in ['Original_Row_Number', 'Error_Description']]
+    error_df = error_df[[c for c in cols if c in error_df.columns]]
+    
+    return error_df
+
+
+def display_validation_errors(errors: Dict[str, List[str]], data_type: str, df: pd.DataFrame = None) -> bool:
     """
     Display validation errors in a user-friendly way.
     Returns True if there are any issues (errors or warnings), False otherwise.
@@ -380,6 +426,20 @@ def display_validation_errors(errors: Dict[str, List[str]], data_type: str) -> b
         for info in errors['info']:
             st.markdown(info)
         st.markdown("---")
+    
+    # Add download button for erroneous rows if dataframe is provided and there are row-level errors
+    if df is not None:
+        error_df = extract_erroneous_rows(errors, df, data_type)
+        if len(error_df) > 0:
+            # Convert to CSV
+            csv = error_df.to_csv(index=False)
+            st.download_button(
+                label=f"📥 Download Erroneous {data_type} Rows ({len(error_df)} rows)",
+                data=csv,
+                file_name=f"{data_type.lower()}_data_errors.csv",
+                mime="text/csv",
+                key=f"download_{data_type.lower()}_errors"
+            )
     
     return has_critical or has_warnings
 
@@ -1078,6 +1138,10 @@ def main():
                     st.session_state['session_data'] = None
                     st.session_state['student_data'] = None
                     st.session_state['last_processed_files'] = None  # Reset file tracking
+                    st.session_state['session_validation_errors'] = {}
+                    st.session_state['student_validation_errors'] = {}
+                    st.session_state['session_validation_warnings'] = False
+                    st.session_state['student_validation_warnings'] = False
                     st.success("Data cleared. Please upload new files.")
                     st.rerun()
             
@@ -1101,6 +1165,12 @@ def main():
                         session_errors = validate_data_comprehensive(session_df, 'session')
                         student_errors = validate_data_comprehensive(student_df, 'student')
                         
+                        # Store validation errors in session state for persistent display
+                        st.session_state['session_validation_errors'] = session_errors
+                        st.session_state['student_validation_errors'] = student_errors
+                        st.session_state['session_validation_warnings'] = len(session_errors.get('warnings', [])) > 0 or len(session_errors.get('critical', [])) > 0
+                        st.session_state['student_validation_warnings'] = len(student_errors.get('warnings', [])) > 0 or len(student_errors.get('critical', [])) > 0
+                        
                         # Display validation results (but don't block)
                         session_has_issues = display_validation_errors(session_errors, 'Session')
                         student_has_issues = display_validation_errors(student_errors, 'Student')
@@ -1108,8 +1178,6 @@ def main():
                         # Always load data, even with errors
                         st.session_state['session_data'] = session_df
                         st.session_state['student_data'] = student_df
-                        st.session_state['session_validation_warnings'] = len(session_errors.get('warnings', [])) > 0 or len(session_errors.get('critical', [])) > 0
-                        st.session_state['student_validation_warnings'] = len(student_errors.get('warnings', [])) > 0 or len(student_errors.get('critical', [])) > 0
                         
                         # Mark these files as processed
                         st.session_state['last_processed_files'] = current_file_ids
@@ -1137,13 +1205,17 @@ def main():
                     session_errors = validate_data_comprehensive(session_df, 'session')
                     student_errors = validate_data_comprehensive(student_df, 'student')
                     
+                    # Store validation errors in session state for persistent display
+                    st.session_state['session_validation_errors'] = session_errors
+                    st.session_state['student_validation_errors'] = student_errors
+                    st.session_state['session_validation_warnings'] = len(session_errors.get('warnings', [])) > 0 or len(session_errors.get('critical', [])) > 0
+                    st.session_state['student_validation_warnings'] = len(student_errors.get('warnings', [])) > 0 or len(student_errors.get('critical', [])) > 0
+                    
                     display_validation_errors(session_errors, 'Session')
                     display_validation_errors(student_errors, 'Student')
                     
                     st.session_state['session_data'] = session_df
                     st.session_state['student_data'] = student_df
-                    st.session_state['session_validation_warnings'] = len(session_errors.get('warnings', [])) > 0 or len(session_errors.get('critical', [])) > 0
-                    st.session_state['student_validation_warnings'] = len(student_errors.get('warnings', [])) > 0 or len(student_errors.get('critical', [])) > 0
                     
                     st.success("✅ **Example data loaded successfully!**")
                     st.rerun()
@@ -1309,6 +1381,23 @@ def main():
                 st.warning("Student statistics unavailable")
             
             st.markdown("---")
+            
+            # Display validation errors if they exist
+            session_errors = st.session_state.get('session_validation_errors', {})
+            student_errors = st.session_state.get('student_validation_errors', {})
+            
+            has_session_issues = len(session_errors.get('critical', [])) > 0 or len(session_errors.get('warnings', [])) > 0
+            has_student_issues = len(student_errors.get('critical', [])) > 0 or len(student_errors.get('warnings', [])) > 0
+            
+            if has_session_issues or has_student_issues:
+                st.markdown("### 🔍 Data Validation Results")
+                if has_session_issues:
+                    session_df = st.session_state.get('session_data')
+                    display_validation_errors(session_errors, 'Session', session_df)
+                if has_student_issues:
+                    student_df = st.session_state.get('student_data')
+                    display_validation_errors(student_errors, 'Student', student_df)
+                st.markdown("---")
             
             # Data preview
             with st.expander("📊 Data Preview", expanded=False):
