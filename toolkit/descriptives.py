@@ -661,7 +661,7 @@ def calculate_equity_metrics(df: pd.DataFrame) -> Dict:
             metrics['econ_disadv_n'] = len(econ_hours)
             metrics['econ_adv_n'] = len(non_econ_hours)
     
-    # High-need students reaching full dosage
+    # High-need students vs total students reaching target dosage
     target_dosage = st.session_state.get('full_dosage_threshold', 60.0)
     high_need_mask = (
         (df.get('ell', pd.Series([False] * len(df))) == True) |
@@ -674,6 +674,10 @@ def calculate_equity_metrics(df: pd.DataFrame) -> Dict:
             (high_need_students['total_hours'] >= target_dosage).sum() / len(high_need_students) * 100
         )
         metrics['high_need_n'] = len(high_need_students)
+    # Total students at target dosage
+    total_at_target = (df['total_hours'] >= target_dosage).sum()
+    metrics['total_full_dosage_pct'] = total_at_target / len(df) * 100 if len(df) > 0 else 0
+    metrics['total_n'] = len(df)
     
     return metrics
 
@@ -1829,22 +1833,30 @@ def main():
                 
                 st.markdown("---")
                 
-                # High-need students reaching full dosage
+                # High-need vs total students reaching target dosage
                 if 'high_need_full_dosage_pct' in equity_metrics:
-                    st.markdown("### High-Need Students Reaching Full Dosage")
-                    pct = equity_metrics['high_need_full_dosage_pct']
-                    n = equity_metrics.get('high_need_n', 0)
+                    st.markdown("### Students Reaching Target Dosage")
+                    high_need_pct = equity_metrics['high_need_full_dosage_pct']
+                    high_need_n = equity_metrics.get('high_need_n', 0)
+                    total_pct = equity_metrics.get('total_full_dosage_pct', 0)
+                    total_n = equity_metrics.get('total_n', 0)
                     
-                    col1, col2 = st.columns([2, 1])
+                    col1, col2 = st.columns(2)
                     with col1:
                         st.metric(
-                            "High-Need Students at Full Dosage",
-                            f"{pct:.1f}%",
-                            delta=f"{int(pct * n / 100)} of {n} high-need students"
+                            "High-need students at target dosage",
+                            f"{high_need_pct:.1f}%",
+                            delta=f"{int(high_need_pct * high_need_n / 100)} of {high_need_n} students",
+                            help="A student is counted as high-need if they are flagged in your data as any of: English Language Learner (ELL), having an Individualized Education Program (IEP), or economically disadvantaged."
                         )
+                        if high_need_n < 30:
+                            st.caption("⚠️ Small sample size")
                     with col2:
-                        if n < 30:
-                            st.warning("⚠️ Small sample size")
+                        st.metric(
+                            "Total students at target dosage",
+                            f"{total_pct:.1f}%",
+                            delta=f"{int(total_pct * total_n / 100)} of {total_n} students"
+                        )
                 
                 st.markdown("---")
                 
@@ -2152,7 +2164,7 @@ def main():
         else:
             show_data_quality_warning()
             st.header("Outcomes Analysis")
-            st.caption("Examining student achievement gains")
+            st.caption("These results are descriptive and do not establish causality. Many factors beyond tutoring influence outcomes.")
             
             # Prepare data
             prepared_df = prepare_data(
@@ -2401,13 +2413,6 @@ def main():
                 # Math distributions
                 plot_outcome_distributions(outcome_df, 'Math')
                 
-                # Important note
-                st.markdown("---")
-                st.info("""
-                **Important:** These results are descriptive and do not establish causality. 
-                Value-added calculations compare current growth to historical growth patterns, 
-                but many factors beyond tutoring may influence outcomes.
-                """)
     
     # ========================================================================
     # COST ANALYTICS TAB
@@ -2518,6 +2523,9 @@ def main():
                             "N/A",
                             help="Cannot calculate: total raw gain points is not positive"
                         )
+                
+                st.markdown("---")
+                st.markdown("These are basic metrics only. For a complete cost analysis, please use [Accelerate's Cost Tool](https://accelerate.us/cost-tool/).")
 
     # Footer caveat
     st.markdown("---")
