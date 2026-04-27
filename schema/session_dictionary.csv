@@ -1,0 +1,7 @@
+section,column_name,description,data_type,required,example_values,range_of_values,aliases,used_in
+Core Session Data,student_id,Unique identifier for the student. Must match the student file exactly after trimming whitespace.,identifier,yes,"0016740395, S67890",Any non-empty string.,,"overview, dosage, equity, outcomes, cost"
+Core Session Data,session_topic,Tutoring subject. Intake normalizes common aliases such as 'reading' to 'ela' and 'mathematics' to 'math'.,categorical,yes,"math, ela, reading",Currently supported analysis expects math or ela after normalization.,,"overview, dosage"
+Core Session Data,session_date,Date or datetime for the tutoring session.,datetime,yes,"2024-06-15, 2024-06-15 10:30:00",Any parseable date or datetime.,session_datetime,"overview, dosage"
+Core Session Data,session_duration,Duration of the session in minutes.,numeric,yes,"45, 60",Non-negative numeric values.,,"overview, dosage, equity, outcomes, cost"
+Core Session Data,session_ratio,Student-to-tutor ratio.,string,recommended,"1:1, 1:3",Free text or ratio notation.,,
+Core Session Data,tutor_id,Unique identifier for the tutor.,identifier,yes,"T54321, 98765",Any non-empty string.,,overview

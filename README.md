@@ -145,9 +145,15 @@ The working groups are open enrollment meetings that work broadly to accomplish 
 ## Quick Start
 
 To make sure that your data are aligned with the open data standard is as easy as 1, 2, 3.
-1. Construct a .csv, .xlsx, or .json file that matches [this](https://drive.google.com/file/d/1caxLu4q-57VWNqNMSwyy9ApbG2ccn2GM/view?usp=drive_link) template.
+1. Construct a `.csv`, `.xlsx`, `.xls`, or `.json` file that matches the canonical schema in [schema/data_dictionary.md](schema/data_dictionary.md). Header-only starter files are available at [schema/student_template_header.csv](schema/student_template_header.csv) and [schema/session_template_header.csv](schema/session_template_header.csv).
 1. Validate that your data match the standard.
 1. Upload your output statistics here and be included on the [data standard interoperability map](https://jasongodfrey.info/datas-map.html)! (optional)
+
+### Advanced, Optional
+
+Most users should ignore the local mapping profile feature. The Streamlit app is designed so a new user can upload the session file and student file directly in the `Upload & Schema` tab and keep moving.
+
+For recurring exports with non-canonical column headers, the app also supports an optional local mapping profile JSON. It lives behind a collapsed advanced control in the upload screen, can be downloaded locally after a successful normalization pass, and can be re-uploaded later to reapply saved column mappings. The app does not store this file; it is only used in your current session unless you download it yourself.
 
 ---
 

@@ -17,9 +17,23 @@ Key features:
 
 import random
 import string
-import pandas as pd
-import numpy as np
+import sys
 from datetime import datetime, timedelta
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+UTILS_DIR = Path(__file__).resolve().parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from schema_registry import get_canonical_columns, get_outcome_measure_fields
+
+
+ELA_MEASURE_1, ELA_MEASURE_2, ELA_MEASURE_3 = get_outcome_measure_fields("ela")
+MATH_MEASURE_1, MATH_MEASURE_2, MATH_MEASURE_3 = get_outcome_measure_fields("math")
 
 # =============================================================================
 # CONFIGURABLE PARAMETERS - Adjust these to customize the generated data
@@ -34,8 +48,9 @@ CONFIG = {
     # =========================================================================
     # STUDENT COUNTS
     # =========================================================================
-    "num_students": 1000,               # Total number of students
-    "treatment_proportion": 0.5,        # Base proportion receiving tutoring
+    "num_students": 2500,               # Total number of students in the roster
+    "target_tutored_students": 1000,    # Exact number of students who receive tutoring
+    "treatment_proportion": 0.4,        # Base tutoring propensity before exact selection
     
     # =========================================================================
     # DOSAGE PARAMETERS (for tutored students)
@@ -114,6 +129,16 @@ CONFIG = {
         "economic_disadvantage": 0.45,  # 45% economically disadvantaged
     },
     
+    # =========================================================================
+    # GENDER DISTRIBUTION
+    # =========================================================================
+    "gender_weights": {
+        "Female": 0.48,
+        "Male": 0.48,
+        "Nonbinary": 0.02,
+        "Unknown": 0.02,
+    },
+
     # =========================================================================
     # ETHNICITY DISTRIBUTION
     # =========================================================================
@@ -242,8 +267,8 @@ CONFIG = {
     # =========================================================================
     # OUTPUT FILES
     # =========================================================================
-    "student_data_file": "example_student_dataset.csv",
-    "session_data_file": "example_session_dataset.csv",
+    "student_data_file": UTILS_DIR / "example_student_dataset.csv",
+    "session_data_file": UTILS_DIR / "example_session_dataset.csv",
 }
 
 
@@ -526,6 +551,47 @@ def generate_provider_fidelity_map(tutor_ids, between_variability):
     return fidelity_map
 
 
+def select_treated_student_ids(student_blueprints, target_tutored_students=None):
+    """
+    Select treated students.
+
+    When ``target_tutored_students`` is provided, select exactly that many
+    students without replacement using each student's enrollment probability as
+    a weight. Otherwise, fall back to independent Bernoulli assignment.
+    """
+    if not student_blueprints:
+        return set()
+
+    if target_tutored_students is None:
+        return {
+            blueprint['student_id']
+            for blueprint in student_blueprints
+            if random.random() < blueprint['enrollment_prob']
+        }
+
+    target = max(0, min(int(target_tutored_students), len(student_blueprints)))
+    if target == 0:
+        return set()
+
+    weights = np.array(
+        [max(float(blueprint.get('enrollment_prob', 0.0)), 0.0) for blueprint in student_blueprints],
+        dtype=float,
+    )
+    if not np.isfinite(weights).all() or weights.sum() <= 0:
+        weights = np.ones(len(student_blueprints), dtype=float)
+    else:
+        weights = np.clip(weights, 1e-9, None)
+
+    probabilities = weights / weights.sum()
+    selected_indices = np.random.choice(
+        len(student_blueprints),
+        size=target,
+        replace=False,
+        p=probabilities,
+    )
+    return {student_blueprints[index]['student_id'] for index in selected_indices}
+
+
 # =============================================================================
 # MAIN GENERATION FUNCTIONS
 # =============================================================================
@@ -566,7 +632,7 @@ def generate_student_data(config):
     ela_math_corr = config.get("ela_math_correlation", 0.75)
     
     # Define other categorical options
-    boolean_values = ['TRUE', 'FALSE']
+    gender_weights = config.get("gender_weights", {"Unknown": 1.0})
     performance_levels = ['Below Basic', 'Basic', 'Proficient', 'Advanced', 'Distinguished', 'Exceeds']
     
     # District definitions (linked ID and name)
@@ -606,6 +672,7 @@ def generate_student_data(config):
     school_ids = list(school_definitions.keys())
     
     used_student_ids = set()
+    student_blueprints = []
     students = []
     treatment_info = {}
     school_assignments = {}
@@ -672,14 +739,43 @@ def generate_student_data(config):
         enrollment_prob = enrollment_prob * score_modifier
         enrollment_prob = min(enrollment_prob, 0.95)  # Cap at 95%
         
-        is_treated = random.random() < enrollment_prob
-        
-        # Current year scores with treatment effect
+        student_blueprints.append(
+            {
+                'student_id': student_id,
+                'school_id': school_id,
+                'grade_level': grade_level,
+                'student_flags': student_flags,
+                'gender': weighted_choice(gender_weights),
+                'ethnicity': weighted_choice(ethnicity_weights),
+                'ela_two_years': ela_two_years,
+                'ela_one_year': ela_one_year,
+                'math_two_years': math_two_years,
+                'math_one_year': math_one_year,
+                'enrollment_prob': enrollment_prob,
+            }
+        )
+
+    treated_student_ids = select_treated_student_ids(
+        student_blueprints,
+        config.get("target_tutored_students"),
+    )
+
+    for blueprint in student_blueprints:
+        student_id = blueprint['student_id']
+        school_id = blueprint['school_id']
+        grade_level = blueprint['grade_level']
+        student_flags = blueprint['student_flags']
+        ela_two_years = blueprint['ela_two_years']
+        ela_one_year = blueprint['ela_one_year']
+        math_two_years = blueprint['math_two_years']
+        math_one_year = blueprint['math_one_year']
+        is_treated = student_id in treated_student_ids
+
         natural_growth_ela = np.random.normal(
             config["natural_growth_mean"], config["natural_growth_std"])
         natural_growth_math = np.random.normal(
             config["natural_growth_mean"], config["natural_growth_std"])
-        
+
         if is_treated:
             # Generate base dosage
             base_dosage = generate_skewed_dosage(
@@ -744,12 +840,10 @@ def generate_student_data(config):
             elif score < 790: return 'Distinguished'
             else: return 'Exceeds'
         
-        perf_prior = score_to_level((ela_one_year + math_one_year) / 2)
-        perf_current = score_to_level((ela_current + math_current) / 2)
-        
-        # Select ethnicity based on weights
-        ethnicity = weighted_choice(ethnicity_weights)
-        
+        perf_earliest = score_to_level((ela_two_years + math_two_years) / 2)
+        perf_previous = score_to_level((ela_one_year + math_one_year) / 2)
+        perf_most_recent = score_to_level((ela_current + math_current) / 2)
+
         # Get school and district info from lookup
         school_info = school_definitions[school_id]
         
@@ -761,22 +855,23 @@ def generate_student_data(config):
             "school_id": school_id,
             "school_name": school_info['name'],
             "current_grade_level": grade_level,
-            "gender": random.choice(boolean_values),
-            "ethnicity": ethnicity,
+            "gender": blueprint['gender'],
+            "ethnicity": blueprint['ethnicity'],
             "ell": student_flags.get("ell", "FALSE"),
             "iep": student_flags.get("iep", "FALSE"),
             "gifted_flag": student_flags.get("gifted_flag", "FALSE"),
             "homeless_flag": student_flags.get("homeless_flag", "FALSE"),
             "disability": student_flags.get("disability", "FALSE"),
             "economic_disadvantage": student_flags.get("economic_disadvantage", "FALSE"),
-            "ela_state_score_two_years_ago": int(ela_two_years),
-            "ela_state_score_one_year_ago": int(ela_one_year),
-            "ela_state_score_current_year": int(ela_current),
-            "math_state_score_two_years_ago": int(math_two_years),
-            "math_state_score_one_year_ago": int(math_one_year),
-            "math_state_score_current_year": int(math_current),
-            "performance_level_prior_year": perf_prior,
-            "performance_level_current_year": perf_current,
+            ELA_MEASURE_1: int(ela_two_years),
+            ELA_MEASURE_2: int(ela_one_year),
+            ELA_MEASURE_3: int(ela_current),
+            MATH_MEASURE_1: int(math_two_years),
+            MATH_MEASURE_2: int(math_one_year),
+            MATH_MEASURE_3: int(math_current),
+            "performance_level_earliest": perf_earliest,
+            "performance_level_previous": perf_previous,
+            "performance_level_most_recent": perf_most_recent,
         }
         students.append(student)
     
@@ -923,6 +1018,11 @@ def save_student_data(students, filename, add_missing=False, missing_range=(5, 1
     if add_missing:
         exclude = ['student_id']
         df = add_missing_data(df, missing_range, exclude_cols=exclude)
+
+    canonical_columns = get_canonical_columns('student')
+    ordered_columns = [column for column in canonical_columns if column in df.columns]
+    trailing_columns = [column for column in df.columns if column not in ordered_columns]
+    df = df[ordered_columns + trailing_columns]
     
     df.to_csv(filename, index=False)
     print(f"[OK] Student data saved to '{filename}' ({len(df)} students)")
@@ -936,6 +1036,11 @@ def save_session_data(session_data, filename, add_missing=False, missing_range=(
     if add_missing:
         exclude = ['student_id', 'tutor_id', 'session_date']
         df = add_missing_data(df, missing_range, exclude_cols=exclude)
+
+    canonical_columns = get_canonical_columns('session')
+    ordered_columns = [column for column in canonical_columns if column in df.columns]
+    trailing_columns = [column for column in df.columns if column not in ordered_columns]
+    df = df[ordered_columns + trailing_columns]
     
     df.to_csv(filename, index=False)
     print(f"[OK] Session data saved to '{filename}' ({len(df)} sessions)")
@@ -990,9 +1095,8 @@ def print_summary(students_df, sessions_df, treatment_info, config):
                     print(f"   {flag:25s}: {rate:5.1f}% tutored (multiplier: {expected_mult:.2f})")
     
     # Enrollment by performance level (score-based targeting)
-    print(f"\n[ENROLLMENT BY PRIOR PERFORMANCE] (score-based targeting)")
-    students_df['avg_prior_score'] = (students_df['ela_state_score_one_year_ago'] + 
-                                       students_df['math_state_score_one_year_ago']) / 2
+    print(f"\n[ENROLLMENT BY MEASURE 2 PERFORMANCE] (score-based targeting)")
+    students_df['avg_prior_score'] = (students_df[ELA_MEASURE_2] + students_df[MATH_MEASURE_2]) / 2
     score_min = config.get("score_min", 650)
     score_max = config.get("score_max", 800)
     bins = [0, 680, 710, 740, 770, 790, 1000]
@@ -1051,9 +1155,9 @@ def print_summary(students_df, sessions_df, treatment_info, config):
         print(f"   Dose multiplier range: {min(dose_mults):.2f} - {max(dose_mults):.2f}")
     
     # Learning outcomes
-    print(f"\n[LEARNING OUTCOMES] (ELA score change from prior year)")
-    treated_growth = treated['ela_state_score_current_year'] - treated['ela_state_score_one_year_ago']
-    control_growth = control['ela_state_score_current_year'] - control['ela_state_score_one_year_ago']
+    print(f"\n[LEARNING OUTCOMES] (ELA change from measure 2 to measure 3)")
+    treated_growth = treated[ELA_MEASURE_3] - treated[ELA_MEASURE_2]
+    control_growth = control[ELA_MEASURE_3] - control[ELA_MEASURE_2]
     
     pooled_std = np.sqrt((treated_growth.std()**2 + control_growth.std()**2) / 2)
     effect_size = (treated_growth.mean() - control_growth.mean()) / pooled_std
@@ -1065,8 +1169,8 @@ def print_summary(students_df, sessions_df, treatment_info, config):
     
     # ELA-Math correlation
     print(f"\n[ELA-MATH CORRELATION]")
-    ela_scores = students_df['ela_state_score_one_year_ago']
-    math_scores = students_df['math_state_score_one_year_ago']
+    ela_scores = students_df[ELA_MEASURE_2]
+    math_scores = students_df[MATH_MEASURE_2]
     actual_corr = ela_scores.corr(math_scores)
     target_corr = config.get("ela_math_correlation", 0.75)
     print(f"   Actual:  {actual_corr:.3f}")

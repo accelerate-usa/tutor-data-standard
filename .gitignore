@@ -1,6 +1,9 @@
 # data
 *.csv
 !*/toolklit/*.csv
+!schema/*.csv
+!utils/example_student_dataset.csv
+!utils/example_session_dataset.csv
 
 # custom
 map/*
