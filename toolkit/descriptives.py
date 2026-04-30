@@ -26,7 +26,9 @@ if str(REPO_ROOT) not in sys.path:
 
 from schema_registry import (
     OUTCOME_SUBJECTS,
+    SESSION_TOPIC_ALIASES,
     categorical_limits,
+    clean_raw_series,
     coerce_dataframe_types,
     get_field_map,
     get_module_columns,
@@ -539,7 +541,7 @@ def _append_missing_value_messages(df: pd.DataFrame, columns: List[str], errors:
     missing_value_errors = []
     for column in columns:
         if column in df.columns:
-            missing_count = df[column].isna().sum()
+            missing_count = clean_raw_series(df[column]).isna().sum()
             if missing_count > 0:
                 missing_value_errors.append(f"  • `{column}`: {missing_count:,} missing values")
 
@@ -549,51 +551,76 @@ def _append_missing_value_messages(df: pd.DataFrame, columns: List[str], errors:
 
 
 def _validate_session_data(df: pd.DataFrame, errors: Dict[str, List[str]]) -> Dict[str, List[str]]:
-    row_errors = []
     _append_missing_value_messages(df, ['student_id', 'session_topic', 'session_date', 'session_duration', 'tutor_id'], errors)
 
-    for idx, row in df.iterrows():
-        row_num = idx + 2
+    row_errors: List[str] = []
+    issue_count = 0
 
-        if 'student_id' in df.columns and pd.isna(row.get('student_id')):
-            row_errors.append(f"Row {row_num}: `student_id` is missing")
+    def add_row_issues(mask: pd.Series, message_for_index) -> None:
+        nonlocal issue_count
+        matching = mask[mask]
+        count = int(len(matching))
+        if count == 0:
+            return
+        issue_count += count
+        remaining_slots = max(0, 20 - len(row_errors))
+        if remaining_slots == 0:
+            return
+        for idx in matching.index[:remaining_slots]:
+            row_errors.append(message_for_index(idx))
 
-        if 'session_topic' in df.columns:
-            topic = row.get('session_topic')
-            normalized_topic, topic_valid = normalize_session_topic(topic)
-            if pd.isna(topic):
-                row_errors.append(f"Row {row_num}: `session_topic` is missing")
-            elif normalized_topic not in {'math', 'ela'}:
-                row_errors.append(f"Row {row_num}: `session_topic` '{topic}' is not currently supported. Use math/ela or a recognized alias.")
-            elif not topic_valid:
-                row_errors.append(f"Row {row_num}: `session_topic` '{topic}' could not be normalized")
+    if 'student_id' in df.columns:
+        student_ids = clean_raw_series(df['student_id'])
+        add_row_issues(
+            student_ids.isna(),
+            lambda idx: f"Row {idx + 2}: `student_id` is missing",
+        )
 
-        if 'session_date' in df.columns:
-            value = row.get('session_date')
-            parsed_date, date_valid = parse_datetime(value)
-            if pd.isna(value):
-                row_errors.append(f"Row {row_num}: `session_date` is missing")
-            elif not date_valid or pd.isna(parsed_date):
-                row_errors.append(f"Row {row_num}: `session_date` '{value}' is not a valid date or datetime")
+    if 'session_topic' in df.columns:
+        topics = clean_raw_series(df['session_topic'])
+        normalized_topics = topics.astype("string").str.strip().str.lower()
+        canonical_topics = normalized_topics.map(lambda value: SESSION_TOPIC_ALIASES.get(value, value), na_action="ignore")
+        invalid_topics = topics.notna() & ~canonical_topics.isin({"math", "ela"})
+        add_row_issues(
+            invalid_topics,
+            lambda idx: f"Row {idx + 2}: `session_topic` '{topics.loc[idx]}' is not currently supported. Use math/ela or a recognized alias.",
+        )
 
-        if 'session_duration' in df.columns:
-            value = row.get('session_duration')
-            duration, duration_valid = parse_numeric(value)
-            if pd.isna(value):
-                row_errors.append(f"Row {row_num}: `session_duration` is missing")
-            elif not duration_valid:
-                row_errors.append(f"Row {row_num}: `session_duration` '{value}' must be numeric minutes")
-            elif duration < 0:
-                row_errors.append(f"Row {row_num}: `session_duration` {duration} must be greater than or equal to 0")
+    if 'session_date' in df.columns:
+        dates = clean_raw_series(df['session_date'])
+        parsed_dates = pd.to_datetime(dates, errors="coerce")
+        invalid_dates = dates.notna() & parsed_dates.isna()
+        add_row_issues(
+            invalid_dates,
+            lambda idx: f"Row {idx + 2}: `session_date` '{dates.loc[idx]}' is not a valid date or datetime",
+        )
 
-        if 'tutor_id' in df.columns and pd.isna(row.get('tutor_id')):
-            row_errors.append(f"Row {row_num}: `tutor_id` is missing")
+    if 'session_duration' in df.columns:
+        durations = clean_raw_series(df['session_duration'])
+        numeric_durations = pd.to_numeric(durations, errors="coerce")
+        invalid_durations = durations.notna() & numeric_durations.isna()
+        negative_durations = durations.notna() & numeric_durations.notna() & (numeric_durations < 0)
+        add_row_issues(
+            invalid_durations,
+            lambda idx: f"Row {idx + 2}: `session_duration` '{durations.loc[idx]}' must be numeric minutes",
+        )
+        add_row_issues(
+            negative_durations,
+            lambda idx: f"Row {idx + 2}: `session_duration` {numeric_durations.loc[idx]} must be greater than or equal to 0",
+        )
 
-    if row_errors:
+    if 'tutor_id' in df.columns:
+        tutor_ids = clean_raw_series(df['tutor_id'])
+        add_row_issues(
+            tutor_ids.isna(),
+            lambda idx: f"Row {idx + 2}: `tutor_id` is missing",
+        )
+
+    if issue_count:
         errors['warnings'].append("**Data Quality Issues (showing first 20):**")
-        errors['warnings'].extend(row_errors[:20])
-        if len(row_errors) > 20:
-            errors['warnings'].append(f"  ... and {len(row_errors) - 20} more issues")
+        errors['warnings'].extend(row_errors)
+        if issue_count > 20:
+            errors['warnings'].append(f"  ... and {issue_count - 20} more issues")
 
     return errors
 
@@ -828,7 +855,7 @@ def add_outcome_summary_columns(student_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def prepare_data(session_df: pd.DataFrame, student_df: pd.DataFrame) -> pd.DataFrame:
-    """Merge and prepare data for analysis. Handles missing columns gracefully."""
+    """Prepare student-level analysis data without materializing session-level joins."""
     session_df = session_df.copy()
     student_df = student_df.copy()
     
@@ -841,36 +868,26 @@ def prepare_data(session_df: pd.DataFrame, student_df: pd.DataFrame) -> pd.DataF
         # If student_id is missing, we can't proceed
         return student_df
     
-    # Convert session duration to hours if column exists
-    if 'session_duration' in session_df.columns:
-        try:
-            session_df['session_duration_hours'] = pd.to_numeric(session_df['session_duration'], errors='coerce') / 60
-        except:
-            session_df['session_duration_hours'] = 0
+    if 'student_id' not in session_df.columns or 'session_duration' not in session_df.columns:
+        hours_per_student = pd.DataFrame({'student_id': student_df['student_id'].unique(), 'total_hours': 0.0})
     else:
-        session_df['session_duration_hours'] = 0
-    
-    # Merge datasets
-    try:
-        merged_df = session_df.merge(student_df, on='student_id', how='inner')
-    except:
-        # If merge fails, return student_df with zero hours
-        student_df['total_hours'] = 0
-        return student_df
-    
-    # Calculate tutoring hours per student
-    if 'session_duration_hours' in merged_df.columns:
         try:
+            session_duration_hours = pd.to_numeric(session_df['session_duration'], errors='coerce') / 60
+            session_hours = pd.DataFrame(
+                {
+                    'student_id': session_df['student_id'],
+                    'session_duration_hours': session_duration_hours,
+                }
+            )
+            valid_student_ids = pd.Index(student_df['student_id'].dropna().unique())
+            session_hours = session_hours[session_hours['student_id'].isin(valid_student_ids)]
             hours_per_student = (
-                merged_df.groupby('student_id')['session_duration_hours']
+                session_hours.groupby('student_id', as_index=False)['session_duration_hours']
                 .sum()
-                .reset_index()
                 .rename(columns={'session_duration_hours': 'total_hours'})
             )
         except:
-            hours_per_student = pd.DataFrame({'student_id': student_df['student_id'].unique(), 'total_hours': 0})
-    else:
-        hours_per_student = pd.DataFrame({'student_id': student_df['student_id'].unique(), 'total_hours': 0})
+            hours_per_student = pd.DataFrame({'student_id': student_df['student_id'].unique(), 'total_hours': 0.0})
     
     # Merge hours back
     try:

@@ -1,14 +1,19 @@
 # data
 *.csv
-!*/toolklit/*.csv
 !schema/*.csv
 !utils/example_student_dataset.csv
 !utils/example_session_dataset.csv
+utils/stress_test_data/
 
 # custom
 map/*
 
+# local secrets
 secrets.txt
+.streamlit/secrets.toml
+.env
+.env.*
+!.env.example
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

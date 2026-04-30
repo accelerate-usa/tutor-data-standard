@@ -34,7 +34,7 @@ def build_markdown_document() -> str:
         "",
         "Most teams can upload `sessions.csv` and `students.csv` directly in the dashboard.",
         "",
-        "> Advanced, optional: the Streamlit app also supports a local mapping profile JSON for recurring exports with non-canonical column headers. Keep this feature documented, but keep it out of the primary upload path. The app does not store the file for the user.",
+        "> Advanced, optional: the dashboard also supports a local mapping profile JSON for recurring exports with non-canonical column headers. Keep this feature documented, but keep it out of the primary upload path. The app does not store the file for the user.",
         "",
     ]
 

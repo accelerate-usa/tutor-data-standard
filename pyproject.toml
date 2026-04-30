@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+addopts = "-ra"
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = [
+    "slow: opt-in scale tests that generate large temporary datasets",
+]

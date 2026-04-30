@@ -1,165 +1,102 @@
 # DATAS
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
-![Version](https://img.shields.io/badge/version-0.0.1-orange.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 
-Welcome to the Data Alignment and Tutoring Assessment Standards (DATAS)! Here's what we do:
-1. We define the technical standard for tutoring data interoperability between schools, districts, providers, and platforms.
-1. We provide an easily adaptable, universally adoptable framework for collecting and sharing tutoring implementation data.
-1. We create tools that  leverage the data standard in practical ways (dashboards, analyses, model regulations, template DSAs).
+DATAS, the Data Alignment and Tutoring Assessment Standards project, defines a practical data standard for tutoring implementation and outcomes data. The repo includes the schema, generated data dictionary, validation logic, example datasets, and local dashboards that help districts, providers, researchers, and funders inspect tutoring program data without sending student-level records to an external service.
 
-Feel free to read more about us below, or jump straight to the [quick start](#quick-start)!
+## What Is Included
 
-## Table of Contents
-
-1. [Mission Statement](#mission-statement)
-1. [Governance](#governance)
-1. [Steering Committee](#steering-committee)
-1. [Quick Start](#quick-start)
-1. [Contributions](#contributions)
-
-## Mission Statement
-Students in public school systems across the United States deserve the full benefits of high-dosage tutoring programs. Despite over 1.4 billion dollars of ESSER funding being spent on high-dosage tutoring, there is insufficient data to evaluate success or identify areas for improvement. If this problem continues, the potential educational benefits of high-dosage tutoring will not be fully realized, potentially resulting in continued learning loss and widening achievement gaps. 
-
-We have the power to unlock the potential of these programs by standardizing how we measure success. 
-
-To test our hypothesis, we will collaborate with educational researchers, providers, school districts, and philanthropies to create policy-ready frameworks for tracking and reporting the implementation and outcomes of high-dosage tutoring in a uniform way. Imagine a future where every dollar invested in tutoring translates into tangible gains for our students.
-
----
-
-## Governance
-
-### Steering committee
-
-The steering commitee is an invitation-only group that meets monthly to direct DATAS. The steering committee has at least one member from each major constituency: provider/platform, SEA/LEA, researcher/philanthropy. Any contributor with an accepted pull request will be invited to the steering committee.
-
-### Working Groups
-
-The working groups are open enrollment meetings that work broadly to accomplish the goals laid out by the steering committee. The number of groups and their goals will shift over time. Currently, there are three working groups:
-1. Technical: make the data standard *work*
-1. Go-to-market: foments conditions for success after alpha testing concludes
-1. Alpha testing: tests the data standard in a real environment
-
----
-## Steering Committee
-<!-- generate from steering_committee.py -->
-<table>
-    <thead>
-        <tr>
-            <th>Steering Committee Members</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td align="center">
-                <img src="img/brittatremblay.jpg" alt="Britta Tremblay" width="100"/><br>
-                <strong>Britta Tremblay</strong><br>
-                <em>VP of Product</em><br>
-                <span>Littera</span>
-            </td>
-            <td align="center">
-                <img src="img/jenniferbronson.jpg" alt="Jennifer Bronson" width="100"/><br>
-                <strong>Jennifer Bronson</strong><br>
-                <em>Managing Director of Programs</em><br>
-                <span>Accelerate</span>
-            </td>
-            <td align="center">
-                <img src="img/jasongodfrey.jpg" alt="Jason Godfrey" width="100"/><br>
-                <strong>Jason Godfrey</strong><br>
-                <em>Director of Data Science</em><br>
-                <span>Accelerate</span>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <img src="img/dr.brentraby.jpg" alt="Dr. Brent Raby" width="100"/><br>
-                <strong>Dr. Brent Raby</strong><br>
-                <em>Associate Superintendent</em><br>
-                <span>West Aurora SD 129</span>
-            </td>
-            <td align="center">
-                <img src="img/fatemehmomeni.jpg" alt="Fatemeh Momeni" width="100"/><br>
-                <strong>Fatemeh Momeni</strong><br>
-                <em>Research Director</em><br>
-                <span>University of Chicago Education Lab</span>
-            </td>
-            <td align="center">
-                <img src="img/johnfailla.jpg" alt="John Failla" width="100"/><br>
-                <strong>John Failla</strong><br>
-                <em>CEO & Founder</em><br>
-                <span>Pearl</span>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <img src="img/justinserrano.jpg" alt="Justin Serrano" width="100"/><br>
-                <strong>Justin Serrano</strong><br>
-                <em>CEO</em><br>
-                <span>Littera</span>
-            </td>
-            <td align="center">
-                <img src="img/natecasey.jpg" alt="Nate Casey" width="100"/><br>
-                <strong>Nate Casey</strong><br>
-                <em>Chief Strategy Officer</em><br>
-                <span>Pearl</span>
-            </td>
-            <td align="center">
-                <img src="img/nicolecarmichael.jpg" alt="Nicole Carmichael" width="100"/><br>
-                <strong>Nicole Carmichael</strong><br>
-                <em>Integrated Data System Manager</em><br>
-                <span>Delaware DoE</span>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <img src="img/shaniyoung.jpg" alt="Shani Young" width="100"/><br>
-                <strong>Shani Young</strong><br>
-                <em>Director of Learning</em><br>
-                <span>North Carolina Education Corps</span>
-            </td>
-            <td align="center">
-                <img src="img/spencerellis.jpg" alt="Spencer Ellis" width="100"/><br>
-                <strong>Spencer Ellis</strong><br>
-                <em>Grant Program Manager</em><br>
-                <span>CO DoE</span>
-            </td>
-            <td align="center">
-                <img src="img/zhanyingzong.jpg" alt="Zhanying Zong" width="100"/><br>
-                <strong>Zhanying Zong</strong><br>
-                <em>Director, Assessment & Accountability</em><br>
-                <span>LA DoE</span>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<!-- generate from steering_committee.py -->
-
----
-## Documentation
-
----
+1. A canonical student dataset and session dataset schema in [schema/data_dictionary.md](schema/data_dictionary.md).
+2. Header-only templates for [students](schema/student_template_header.csv) and [sessions](schema/session_template_header.csv).
+3. A Streamlit dashboard at [toolkit/descriptives.py](toolkit/descriptives.py), which is the primary user-facing analysis tool.
+4. A standalone browser dashboard at [toolkit/descriptives.html](toolkit/descriptives.html), which provides a local HTML alternative when users do not want to install or run Streamlit.
+5. Tests that cover schema normalization, validation, descriptive analytics, generated schema artifacts, and large-file ingest behavior.
 
 ## Quick Start
 
-To make sure that your data are aligned with the open data standard is as easy as 1, 2, 3.
-1. Construct a `.csv`, `.xlsx`, `.xls`, or `.json` file that matches the canonical schema in [schema/data_dictionary.md](schema/data_dictionary.md). Header-only starter files are available at [schema/student_template_header.csv](schema/student_template_header.csv) and [schema/session_template_header.csv](schema/session_template_header.csv).
-1. Validate that your data match the standard.
-1. Upload your output statistics here and be included on the [data standard interoperability map](https://jasongodfrey.info/datas-map.html)! (optional)
+Create a Python environment and install the pinned runtime dependencies:
 
-### Advanced, Optional
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r toolkit\requirements.txt
+```
 
-Most users should ignore the local mapping profile feature. The Streamlit app is designed so a new user can upload the session file and student file directly in the `Upload & Schema` tab and keep moving.
+Run the primary Streamlit dashboard:
 
-For recurring exports with non-canonical column headers, the app also supports an optional local mapping profile JSON. It lives behind a collapsed advanced control in the upload screen, can be downloaded locally after a successful normalization pass, and can be re-uploaded later to reapply saved column mappings. The app does not store this file; it is only used in your current session unless you download it yourself.
+```powershell
+streamlit run toolkit\descriptives.py
+```
 
----
+The dashboard accepts `.csv`, `.xlsx`, `.xls`, and `.json` files. Upload a session file and a student file in the `Upload & Schema` tab, then review validation results before moving through dosage, equity, outcomes, and cost analytics.
 
-## Contributions
-We welcome contributions! Feel free to open issues or submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
+## Standalone HTML Dashboard
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The standalone dashboard at [toolkit/descriptives.html](toolkit/descriptives.html) is an alternative local path for users who do not want to run a Python app. Open the file in a modern browser, upload the same student and session files, or use the bundled example data to inspect the dashboard immediately.
 
-<!-- 29df1c1e-8fcc-4b30-88df-2365d9d8e9c8 -->
+The HTML version is intended to match the Streamlit app's core validation and descriptive calculations. It is useful for demos, lightweight local review, and teams that need a simple file-based workflow. The Streamlit app remains the canonical implementation when users want the most complete Python workflow.
+
+## Schema
+
+The generated schema artifacts live in [schema](schema):
+
+1. [schema/data_dictionary.md](schema/data_dictionary.md) explains every canonical column.
+2. [schema/student_dictionary.csv](schema/student_dictionary.csv) and [schema/session_dictionary.csv](schema/session_dictionary.csv) provide machine-readable dictionaries.
+3. [schema/student_template_header.csv](schema/student_template_header.csv) and [schema/session_template_header.csv](schema/session_template_header.csv) provide empty header templates.
+
+Regenerate schema artifacts after changing [schema_registry.py](schema_registry.py):
+
+```powershell
+python utils\generate_schema_artifacts.py
+```
+
+CI and the local test suite verify that generated schema files are current.
+
+## Example Data
+
+The bundled example files in [utils/example_student_dataset.csv](utils/example_student_dataset.csv) and [utils/example_session_dataset.csv](utils/example_session_dataset.csv) are generated from [utils/generate_datasets.py](utils/generate_datasets.py). They are large enough to exercise the dashboard with realistic distributions while remaining small enough to keep in the repo.
+
+Regenerate them when the schema or example-data assumptions change:
+
+```powershell
+python utils\generate_datasets.py
+```
+
+## Development
+
+Install the development dependencies:
+
+```powershell
+python -m pip install -r requirements-dev.txt
+```
+
+Run the standard test suite:
+
+```powershell
+pytest -q
+```
+
+Run the opt-in million-row scale test before a 1.0 release or other major launch checkpoint:
+
+```powershell
+$env:DATAS_RUN_FULL_STRESS_TEST = "1"
+pytest -q tests\test_large_ingest.py
+```
+
+The scale test writes temporary generated files under pytest's temp directory and does not require checked-in stress fixtures.
+
+## Optional Mapping Profiles
+
+Most users should ignore mapping profiles. They are only for recurring exports with non-canonical column headers. After a successful normalization pass, the dashboard can produce a local JSON mapping profile that can be re-uploaded later to reuse column mappings. The app does not store this profile.
+
+## Security And Privacy
+
+DATAS dashboards are designed for local review. Users should not commit student-level operational data, generated stress data, `.env` files, Streamlit secrets, API keys, or local mapping profiles. The repository ignores common local secret files, but any real credential that has lived in a working directory should be rotated before launch.
+
+## Governance And Contributions
+
+DATAS is stewarded by Accelerate with input from tutoring providers, platforms, school systems, researchers, and philanthropy partners. Contributions are welcome. For substantial schema or dashboard changes, open an issue or pull request that explains the user need, expected behavior, and validation approach.
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

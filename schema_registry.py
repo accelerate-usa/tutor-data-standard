@@ -561,6 +561,8 @@ def coerce_dataframe_types(df: pd.DataFrame, dataset: str) -> pd.DataFrame:
             typed[column] = pd.array([parse_grade(value)[0] for value in raw_series], dtype="Int64")
         elif spec.data_type in {"numeric", "numeric_outcome"}:
             typed[column] = pd.to_numeric(raw_series, errors="coerce").astype("Float64")
+        elif spec.data_type == "datetime" and dataset == "session":
+            typed[column] = raw_series.astype("string")
         elif spec.data_type == "datetime":
             typed[column] = pd.to_datetime(raw_series, errors="coerce")
 
@@ -614,4 +616,3 @@ def categorical_limits(dataset: str) -> Dict[str, int]:
         for field in get_schema(dataset)
         if field.max_unique is not None
     }
-

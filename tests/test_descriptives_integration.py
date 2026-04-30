@@ -157,6 +157,94 @@ def test_prepare_data_calculates_outcome_summary_columns() -> None:
     assert prepared.loc[0, "math_raw_gain"] == 25
 
 
+def test_prepare_data_aggregates_sessions_before_student_merge(monkeypatch: pytest.MonkeyPatch) -> None:
+    session_df = pd.DataFrame(
+        {
+            "student_id": ["001", "001", "002"],
+            "session_topic": ["math", "ela", "math"],
+            "session_date": ["2026-01-15", "2026-01-16", "2026-01-17"],
+            "session_duration": [30, 45, 60],
+            "tutor_id": ["T1", "T1", "T2"],
+        }
+    )
+    student_df = pd.DataFrame(
+        {
+            "student_id": ["001", "002", "003"],
+            "district_id": ["01", "01", "01"],
+            "district_name": ["District", "District", "District"],
+            "school_id": ["02", "02", "02"],
+            "school_name": ["School", "School", "School"],
+            "current_grade_level": [3, 4, 5],
+        }
+    )
+    original_merge = pd.DataFrame.merge
+    full_session_merge_calls = []
+
+    def tracking_merge(self, right, *args, **kwargs):
+        if len(self) == len(session_df) and len(right) == len(student_df):
+            full_session_merge_calls.append((len(self), len(right)))
+        return original_merge(self, right, *args, **kwargs)
+
+    monkeypatch.setattr(pd.DataFrame, "merge", tracking_merge)
+
+    prepared = prepare_data(session_df, student_df)
+
+    assert not full_session_merge_calls
+    assert prepared.set_index("student_id").loc["001", "total_hours"] == pytest.approx(1.25)
+    assert prepared.set_index("student_id").loc["002", "total_hours"] == pytest.approx(1.0)
+    assert prepared.set_index("student_id").loc["003", "total_hours"] == pytest.approx(0.0)
+
+
+def test_session_ingest_leaves_dates_unparsed_until_time_views(tmp_path: Path) -> None:
+    session_path = write_csv(
+        tmp_path / "session.csv",
+        "\n".join(
+            [
+                "student_id,session_topic,session_date,session_duration,tutor_id",
+                "001,math,2026-01-10 09:00:00,45,T1",
+                "002,ela,2026-01-11 10:00:00,30,T2",
+            ]
+        ),
+    )
+
+    _, typed_df, errors, _ = load_dataset(session_path, "session")
+
+    assert not errors["critical"]
+    assert not pd.api.types.is_datetime64_any_dtype(typed_df["session_date"])
+    assert typed_df["session_date"].astype(str).tolist() == ["2026-01-10 09:00:00", "2026-01-11 10:00:00"]
+
+
+def test_session_validation_does_not_depend_on_row_parser_calls(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    session_path = write_csv(
+        tmp_path / "session.csv",
+        "\n".join(
+            [
+                "student_id,session_topic,session_date,session_duration,tutor_id",
+                "001,math,2026-01-10,45,T1",
+                "002,science,not-a-date,bad,T2",
+            ]
+        ),
+    )
+
+    import toolkit.descriptives as descriptives
+
+    def fail_row_parser(*_args, **_kwargs):
+        raise AssertionError("row-wise parser was called")
+
+    monkeypatch.setattr(descriptives, "parse_datetime", fail_row_parser)
+    monkeypatch.setattr(descriptives, "parse_numeric", fail_row_parser)
+
+    _, _, errors, _ = load_dataset(session_path, "session")
+
+    warnings = "\n".join(errors["warnings"])
+    assert "`session_topic` 'science'" in warnings
+    assert "`session_date` 'not-a-date'" in warnings
+    assert "`session_duration` 'bad'" in warnings
+
+
 def test_get_prepared_data_cached_matches_prepare_data() -> None:
     session_df = pd.DataFrame(
         {
