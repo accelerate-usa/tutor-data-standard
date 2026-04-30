@@ -13,7 +13,10 @@ from plotly.subplots import make_subplots
 import numpy as np
 from scipy import stats
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
+from functools import lru_cache
 import json
+import os
+import platform
 import re
 import subprocess
 from io import StringIO
@@ -21,6 +24,8 @@ from pathlib import Path
 import sys
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+DATAS_APP_VERSION = "1.0.0"
+DATAS_BUILD_LABEL = "2026-04-30-runtime-diagnostics"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -107,6 +112,102 @@ st.markdown("""
 # ============================================================================
 # METRIC HELPERS
 # ============================================================================
+
+@lru_cache(maxsize=1)
+def get_runtime_build_info() -> Dict[str, str]:
+    """Return deployment details that help distinguish stale Cloud builds."""
+    commit = ""
+    commit_source = ""
+    for env_key in (
+        "STREAMLIT_GIT_COMMIT",
+        "GIT_COMMIT",
+        "COMMIT_SHA",
+        "SOURCE_COMMIT",
+        "SOURCE_VERSION",
+        "GITHUB_SHA",
+    ):
+        env_value = os.environ.get(env_key, "").strip()
+        if env_value:
+            commit = env_value[:12]
+            commit_source = env_key
+            break
+
+    branch = os.environ.get("GIT_BRANCH", "").strip()
+    if not commit:
+        try:
+            result = subprocess.run(
+                ["git", "rev-parse", "--short=12", "HEAD"],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                check=True,
+                text=True,
+                timeout=2,
+            )
+            commit = result.stdout.strip()
+            commit_source = "git rev-parse"
+        except Exception:
+            commit = "unknown"
+            commit_source = "not available"
+
+    if not branch:
+        try:
+            result = subprocess.run(
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                check=True,
+                text=True,
+                timeout=2,
+            )
+            branch = result.stdout.strip()
+        except Exception:
+            branch = "unknown"
+
+    config_path = REPO_ROOT / ".streamlit" / "config.toml"
+    watcher_status = "config file not found"
+    if config_path.exists():
+        try:
+            config_text = config_path.read_text(encoding="utf-8")
+            watcher_status = (
+                "utils/stress_test_data blacklisted"
+                if "utils/stress_test_data" in config_text
+                else "config found; stress-test folder not listed"
+            )
+        except OSError:
+            watcher_status = "config file found; unable to read"
+
+    return {
+        "datas_version": DATAS_APP_VERSION,
+        "build_label": DATAS_BUILD_LABEL,
+        "git_commit": commit,
+        "git_commit_source": commit_source,
+        "git_branch": branch,
+        "streamlit_version": st.__version__,
+        "python_version": platform.python_version(),
+        "watcher_config": watcher_status,
+    }
+
+
+def render_runtime_diagnostics() -> None:
+    """Render compact deployment details for Cloud troubleshooting."""
+    info = get_runtime_build_info()
+    with st.expander("Runtime diagnostics", expanded=False):
+        st.caption("Use this to confirm the hosted app has picked up the latest GitHub deployment.")
+        st.code(
+            "\n".join(
+                [
+                    f"DATAS app version: {info['datas_version']}",
+                    f"Build label: {info['build_label']}",
+                    f"Git commit: {info['git_commit']} ({info['git_commit_source']})",
+                    f"Git branch: {info['git_branch']}",
+                    f"Streamlit: {info['streamlit_version']}",
+                    f"Python: {info['python_version']}",
+                    f"Watcher config: {info['watcher_config']}",
+                ]
+            ),
+            language="text",
+        )
+
 
 def build_metric_help(formula_lines: Sequence[str], explanation: str, notes: Optional[Sequence[str]] = None) -> str:
     """Build markdown-safe help text with formula-first formatting."""
@@ -3198,6 +3299,7 @@ def main():
     # Footer caveat
     st.markdown("---")
     st.caption("This tool can be run locally if you prefer not to upload data to a hosted app. Please feel free to run it [locally](https://github.com/accelerate-usa/tutor-data-standard/tree/main/toolkit). If you use a hosted version, all data are erased upon refresh.")
+    render_runtime_diagnostics()
 
 
 if __name__ == "__main__":
