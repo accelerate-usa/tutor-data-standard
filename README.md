@@ -93,7 +93,7 @@ Most users should ignore mapping profiles. They are only for recurring exports w
 
 ## Security And Privacy
 
-DATAS dashboards are designed for local review. Users should not commit student-level operational data, generated stress data, `.env` files, Streamlit secrets, API keys, or local mapping profiles. The repository ignores common local secret files, but any real credential that has lived in a working directory should be rotated before launch.
+DATAS dashboards are designed for local review. Users should not commit student-level operational data, generated stress data, `.env` files, or local mapping profiles.
 
 ## Governance And Contributions
 

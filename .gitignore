@@ -9,8 +9,6 @@ utils/stress_test_data/
 map/*
 
 # local secrets
-secrets.txt
-.streamlit/secrets.toml
 .env
 .env.*
 !.env.example
@@ -19,7 +17,6 @@ secrets.txt
 __pycache__/
 *.py[cod]
 *$py.class
-key.txt
 
 # C extensions
 *.so
