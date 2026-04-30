@@ -89,7 +89,7 @@ The scale test writes temporary generated files under pytest's temp directory an
 
 ## Optional Mapping Profiles
 
-Most users should ignore mapping profiles. They are only for recurring exports with non-canonical column headers. After a successful normalization pass, the dashboard can produce a local JSON mapping profile that can be re-uploaded later to reuse column mappings. The app does not store this profile.
+Most users should ignore mapping profiles. They are only for recurring uploads with non-canonical column headers. Advanced users can upload a local JSON mapping profile to reuse known column mappings. The app does not store this profile.
 
 ## Security And Privacy
 

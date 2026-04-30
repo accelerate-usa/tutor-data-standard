@@ -47,15 +47,10 @@ from toolkit.app_support import (
     TRI_STATE_FILTER_OPTIONS,
     apply_custom_column_map,
     apply_filter_values,
-    build_mapping_profile,
     build_module_readiness,
     build_normalization_detail_rows,
     build_normalization_summary_rows,
     build_unknown_denominator_notes,
-    combine_export_sections,
-    export_dataframe_bytes,
-    export_sections_json,
-    flatten_metrics,
     get_filter_specs,
     get_profile_column_map,
     get_tab_readiness_notes,
@@ -686,53 +681,7 @@ def _validate_student_data(df: pd.DataFrame, errors: Dict[str, List[str]]) -> Di
     return errors
 
 
-def extract_erroneous_rows(errors: Dict[str, List[str]], df: pd.DataFrame, data_type: str) -> pd.DataFrame:
-    """
-    Extract rows with errors from the dataframe based on error messages.
-    Returns a dataframe with erroneous rows plus an error description column.
-    """
-    import re
-    
-    # Parse error messages to extract row numbers
-    problematic_rows = {}  # {row_index: [error_descriptions]}
-    
-    # Check all error categories
-    for error_category in ['critical', 'warnings', 'info']:
-        for error_msg in errors.get(error_category, []):
-            # Look for "Row X:" pattern
-            match = re.search(r'Row (\d+):\s*(.+)', error_msg)
-            if match:
-                row_num = int(match.group(1))
-                error_desc = match.group(2).strip()
-                # Convert row number to DataFrame index (row_num - 2 because header is row 1)
-                df_idx = row_num - 2
-                
-                if 0 <= df_idx < len(df):
-                    if df_idx not in problematic_rows:
-                        problematic_rows[df_idx] = []
-                    problematic_rows[df_idx].append(error_desc)
-    
-    if not problematic_rows:
-        return pd.DataFrame()
-    
-    # Extract problematic rows
-    error_indices = sorted(problematic_rows.keys())
-    error_df = df.iloc[error_indices].copy()
-    
-    # Add error description column
-    error_df['Error_Description'] = ['; '.join(problematic_rows[idx]) for idx in error_indices]
-    
-    # Add original row number column (for reference)
-    error_df['Original_Row_Number'] = [idx + 2 for idx in error_indices]
-    
-    # Reorder columns to put error info first
-    cols = ['Original_Row_Number', 'Error_Description'] + [c for c in error_df.columns if c not in ['Original_Row_Number', 'Error_Description']]
-    error_df = error_df[[c for c in cols if c in error_df.columns]]
-    
-    return error_df
-
-
-def display_validation_errors(errors: Dict[str, List[str]], data_type: str, df: pd.DataFrame = None) -> bool:
+def display_validation_errors(errors: Dict[str, List[str]], data_type: str) -> bool:
     """
     Display validation errors in a user-friendly way.
     Returns True if there are any issues (errors or warnings), False otherwise.
@@ -769,20 +718,6 @@ def display_validation_errors(errors: Dict[str, List[str]], data_type: str, df: 
         for info in errors['info']:
             st.markdown(info)
         st.markdown("---")
-    
-    # Add download button for erroneous rows if dataframe is provided and there are row-level errors
-    if df is not None:
-        error_df = extract_erroneous_rows(errors, df, data_type)
-        if len(error_df) > 0:
-            # Convert to CSV
-            csv = error_df.to_csv(index=False)
-            st.download_button(
-                label=f"📥 Download Erroneous {data_type} Rows ({len(error_df)} rows)",
-                data=csv,
-                file_name=f"{data_type.lower()}_data_errors.csv",
-                mime="text/csv",
-                key=f"download_{data_type.lower()}_errors"
-            )
     
     return has_critical or has_warnings
 
@@ -1661,35 +1596,6 @@ def get_loaded_context() -> Tuple[Optional[pd.DataFrame], Optional[pd.DataFrame]
     return prepared_df, readiness_df
 
 
-def render_export_downloads(
-    label: str,
-    base_name: str,
-    sections: Mapping[str, Optional[pd.DataFrame]],
-) -> None:
-    combined_df = combine_export_sections(sections)
-    if combined_df.empty:
-        return
-
-    with st.popover(label):
-        st.caption("Exports are generated only in this session. The app does not retain your data or summaries.")
-        for export_format in ("csv", "tsv"):
-            payload, mime_type, extension = export_dataframe_bytes(combined_df, export_format)
-            st.download_button(
-                label=f"Download {extension.upper()}",
-                data=payload,
-                file_name=f"{base_name}.{extension}",
-                mime=mime_type,
-                key=f"{base_name}_{extension}",
-            )
-        st.download_button(
-            label="Download JSON",
-            data=export_sections_json(sections),
-            file_name=f"{base_name}.json",
-            mime="application/json",
-            key=f"{base_name}_json",
-        )
-
-
 def render_compact_filters(df: pd.DataFrame, module: str, prefix: str) -> Dict[str, object]:
     filter_specs = get_filter_specs(df, module)
     defaults: Dict[str, object] = {}
@@ -1752,22 +1658,6 @@ def render_tab_readiness_message(tab_key: str, readiness_df: Optional[pd.DataFra
     with st.expander("What is unavailable in this tab?", expanded=False):
         for detail in details:
             st.markdown(f"- {detail}")
-
-
-def render_normalized_dataset_downloads(dataset: str, df: Optional[pd.DataFrame]) -> None:
-    if df is None or df.empty:
-        return
-    with st.popover(f"Download normalized {dataset} data"):
-        st.caption("These canonical files are generated in-session only. The app does not store your uploads.")
-        for export_format in ("csv", "tsv", "json"):
-            payload, mime_type, extension = export_dataframe_bytes(df, export_format)
-            st.download_button(
-                label=f"Download {extension.upper()}",
-                data=payload,
-                file_name=f"{dataset}_normalized.{extension}",
-                mime=mime_type,
-                key=f"{dataset}_normalized_{extension}",
-            )
 
 
 def show_data_quality_warning():
@@ -1874,7 +1764,7 @@ def main():
     with tab_overview:
         st.header("Upload & Schema")
         
-        st.caption("Most users can just upload their session file and student file. Advanced options stay tucked away unless you need them, and nothing is kept unless you explicitly download it.")
+        st.caption("Most users can upload a session file and student file. Advanced column-mapping options stay tucked away unless you need them.")
 
         # Keep the upload path flat and obvious.
         st.markdown("### Upload or Replace Data")
@@ -1897,7 +1787,7 @@ def main():
         elif st.session_state.get("mapping_profile_name"):
             mapping_label = "Advanced: reuse a saved column mapping (active)"
         with st.popover(mapping_label):
-            st.caption("Most users can ignore this. Use a local mapping profile only for recurring exports with non-standard headers. The app does not store this file.")
+            st.caption("Most users can ignore this. Use a local mapping profile only for recurring uploads with non-standard headers. The app does not store this file.")
             mapping_profile_file = st.file_uploader(
                 "Upload local mapping profile (JSON)",
                 type=["json"],
@@ -1961,8 +1851,8 @@ def main():
                     st.session_state['student_normalization_report'] = student_report
                     
                     # Display validation results (but don't block)
-                    session_has_issues = display_validation_errors(session_errors, 'Session', session_input_df)
-                    student_has_issues = display_validation_errors(student_errors, 'Student', student_input_df)
+                    session_has_issues = display_validation_errors(session_errors, 'Session')
+                    student_has_issues = display_validation_errors(student_errors, 'Student')
                     
                     # Always load data, even with errors
                     st.session_state['session_data'] = session_df
@@ -2013,7 +1903,7 @@ def main():
                     st.success("✅ **Example data loaded successfully!**")
                     st.rerun()
                 else:
-                    st.error("❌ Failed to load example data. Please try again or download manually.")
+                    st.error("❌ Failed to load example data. Please try again or load files manually.")
         
         if st.session_state['session_data'] is None or st.session_state['student_data'] is None:
             st.info("""
@@ -2063,10 +1953,6 @@ def main():
                 ],
                 ignore_index=True,
             )
-            mapping_profile_payload = build_mapping_profile(
-                st.session_state.get("session_normalization_report"),
-                st.session_state.get("student_normalization_report"),
-            )
             readiness_summary = pd.DataFrame()
             if readiness_df is not None and not readiness_df.empty:
                 readiness_summary = readiness_df[readiness_df["section"] == "Tab summary"].copy()
@@ -2097,26 +1983,6 @@ def main():
                 f"Intervention sample used for tutoring summaries: **{tutored_students:,}** students."
             )
 
-            render_export_downloads(
-                "Download overview summary",
-                "overview_summary",
-                {
-                    "normalization_summary": normalization_summary,
-                    "readiness_summary": readiness_summary,
-                    "program_overview": pd.DataFrame(
-                        [
-                            {
-                                "total_students_in_roster": len(prepared_df),
-                                "students_tutored": tutored_students,
-                                "total_tutoring_hours": total_hours,
-                                "average_hours_per_tutored_student": avg_hours,
-                                "schools_served": schools_served,
-                            }
-                        ]
-                    ),
-                },
-            )
-            
             st.markdown("---")
             
             # Session Records Statistics
@@ -2251,31 +2117,6 @@ def main():
                 with st.expander("Column normalization details", expanded=False):
                     st.dataframe(normalization_details, use_container_width=True, hide_index=True)
 
-            st.markdown("#### Local Processing")
-            st.caption("Nothing in this screen is retained by the app. Download what you want to keep; otherwise it disappears when you refresh or close the session.")
-            download_col1, download_col2 = st.columns(2)
-            with download_col1:
-                render_normalized_dataset_downloads("session", st.session_state.get("session_data"))
-            with download_col2:
-                render_normalized_dataset_downloads("student", st.session_state.get("student_data"))
-
-            dataset_profiles = mapping_profile_payload.get("dataset_profiles", {}) if isinstance(mapping_profile_payload, dict) else {}
-            profile_has_mappings = any(
-                dataset_profiles.get(dataset_name, {}).get("custom_column_map")
-                for dataset_name in ("session", "student")
-                if isinstance(dataset_profiles.get(dataset_name), dict)
-            )
-            if profile_has_mappings:
-                with st.expander("Advanced local artifact: mapping profile", expanded=False):
-                    st.caption("Optional. This JSON lets you reuse saved column mappings on a future upload. The app does not save it for you.")
-                    st.download_button(
-                        label="Download local mapping profile",
-                        data=json.dumps(mapping_profile_payload, indent=2).encode("utf-8"),
-                        file_name="datas_mapping_profile.json",
-                        mime="application/json",
-                        key="download_mapping_profile_json",
-                    )
-            
             # Display validation errors if they exist
             session_errors = st.session_state.get('session_validation_errors', {})
             student_errors = st.session_state.get('student_validation_errors', {})
@@ -2286,11 +2127,9 @@ def main():
             if has_session_issues or has_student_issues:
                 st.markdown("### 🔍 Data Validation Results")
                 if has_session_issues:
-                    session_df = st.session_state.get('session_input_data', st.session_state.get('session_data'))
-                    display_validation_errors(session_errors, 'Session', session_df)
+                    display_validation_errors(session_errors, 'Session')
                 if has_student_issues:
-                    student_df = st.session_state.get('student_input_data', st.session_state.get('student_data'))
-                    display_validation_errors(student_errors, 'Student', student_df)
+                    display_validation_errors(student_errors, 'Student')
                 st.markdown("---")
             
             # Data preview
@@ -2344,20 +2183,7 @@ def main():
                     dosage_df,
                     st.session_state['full_dosage_threshold']
                 )
-                render_export_downloads(
-                    "Download dosage summary",
-                    "dosage_summary",
-                    {
-                        "metrics": flatten_metrics(
-                            dosage_metrics,
-                            {
-                                "matched_students_after_filters": dosage_population['matched_students'],
-                                "tutored_students_in_analysis": dosage_population['tutored_students'],
-                            },
-                        )
-                    },
-                )
-                
+
                 # Visualization at the top
                 st.markdown("### Distribution of Tutoring Hours")
                 st.caption("**What to look for:** This distribution includes only students who received tutoring. A right-skewed pattern suggests most tutored students receive below-target dosage.")
@@ -2648,19 +2474,6 @@ def main():
                 )
                 # Calculate equity metrics
                 equity_metrics = calculate_equity_metrics(equity_df)
-                render_export_downloads(
-                    "Download equity summary",
-                    "equity_summary",
-                    {
-                        "metrics": flatten_metrics(
-                            equity_metrics,
-                            {
-                                "matched_students_after_filters": equity_population['matched_students'],
-                                "tutored_students_in_analysis": equity_population['tutored_students'],
-                            },
-                        )
-                    },
-                )
 
                 unknown_notes = build_unknown_denominator_notes(
                     equity_df,
@@ -2935,19 +2748,6 @@ def main():
                 )
                 # Calculate outcome metrics
                 outcome_metrics = calculate_outcome_metrics(outcome_df)
-                render_export_downloads(
-                    "Download outcomes summary",
-                    "outcomes_summary",
-                    {
-                        "metrics": flatten_metrics(
-                            outcome_metrics,
-                            {
-                                "matched_students_after_filters": outcome_population['matched_students'],
-                                "tutored_students_in_analysis": outcome_population['tutored_students'],
-                            },
-                        )
-                    },
-                )
 
                 unknown_notes = build_unknown_denominator_notes(
                     outcome_df,
@@ -3290,20 +3090,6 @@ def main():
                     st.session_state['total_cost'],
                     st.session_state['full_dosage_threshold'],
                     reference_df=prepared_df,
-                )
-                render_export_downloads(
-                    "Download cost summary",
-                    "cost_summary",
-                    {
-                        "metrics": flatten_metrics(
-                            cost_metrics,
-                            {
-                                "matched_students_after_filters": cost_population['matched_students'],
-                                "tutored_students_in_analysis": cost_population['tutored_students'],
-                                "total_cost": st.session_state['total_cost'],
-                            },
-                        )
-                    },
                 )
                 
                 # Basic cost metrics

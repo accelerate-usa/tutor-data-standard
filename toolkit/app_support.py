@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 import pandas as pd
 
@@ -56,38 +56,6 @@ def apply_custom_column_map(
     return renamed, applied
 
 
-def build_mapping_profile(
-    session_report: Optional[Mapping[str, object]],
-    student_report: Optional[Mapping[str, object]],
-) -> Dict[str, object]:
-    def extract_map(report: Optional[Mapping[str, object]]) -> Dict[str, str]:
-        if not report:
-            return {}
-        custom_map: Dict[str, str] = {}
-        alias_sources = report.get("alias_sources", {})
-        if isinstance(alias_sources, Mapping):
-            for canonical, source_columns in alias_sources.items():
-                if isinstance(source_columns, Sequence):
-                    for source_column in source_columns:
-                        source_name = str(source_column)
-                        if normalize_name(source_name) != str(canonical):
-                            custom_map[source_name] = str(canonical)
-        applied_custom_map = report.get("applied_custom_column_map", {})
-        if isinstance(applied_custom_map, Mapping):
-            for source_column, canonical in applied_custom_map.items():
-                custom_map[str(source_column)] = str(canonical)
-        return dict(sorted(custom_map.items()))
-
-    return {
-        "version": 1,
-        "note": "Local mapping profile for DATAS uploads. This file is not stored by the app.",
-        "dataset_profiles": {
-            "session": {"custom_column_map": extract_map(session_report)},
-            "student": {"custom_column_map": extract_map(student_report)},
-        },
-    }
-
-
 def parse_mapping_profile_text(profile_text: str) -> Dict[str, object]:
     payload = json.loads(profile_text)
     if not isinstance(payload, dict):
@@ -121,53 +89,6 @@ def get_profile_column_map(
     if not isinstance(custom_map, Mapping):
         return {}
     return {str(source): str(target) for source, target in custom_map.items()}
-
-
-def flatten_metrics(metrics: Mapping[str, Any], context: Optional[Mapping[str, Any]] = None) -> pd.DataFrame:
-    row = {str(key): value for key, value in metrics.items()}
-    if context:
-        row.update({str(key): value for key, value in context.items()})
-    return pd.DataFrame([row])
-
-
-def combine_export_sections(sections: Mapping[str, Optional[pd.DataFrame]]) -> pd.DataFrame:
-    frames: List[pd.DataFrame] = []
-    for section_name, frame in sections.items():
-        if frame is None or frame.empty:
-            continue
-        section_frame = frame.copy()
-        if "export_section" in section_frame.columns:
-            renamed_column = "source_export_section"
-            suffix = 2
-            while renamed_column in section_frame.columns:
-                renamed_column = f"source_export_section_{suffix}"
-                suffix += 1
-            section_frame = section_frame.rename(columns={"export_section": renamed_column})
-        section_frame.insert(0, "export_section", section_name)
-        frames.append(section_frame)
-    if not frames:
-        return pd.DataFrame({"export_section": []})
-    return pd.concat(frames, ignore_index=True, sort=False)
-
-
-def export_sections_json(sections: Mapping[str, Optional[pd.DataFrame]]) -> bytes:
-    payload = {
-        section_name: frame.fillna(pd.NA).replace({pd.NA: None}).to_dict(orient="records")
-        for section_name, frame in sections.items()
-        if frame is not None and not frame.empty
-    }
-    return json.dumps(payload, indent=2, default=str).encode("utf-8")
-
-
-def export_dataframe_bytes(df: pd.DataFrame, file_format: str) -> Tuple[bytes, str, str]:
-    normalized_format = file_format.lower()
-    if normalized_format == "csv":
-        return df.to_csv(index=False).encode("utf-8"), "text/csv", "csv"
-    if normalized_format == "tsv":
-        return df.to_csv(index=False, sep="\t").encode("utf-8"), "text/tab-separated-values", "tsv"
-    if normalized_format == "json":
-        return df.to_json(orient="records", indent=2).encode("utf-8"), "application/json", "json"
-    raise ValueError(f"Unsupported export format: {file_format}")
 
 
 def get_filter_specs(df: pd.DataFrame, module: str) -> List[Dict[str, object]]:

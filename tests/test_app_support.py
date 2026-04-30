@@ -8,14 +8,10 @@ import pytest
 from toolkit.app_support import (
     apply_custom_column_map,
     apply_filter_values,
-    build_mapping_profile,
     build_module_readiness,
     build_normalization_detail_rows,
     build_normalization_summary_rows,
     build_unknown_denominator_notes,
-    combine_export_sections,
-    export_dataframe_bytes,
-    export_sections_json,
     get_filter_specs,
     get_profile_column_map,
     get_tab_readiness_notes,
@@ -74,23 +70,6 @@ def test_apply_custom_column_map_renames_exact_and_normalized_matches() -> None:
 
     assert list(renamed.columns) == ["student_id", "Hours"]
     assert applied == {" Student Number ": "student_id"}
-
-
-def test_build_mapping_profile_extracts_alias_and_custom_maps() -> None:
-    session_report = {
-        "alias_sources": {"session_date": ["session_datetime"]},
-        "applied_custom_column_map": {"Learner ID": "student_id"},
-    }
-    student_report = {
-        "alias_sources": {"student_id": ["Student Number"]},
-        "applied_custom_column_map": {},
-    }
-
-    profile = build_mapping_profile(session_report, student_report)
-
-    assert profile["dataset_profiles"]["session"]["custom_column_map"]["session_datetime"] == "session_date"
-    assert profile["dataset_profiles"]["session"]["custom_column_map"]["Learner ID"] == "student_id"
-    assert profile["dataset_profiles"]["student"]["custom_column_map"]["Student Number"] == "student_id"
 
 
 def test_parse_mapping_profile_text_rejects_invalid_payload() -> None:
@@ -218,67 +197,3 @@ def test_get_tab_readiness_notes_returns_status_and_missing_details() -> None:
 
     assert status in {"Ready", "Partial", "Unavailable"}
     assert isinstance(details, list)
-
-
-def test_export_dataframe_bytes_supports_csv_tsv_and_json() -> None:
-    df = pd.DataFrame({"a": [1], "b": [2]})
-
-    csv_bytes, csv_mime, csv_ext = export_dataframe_bytes(df, "csv")
-    tsv_bytes, tsv_mime, tsv_ext = export_dataframe_bytes(df, "tsv")
-    json_bytes, json_mime, json_ext = export_dataframe_bytes(df, "json")
-
-    assert csv_mime == "text/csv" and csv_ext == "csv" and b"a,b" in csv_bytes
-    assert tsv_mime == "text/tab-separated-values" and tsv_ext == "tsv" and b"a\tb" in tsv_bytes
-    assert json_mime == "application/json" and json_ext == "json" and b'"a"' in json_bytes
-
-
-def test_combine_export_sections_adds_export_section_column() -> None:
-    combined = combine_export_sections(
-        {
-            "metrics": pd.DataFrame({"value": [1]}),
-            "empty": pd.DataFrame(),
-            "summary": pd.DataFrame({"value": [2]}),
-        }
-    )
-
-    assert combined["export_section"].tolist() == ["metrics", "summary"]
-    assert combined["value"].tolist() == [1, 2]
-
-
-def test_combine_export_sections_preserves_existing_section_columns() -> None:
-    combined = combine_export_sections(
-        {
-            "readiness_summary": pd.DataFrame(
-                {
-                    "section": ["Tab summary"],
-                    "status": ["Ready"],
-                }
-            )
-        }
-    )
-
-    assert combined["export_section"].tolist() == ["readiness_summary"]
-    assert combined["section"].tolist() == ["Tab summary"]
-
-
-def test_combine_export_sections_renames_existing_export_section_column() -> None:
-    combined = combine_export_sections(
-        {
-            "metrics": pd.DataFrame(
-                {
-                    "export_section": ["original"],
-                    "value": [1],
-                }
-            )
-        }
-    )
-
-    assert combined["export_section"].tolist() == ["metrics"]
-    assert combined["source_export_section"].tolist() == ["original"]
-
-
-def test_export_sections_json_serializes_named_frames() -> None:
-    payload = export_sections_json({"metrics": pd.DataFrame({"value": [1]})})
-    parsed = json.loads(payload.decode("utf-8"))
-
-    assert parsed == {"metrics": [{"value": 1}]}

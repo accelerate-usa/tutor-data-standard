@@ -4,7 +4,7 @@ Generated from `schema_registry.py`. Regenerate with `python utils/generate_sche
 
 Most teams can upload `sessions.csv` and `students.csv` directly in the dashboard.
 
-> Advanced, optional: the dashboard also supports a local mapping profile JSON for recurring exports with non-canonical column headers. Keep this feature documented, but keep it out of the primary upload path. The app does not store the file for the user.
+> Advanced, optional: the dashboard can apply an uploaded local mapping profile JSON for recurring uploads with non-canonical column headers. Keep this feature documented, but keep it out of the primary upload path. The app does not store the file for the user.
 
 ## Student Dataset
 
