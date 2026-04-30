@@ -1,0 +1,2 @@
+[server]
+folderWatchBlacklist = ["utils/stress_test_data"]
