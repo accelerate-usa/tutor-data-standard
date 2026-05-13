@@ -1394,6 +1394,203 @@ def get_latest_outcome_series(df: pd.DataFrame, subject: str) -> pd.Series:
     return pd.to_numeric(latest_values, errors='coerce')
 
 
+PROFICIENCY_ORDER = [
+    'far below basic',
+    'below basic',
+    'basic',
+    'approaching',
+    'proficient',
+    'advanced',
+    'exceeds',
+    'level 1',
+    'level 2',
+    'level 3',
+    'level 4',
+    'level 5',
+    'novice',
+    'developing',
+    'distinguished',
+]
+
+TUTORING_STATUS_ORDER = ['Tutored', 'Untutored']
+TUTORING_STATUS_COLORS = {
+    'Tutored': '#36A2EB',
+    'Untutored': '#FF6384',
+}
+
+
+def get_proficiency_sort_key(level: object) -> Tuple[int, str]:
+    level_text = str(level).strip()
+    level_lower = level_text.lower()
+    for index, order_level in enumerate(PROFICIENCY_ORDER):
+        if order_level in level_lower:
+            return index, level_lower
+    return len(PROFICIENCY_ORDER), level_lower
+
+
+def get_received_tutoring_mask(df: pd.DataFrame) -> pd.Series:
+    if 'received_tutoring' in df.columns:
+        received = df['received_tutoring'].fillna(False)
+        if pd.api.types.is_bool_dtype(received):
+            return received.astype(bool)
+        return received.astype(str).str.strip().str.lower().isin({'true', '1', 'yes', 'y'})
+    return get_tutored_student_mask(df)
+
+
+def get_most_recent_performance_level_column(df: pd.DataFrame) -> Optional[str]:
+    for candidate in ('performance_level_most_recent', 'performance_level_current_year'):
+        if candidate in df.columns:
+            return candidate
+    return None
+
+
+def build_proficiency_participation_chart_data(
+    df: pd.DataFrame,
+    perf_col: str,
+) -> Tuple[pd.DataFrame, pd.DataFrame, List[str]]:
+    if perf_col not in df.columns:
+        return pd.DataFrame(), pd.DataFrame(), []
+
+    analysis_df = df.copy()
+    level_values = analysis_df[perf_col].astype('string').str.strip()
+    analysis_df = analysis_df[level_values.notna() & level_values.ne('')].copy()
+    if analysis_df.empty:
+        return pd.DataFrame(), pd.DataFrame(), []
+
+    analysis_df['Proficiency Level'] = analysis_df[perf_col].astype(str).str.strip()
+    analysis_df['Tutoring Status'] = np.where(
+        get_received_tutoring_mask(analysis_df),
+        'Tutored',
+        'Untutored',
+    )
+
+    ordered_levels = sorted(
+        analysis_df['Proficiency Level'].dropna().unique().tolist(),
+        key=get_proficiency_sort_key,
+    )
+    count_lookup = (
+        analysis_df.groupby(['Proficiency Level', 'Tutoring Status'])
+        .size()
+        .to_dict()
+    )
+
+    chart_rows = []
+    summary_rows = []
+    for level in ordered_levels:
+        tutored = int(count_lookup.get((level, 'Tutored'), 0))
+        untutored = int(count_lookup.get((level, 'Untutored'), 0))
+        total = tutored + untutored
+
+        for status, count in (('Tutored', tutored), ('Untutored', untutored)):
+            chart_rows.append(
+                {
+                    'Proficiency Level': level,
+                    'Tutoring Status': status,
+                    'Student Count': count,
+                    'Category Total': total,
+                    'Percent of Category': (count / total * 100) if total else 0.0,
+                }
+            )
+
+        summary_rows.append(
+            {
+                'Proficiency Level': level,
+                'Tutored': tutored,
+                'Untutored': untutored,
+                'Total': total,
+                '% Tutored': (tutored / total * 100) if total else 0.0,
+            }
+        )
+
+    return pd.DataFrame(chart_rows), pd.DataFrame(summary_rows), ordered_levels
+
+
+def get_current_year_outcome_columns(df: pd.DataFrame) -> List[Tuple[str, str]]:
+    columns = []
+    for subject in OUTCOME_SUBJECTS:
+        measure_fields = get_outcome_measure_fields(subject)
+        candidate_columns = []
+        if measure_fields:
+            candidate_columns.append(measure_fields[-1])
+        candidate_columns.extend(
+            [
+                f'{subject}_latest_outcome',
+                f'{subject}_state_score_current_year',
+                f'{subject}_outcome_score_current_year',
+            ]
+        )
+
+        for column in candidate_columns:
+            if column in df.columns:
+                columns.append((subject.upper(), column))
+                break
+    return columns
+
+
+def build_current_year_outcome_participation_chart_data(
+    df: pd.DataFrame,
+    smoothing_window: int = 7,
+) -> pd.DataFrame:
+    outcome_columns = get_current_year_outcome_columns(df)
+    if not outcome_columns:
+        return pd.DataFrame()
+
+    received_mask = get_received_tutoring_mask(df)
+    chart_frames = []
+    for subject_label, outcome_col in outcome_columns:
+        outcome_values = pd.to_numeric(df[outcome_col], errors='coerce')
+        subject_df = pd.DataFrame(
+            {
+                'Subject': subject_label,
+                'Current-Year Outcome': outcome_values,
+                'Received Tutoring': received_mask.astype(bool),
+            }
+        ).dropna(subset=['Current-Year Outcome'])
+        if subject_df.empty:
+            continue
+
+        grouped = (
+            subject_df.groupby('Current-Year Outcome', as_index=False)
+            .agg(
+                Student_Count=('Received Tutoring', 'size'),
+                Tutored_Count=('Received Tutoring', 'sum'),
+            )
+            .sort_values('Current-Year Outcome')
+        )
+        grouped['Student Count'] = grouped['Student_Count'].astype(int)
+        grouped['Tutored Count'] = grouped['Tutored_Count'].astype(int)
+        grouped['Untutored Count'] = grouped['Student Count'] - grouped['Tutored Count']
+        grouped['Percent Tutored'] = grouped['Tutored Count'] / grouped['Student Count'] * 100
+
+        window = max(1, min(int(smoothing_window), len(grouped)))
+        rolling_tutored = grouped['Tutored Count'].rolling(window=window, center=True, min_periods=1).sum()
+        rolling_total = grouped['Student Count'].rolling(window=window, center=True, min_periods=1).sum()
+
+        grouped['Smoothed Percent Tutored'] = rolling_tutored / rolling_total * 100
+        grouped['Smoothing Student Count'] = rolling_total.astype(int)
+        grouped['Smoothing Window'] = window
+        grouped['Subject'] = subject_label
+        chart_frames.append(
+            grouped[
+                [
+                    'Subject',
+                    'Current-Year Outcome',
+                    'Smoothed Percent Tutored',
+                    'Percent Tutored',
+                    'Student Count',
+                    'Tutored Count',
+                    'Untutored Count',
+                    'Smoothing Student Count',
+                    'Smoothing Window',
+                ]
+            ]
+        )
+
+    if not chart_frames:
+        return pd.DataFrame()
+    return pd.concat(chart_frames, ignore_index=True)
+
+
 def weighted_metric_average(
     metrics: Mapping[str, Any],
     value_weight_pairs: Sequence[Tuple[str, str]],
@@ -2747,65 +2944,47 @@ def main():
                 
                 st.markdown("---")
 
-                st.markdown("### Dosage by Proficiency Level")
-                st.caption("This view stays focused on tutored students. Higher dosage for lower-proficiency groups suggests the program is concentrating support where need is greatest.")
+                st.markdown("### Tutoring Participation by Most Recent Performance Level")
+                st.caption("Each performance level is normalized to 100%, making tutoring participation rates comparable across levels even when the student counts differ.")
 
                 try:
-                    perf_col = 'performance_level_most_recent'
-                    if perf_col in equity_df.columns:
-                        proficiency_order = [
-                            'far below basic', 'below basic', 'basic', 'approaching', 'proficient', 'advanced', 'exceeds',
-                            'level 1', 'level 2', 'level 3', 'level 4', 'level 5',
-                            'novice', 'developing', 'proficient', 'distinguished',
-                        ]
-
-                        def get_proficiency_index(level):
-                            level_lower = str(level).lower()
-                            for i, order_level in enumerate(proficiency_order):
-                                if order_level in level_lower:
-                                    return i
-                            return 999
-
-                        proficiency_data = []
-                        for perf_level in equity_df[perf_col].dropna().unique():
-                            perf_data = equity_df[equity_df[perf_col] == perf_level]
-                            if len(perf_data) == 0:
-                                continue
-                            hours = tutoring_hours_series(perf_data)
-                            proficiency_data.append({
-                                'Proficiency Level': perf_level,
-                                'Average Hours': hours.mean(),
-                                '% at Full Dosage': (hours >= st.session_state['full_dosage_threshold']).sum() / len(perf_data) * 100,
-                                'N': len(perf_data),
-                                '_sort_key': get_proficiency_index(perf_level),
-                            })
-
-                        if proficiency_data:
-                            proficiency_df = pd.DataFrame(proficiency_data).sort_values(['_sort_key', 'Proficiency Level'])
-                            ordered_levels = proficiency_df['Proficiency Level'].tolist()
-
-                            display_df = proficiency_df.drop(columns=['_sort_key']).copy()
-                            display_df['Average Hours'] = display_df['Average Hours'].map(lambda value: f"{value:.1f}")
-                            display_df['% at Full Dosage'] = display_df['% at Full Dosage'].map(lambda value: f"{value:.1f}%")
+                    perf_col = get_most_recent_performance_level_column(filtered_equity_df)
+                    if perf_col:
+                        chart_df, display_df, ordered_levels = build_proficiency_participation_chart_data(
+                            filtered_equity_df,
+                            perf_col,
+                        )
+                        if not chart_df.empty:
+                            display_df = display_df.copy()
+                            display_df['% Tutored'] = display_df['% Tutored'].map(lambda value: f"{value:.1f}%")
                             st.dataframe(display_df, use_container_width=True, hide_index=True)
 
                             fig = px.bar(
-                                proficiency_df,
+                                chart_df,
                                 x='Proficiency Level',
-                                y='Average Hours',
-                                text='N',
-                                labels={'Average Hours': 'Average Tutoring Hours', 'Proficiency Level': 'Most Recent Performance Level'},
-                                title='Average Dosage by Most Recent Performance Level',
-                                category_orders={'Proficiency Level': ordered_levels},
+                                y='Percent of Category',
+                                color='Tutoring Status',
+                                barmode='group',
+                                text='Percent of Category',
+                                labels={
+                                    'Percent of Category': 'Percent of Students in Performance Level',
+                                    'Proficiency Level': 'Most Recent Performance Level',
+                                },
+                                title='Percent of Tutored vs Untutored Students by Most Recent Performance Level',
+                                color_discrete_map=TUTORING_STATUS_COLORS,
+                                category_orders={
+                                    'Proficiency Level': ordered_levels,
+                                    'Tutoring Status': TUTORING_STATUS_ORDER,
+                                },
+                                hover_data={
+                                    'Student Count': ':,',
+                                    'Category Total': ':,',
+                                    'Percent of Category': ':.1f',
+                                },
                             )
-                            fig.update_traces(texttemplate='n=%{text}', textposition='outside')
-                            fig.add_hline(
-                                y=st.session_state['full_dosage_threshold'],
-                                line_dash="dash",
-                                line_color="orange",
-                                annotation_text="Target",
-                            )
-                            fig.update_layout(height=400, showlegend=False)
+                            fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
+                            fig.update_layout(height=400, legend_title_text='Tutoring Status')
+                            fig.update_yaxes(title_text='Percent of Students in Performance Level', range=[0, 100])
                             st.plotly_chart(fig, use_container_width=True)
                         else:
                             st.info("Performance-level dosage analysis requires at least one populated most recent performance level.")
@@ -2813,6 +2992,48 @@ def main():
                         st.info("Performance-level dosage analysis requires `performance_level_most_recent`.")
                 except Exception as e:
                     st.info(f"Performance-level dosage analysis unavailable: {str(e)}")
+
+                st.markdown("### Tutoring Participation by Current-Year Outcome")
+                st.caption("The line shows the tutoring participation rate across observed current-year outcome scores; lower scores should generally have higher participation if tutoring is targeted toward students with greater academic need.")
+
+                try:
+                    outcome_chart_df = build_current_year_outcome_participation_chart_data(filtered_equity_df)
+                    if not outcome_chart_df.empty:
+                        chart_kwargs = {
+                            'data_frame': outcome_chart_df,
+                            'x': 'Current-Year Outcome',
+                            'y': 'Smoothed Percent Tutored',
+                            'color': 'Subject',
+                            'markers': True,
+                            'labels': {
+                                'Current-Year Outcome': 'Current-Year Outcome',
+                                'Smoothed Percent Tutored': 'Percent Tutored',
+                            },
+                            'title': 'Tutoring Participation Rate by Current-Year Outcome',
+                            'hover_data': {
+                                'Student Count': ':,',
+                                'Tutored Count': ':,',
+                                'Untutored Count': ':,',
+                                'Percent Tutored': ':.1f',
+                                'Smoothing Student Count': ':,',
+                                'Smoothing Window': False,
+                            },
+                        }
+                        if outcome_chart_df['Subject'].nunique() > 1:
+                            chart_kwargs['facet_col'] = 'Subject'
+                            chart_kwargs['facet_col_wrap'] = 2
+
+                        fig = px.line(**chart_kwargs)
+                        fig.for_each_annotation(lambda annotation: annotation.update(text=annotation.text.replace('Subject=', '')))
+                        fig.update_traces(line=dict(width=3), marker=dict(size=5))
+                        fig.update_layout(height=430, legend_title_text='Subject', hovermode='x unified')
+                        fig.update_xaxes(title_text='Current-Year Outcome')
+                        fig.update_yaxes(title_text='Percent Tutored', range=[0, 100], ticksuffix='%')
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info("Current-year outcome participation analysis requires at least one populated current-year numeric outcome field.")
+                except Exception as e:
+                    st.info(f"Current-year outcome participation analysis unavailable: {str(e)}")
     
     # ========================================================================
     # OUTCOMES TAB

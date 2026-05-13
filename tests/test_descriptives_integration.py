@@ -10,6 +10,8 @@ import pytest
 from utils.generate_datasets import CONFIG as GENERATOR_CONFIG, generate_student_data, set_random_seed
 from toolkit.app_support import build_module_readiness, get_profile_column_map
 from toolkit.descriptives import (
+    build_current_year_outcome_participation_chart_data,
+    build_proficiency_participation_chart_data,
     calculate_cost_metrics,
     calculate_dosage_metrics,
     calculate_equity_metrics,
@@ -314,6 +316,73 @@ def test_calculate_equity_metrics_excludes_untutored_students() -> None:
     assert metrics["ell_ell_n"] == 1
     assert metrics["ell_non_ell_n"] == 1
     assert metrics["ell_gap"] == -10.0
+
+
+def test_build_proficiency_participation_chart_data_counts_tutored_and_untutored() -> None:
+    df = pd.DataFrame(
+        {
+            "student_id": ["1", "2", "3", "4", "5"],
+            "total_hours": [10.0, 0.0, 5.0, 0.0, 8.0],
+            "performance_level_most_recent": [
+                "Basic",
+                "Below Basic",
+                "Below Basic",
+                "Basic",
+                "Advanced",
+            ],
+        }
+    )
+
+    chart_df, summary_df, ordered_levels = build_proficiency_participation_chart_data(
+        df,
+        "performance_level_most_recent",
+    )
+
+    assert ordered_levels == ["Below Basic", "Basic", "Advanced"]
+    below_basic = summary_df[summary_df["Proficiency Level"] == "Below Basic"].iloc[0]
+    basic = summary_df[summary_df["Proficiency Level"] == "Basic"].iloc[0]
+    advanced = summary_df[summary_df["Proficiency Level"] == "Advanced"].iloc[0]
+
+    assert below_basic["Tutored"] == 1
+    assert below_basic["Untutored"] == 1
+    assert basic["Tutored"] == 1
+    assert basic["Untutored"] == 1
+    assert advanced["Tutored"] == 1
+    assert advanced["Untutored"] == 0
+    assert len(chart_df) == 6
+    assert chart_df.groupby("Proficiency Level")["Percent of Category"].sum().tolist() == [100.0, 100.0, 100.0]
+    advanced_tutored = chart_df[
+        (chart_df["Proficiency Level"] == "Advanced") &
+        (chart_df["Tutoring Status"] == "Tutored")
+    ].iloc[0]
+    assert advanced_tutored["Percent of Category"] == 100.0
+
+
+def test_build_current_year_outcome_participation_chart_data_uses_measure_three() -> None:
+    df = pd.DataFrame(
+        {
+            "student_id": ["1", "2", "3"],
+            "total_hours": [10.0, 0.0, 5.0],
+            "ela_outcome_measure_3": [720, 690, pd.NA],
+            "math_outcome_measure_3": [700, 710, 730],
+        }
+    )
+
+    chart_df = build_current_year_outcome_participation_chart_data(df, smoothing_window=1)
+
+    assert set(chart_df["Subject"]) == {"ELA", "MATH"}
+    ela_rows = chart_df[chart_df["Subject"] == "ELA"]
+    math_rows = chart_df[chart_df["Subject"] == "MATH"]
+
+    assert len(chart_df) == 5
+    assert ela_rows["Student Count"].sum() == 2
+    assert math_rows["Student Count"].sum() == 3
+    assert ela_rows["Current-Year Outcome"].tolist() == [690, 720]
+    assert math_rows["Current-Year Outcome"].tolist() == [700, 710, 730]
+    assert chart_df["Tutored Count"].sum() == 3
+    assert chart_df["Untutored Count"].sum() == 2
+    assert chart_df["Percent Tutored"].tolist() == [0.0, 100.0, 100.0, 0.0, 100.0]
+    assert chart_df["Smoothed Percent Tutored"].tolist() == chart_df["Percent Tutored"].tolist()
 
 
 def test_calculate_outcome_metrics_excludes_untutored_students() -> None:
